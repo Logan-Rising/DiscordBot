@@ -1,0 +1,26 @@
+{
+    "name": "discordbot",
+    "version": "2.0.0",
+    "description": "",
+    "main": "bot.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Bigfoot",
+    "license": "ISC",
+    "dependencies": {
+        "canvas-gif": "^1.0.3",
+        "chart.js": "^3.9.1",
+        "chromium": "^3.0.3",
+        "discord-reply": "^0.1.2",
+        "discord.js": "^12.5.3",
+        "firebase": "^9.16.0",
+        "image-downloader": "^4.0.3",
+        "images-scraper": "^6.4.0",
+        "node-fetch": "^3.2.4",
+        "prettier": "^2.8.8",
+        "quickchart-js": "^3.1.0",
+        "random-word": "^2.0.0",
+        "request": "^2.88.2"
+    }
+}

@@ -1,0 +1,8 @@
+/node_modules
+README
+suggestions.txt
+script.bat
+package.json
+package-lock.json
+.env
+.gitignore
