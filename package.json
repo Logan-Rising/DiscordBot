@@ -14,7 +14,7 @@
         "chromium": "^3.0.3",
         "discord-reply": "^0.1.2",
         "discord.js": "^12.5.3",
-        "firebase": "^8.6.8",
+        "firebase": "^9.16.0",
         "image-downloader": "^4.0.3",
         "images-scraper": "^6.4.0",
         "node-fetch": "^3.2.4",
