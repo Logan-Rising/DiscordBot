@@ -1,6 +1,6 @@
 const messages = require('../functions/messages.js');
 const firebasefunctions = require('../functions/firebasefunctions.js');
-const gif = require('../functions/customfunctions.js');
+const kickfunction = require('../functions/customfunctions.js');
 
 module.exports = {
     name: 'kick',
@@ -43,9 +43,8 @@ module.exports = {
             collector.on('collect', (reaction, user) => {
                 switch (reaction.emoji.name) {
                     case green_check:
-                        // memberTarget.kick();
-                        console.log('member kicked');
-                        // gif.gifEdit(memberTarget.user.tag, message.channel);
+                        memberTarget.kick();
+                        kickfunction.onKickBan(memberTarget.user.tag, message.channel);
                         collector.stop();
                         break;
                     default:

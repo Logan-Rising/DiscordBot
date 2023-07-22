@@ -41,7 +41,8 @@ module.exports = {
             collector.on('collect', (reaction, user) => {
                 switch (reaction.emoji.name) {
                     case green_check:
-                        // memberTarget.ban();
+                        memberTarget.ban();
+                        kickfunction.onKickBan(memberTarget.user.tag, message.channel);
                         collector.stop();
                         break;
                     default:
