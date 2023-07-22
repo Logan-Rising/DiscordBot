@@ -75,6 +75,9 @@ const firedb = fire.getFirestore(firebaseApp);
 (await firebasefunctions.InitializeCommand('getcommandusage', 'owner', firedb))
     ? console.log('getcommandusage initialized successfully')
     : console.log('getcommandusage initialization failed');
+(await firebasefunctions.InitializeCommand('getimageusage', 'owner', firedb))
+    ? console.log('getcommandusage initialized successfully')
+    : console.log('getcommandusage initialization failed');
 
 // Messaging
 (await firebasefunctions.SetMessagesRead(firedb, 0))

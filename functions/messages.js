@@ -1,33 +1,29 @@
-function send_message(channel, content) {
+const firebasefunctions = require('./firebasefunctions.js');
+
+async function send_message(channel, content, firedb) {
     if (!channel) {
         console.log('messages.js: Must include channel to send to');
     }
 
     try {
+        await firebasefunctions.IncrementMessageSent(firedb, 1);
         return channel.send(content);
     } catch (error) {
         console.error(error);
     }
 }
 
-function send_reply(message, content) {
+async function send_reply(message, content) {
     if (!message) {
         console.log('messages.js: Must include message to reply to');
     }
 
     try {
-        message.lineReply(content);
+        await firebasefunctions.IncrementMessageSent(firedb, 1);
+        return message.lineReply(content);
     } catch (error) {
         console.error(error);
     }
 }
 
-async function slash_command(message, content) {
-    try {
-        await message.reply('Hi');
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-module.exports = { send_message, send_reply, slash_command };
+module.exports = { send_message, send_reply };
