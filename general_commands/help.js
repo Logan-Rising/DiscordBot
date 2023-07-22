@@ -191,7 +191,7 @@ module.exports = {
         }
 
         // Custom Commands
-        if (custom_bool && !commandFound) {
+        if (custom_bool && !commandFound && private) {
             const command_files_general = fs.readdirSync('./custom_commands/').filter(file => file.endsWith('.js'));
             !searchForCommand ? (embed_string += '\nCustom: \n') : (embed_string += '');
 

@@ -32,7 +32,7 @@ const firedb = fire.getFirestore(firebaseApp);
 (await firebasefunctions.InitializeCommand('8ball', 'general', firedb))
     ? console.log('8ball initialized successfully')
     : console.log('8ball initialization failed');
-(await firebasefunctions.InitializeCommand('changerequest', 'general', firedb))
+(await firebasefunctions.InitializeCommand('suggestion', 'general', firedb))
     ? console.log('changerequest initialized successfully')
     : console.log('changerequest initialization failed');
 (await firebasefunctions.InitializeCommand('dependencies', 'general', firedb))

@@ -1,5 +1,6 @@
 const messages = require('../functions/messages.js');
 const firebasefunctions = require('../functions/firebasefunctions.js');
+const banfunction = require('../functions/customfunctions.js');
 
 module.exports = {
     name: 'ban',
@@ -42,7 +43,7 @@ module.exports = {
                 switch (reaction.emoji.name) {
                     case green_check:
                         memberTarget.ban();
-                        kickfunction.onKickBan(memberTarget.user.tag, message.channel);
+                        banfunction.onKickBan(memberTarget.user.tag, message.channel);
                         collector.stop();
                         break;
                     default:

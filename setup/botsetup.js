@@ -50,6 +50,9 @@ const kickGifPath = '';
 // Message that is logged to the console when the bot is started
 const startupMessage = botName + ' Is Online!';
 
+// Path to suggestions.txt file. Can change to desired directory.
+const suggestionsPath = '../suggestions.txt';
+
 module.exports = {
     Image_Permissions,
     Record_Permissions,
@@ -62,6 +65,7 @@ module.exports = {
     ownerId,
     kickGifPath,
     startupMessage,
+    suggestionsPath,
 };
 `
 
@@ -77,7 +81,7 @@ const customFunctionsContent =
 `const fs = require('fs');
 const canvasGif = require('canvas-gif');
 const path = require('path');
-const constants = require('../constants');
+const constants = require('../constants.js');
 
 // Edit a gif when a user is kicked
 async function onKickBan(name, channel) {

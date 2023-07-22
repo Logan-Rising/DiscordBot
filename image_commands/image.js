@@ -10,17 +10,19 @@ const google = new Scraper({
 
 module.exports = {
     name: 'image',
-    description: 'Sends a random image based on the provided query',
+    description: 'Sends a random image based on the provided query via image scaping the web.',
     users: [],
     servers: [],
     syntax: '&image <query>',
-    async execute(client, message, args) {
+    async execute(client, message, args, Discord, firedb) {
         await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         const image_query = args.join(' ');
-        if (!image_query) return messages.send_message(message.channel, 'Please enter an image name');
+        if (!image_query) return messages.send_reply(message, 'Please enter an image name');
 
-        const image_results = await google.scrape(image_query, 200);
-        messages.send_message(message.channel, image_results[Math.floor(Math.random() * image_results.length)].url);
+        const image_results = await google.scrape(image_query, 100);
+        const num = Math.floor(Math.random() * image_results.length);
+        if (image_results[num].url !== undefined)
+            messages.send_reply(message, image_results[num].url);
     },
 };
