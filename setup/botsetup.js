@@ -1,13 +1,12 @@
 /*
  * Run this script from Command Prompt (Windows) or Terminal (macOS) in this directory using 'node botsetup.js'
-*/
+ */
 
 const fs = require('fs');
 
 /* Initialize constants file. Fill in variable values once initialized. */
-const constantsPath = '../constants.js'
-const constantsContent = 
-`// Ids of users who will have access to addimage and deleteimage commands
+const constantsPath = '../constants.js';
+const constantsContent = `// Ids of users who will have access to addimage and deleteimage commands
 // Leave blank for all users to be able to use
 const Image_Permissions = [];
 
@@ -67,7 +66,7 @@ module.exports = {
     startupMessage,
     suggestionsPath,
 };
-`
+`;
 
 /* Initialize constants.js file. Fill out custom functions if desired to edit gifs upon user being kicked.*/
 fs.appendFile(constantsPath, constantsContent, err => {
@@ -77,8 +76,7 @@ fs.appendFile(constantsPath, constantsContent, err => {
 });
 
 const customFunctionsPath = '../functions/customfunctions.js';
-const customFunctionsContent = 
-`const fs = require('fs');
+const customFunctionsContent = `const fs = require('fs');
 const canvasGif = require('canvas-gif');
 const path = require('path');
 const constants = require('../constants.js');
@@ -97,7 +95,7 @@ module.exports = {
     gifEdit,
     onStartup,
 };
-`
+`;
 
 // Write to customfunctions.js file
 fs.appendFile(customFunctionsPath, customFunctionsContent, err => {

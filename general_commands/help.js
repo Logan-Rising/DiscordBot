@@ -228,7 +228,9 @@ module.exports = {
             return;
         }
 
-        !searchForCommand ? embed_string += '\nNeed help with a specific command?  Use &help <command name>' : embed_string += '';
+        !searchForCommand
+            ? (embed_string += '\nNeed help with a specific command?  Use &help <command name>')
+            : (embed_string += '');
 
         const embed = new Discord.MessageEmbed()
             .setColor('#BFCDEB')

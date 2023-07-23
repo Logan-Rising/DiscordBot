@@ -11,7 +11,7 @@ module.exports = {
     async execute(client, message, args, Discord, firedb) {
         await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
-        let dependencies_string = "";
+        let dependencies_string = '';
 
         for (const pkg in package.dependencies) {
             dependencies_string += `${pkg}:${package.dependencies[pkg]}` + '\n';

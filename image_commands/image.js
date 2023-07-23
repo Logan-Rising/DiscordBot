@@ -22,7 +22,6 @@ module.exports = {
 
         const image_results = await google.scrape(image_query, 100);
         const num = Math.floor(Math.random() * image_results.length);
-        if (image_results[num].url !== undefined)
-            messages.send_reply(firedb, message, image_results[num].url);
+        if (image_results[num].url !== undefined) messages.send_reply(firedb, message, image_results[num].url);
     },
 };

@@ -4,7 +4,7 @@ const constants = require('../constants.js');
 
 module.exports = {
     name: 'getimageusage',
-    description: 'Get an image database element\' usage statistic',
+    description: "Get an image database element' usage statistic",
     users: [constants.ownerId],
     servers: [],
     syntax: '&getimageusage <command name>',

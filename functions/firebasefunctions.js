@@ -168,7 +168,7 @@ async function InitializeCommand(commandName, type, firedb) {
 
 async function SetMessagesRead(firedb, number) {
     let success = true;
-    
+
     try {
         const docRef = await fire.doc(firedb, 'messaging', 'messages_read');
         await fire.setDoc(docRef, { index: number });
@@ -196,7 +196,7 @@ async function GetMessagesRead(firedb) {
 
 async function SetMessagesSent(firedb, number) {
     let success = true;
-    
+
     try {
         const docRef = await fire.doc(firedb, 'messaging', 'messages_sent');
         await fire.setDoc(docRef, { index: number });

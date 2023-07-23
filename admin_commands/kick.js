@@ -26,7 +26,11 @@ module.exports = {
 
             const filter = (reaction, user) =>
                 [green_check, red_x].includes(reaction.emoji.name) && user.id === message.member.id;
-            let kickMessage = await messages.send_message(firedb, message.channel, `Are you sure you want to kick <@${id}>?`);
+            let kickMessage = await messages.send_message(
+                firedb,
+                message.channel,
+                `Are you sure you want to kick <@${id}>?`
+            );
             member = kickMessage.mentions.users.first();
             if (!member) {
                 kickMessage.delete();

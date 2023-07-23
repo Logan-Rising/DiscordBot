@@ -25,7 +25,11 @@ module.exports = {
 
             const filter = (reaction, user) =>
                 [green_check, red_x].includes(reaction.emoji.name) && user.id === message.member.id;
-            let banMessage = await messages.send_message(firedb, message.channel, `Are you sure you want to ban <@${id}>?`);
+            let banMessage = await messages.send_message(
+                firedb,
+                message.channel,
+                `Are you sure you want to ban <@${id}>?`
+            );
             member = banMessage.mentions.users.first();
             if (!member) {
                 banMessage.delete();

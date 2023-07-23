@@ -21,7 +21,7 @@ module.exports = {
         var type = args[1].toLowerCase();
 
         // Check if command name already exists in the database
-        if (await firebasefunctions.GetCommandCount(name, firedb) !== -1) {
+        if ((await firebasefunctions.GetCommandCount(name, firedb)) !== -1) {
             messages.send_reply(firedb, message, 'Name already exists: Database');
             return;
         }
@@ -45,7 +45,11 @@ module.exports = {
                 path = './custom_commands/' + name + '.js';
                 break;
             default:
-                messages.send_reply(firedb, message, 'Type not recognized. Valid types are: admin, general, game, image, and custom.');
+                messages.send_reply(
+                    firedb,
+                    message,
+                    'Type not recognized. Valid types are: admin, general, game, image, and custom.'
+                );
                 return;
         }
 
@@ -57,20 +61,36 @@ module.exports = {
         // All conditional criteria is met so go ahead and write the file
 
         const message_string =
-        'const constants = require(\'../functions/firebasefunctions.js\');' + '\n' + 
-        '\n' +
-        'module.exports = {' + '\n' +
-        '    name: \'' + name + '\',' + '\n' +
-        '    description: \'\',' + '\n' +
-        '    users: [],' + '\n' +
-        '    servers: [],' + '\n' +
-        '    syntax: \'&' + name + '\',' + '\n' +
-        '    async execute(client, message, args, Discord, firedb) {' + '\n' +
-        '        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);' + '\n' + 
-        '\n' +
-        '        return;' + '\n' +
-        '    },' + '\n' +
-        '};' + '\n';
+            "const constants = require('../functions/firebasefunctions.js');" +
+            '\n' +
+            '\n' +
+            'module.exports = {' +
+            '\n' +
+            "    name: '" +
+            name +
+            "'," +
+            '\n' +
+            "    description: ''," +
+            '\n' +
+            '    users: [],' +
+            '\n' +
+            '    servers: [],' +
+            '\n' +
+            "    syntax: '&" +
+            name +
+            "'," +
+            '\n' +
+            '    async execute(client, message, args, Discord, firedb) {' +
+            '\n' +
+            '        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);' +
+            '\n' +
+            '\n' +
+            '        return;' +
+            '\n' +
+            '    },' +
+            '\n' +
+            '};' +
+            '\n';
 
         const success = await firebasefunctions.InitializeCommand(name, type, firedb);
 

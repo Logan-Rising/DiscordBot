@@ -4,12 +4,12 @@ const constants = require('../constants');
 
 async function GetImage(message, name, firedb) {
     let num = await firebasefunctions.GetImageIndex(name, firedb);
-    
+
     if (num === -1) {
-        console.log(name + " does not exist in database");
+        console.log(name + ' does not exist in database');
         return;
-    } else if (num === 0) { 
-        console.log(name + " does not have an images. Use &addimage to add images for this category.");
+    } else if (num === 0) {
+        console.log(name + ' does not have an images. Use &addimage to add images for this category.');
         return;
     }
 

@@ -4,7 +4,7 @@ const constants = require('../constants.js');
 
 module.exports = {
     name: 'getcommandusage',
-    description: 'Get a command database element\' usage statistic',
+    description: "Get a command database element' usage statistic",
     users: [constants.ownerId],
     servers: [],
     syntax: '&getcommandusage <command name>',

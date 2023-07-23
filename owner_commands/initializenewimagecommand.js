@@ -21,7 +21,7 @@ module.exports = {
         var type = args[1].toLowerCase();
 
         // Check if command name already exists in the database
-        if (await firebasefunctions.GetImageUsage(name, firedb) !== -1) {
+        if ((await firebasefunctions.GetImageUsage(name, firedb)) !== -1) {
             messages.send_reply(firedb, message, 'Name already exists: Database');
             return;
         }
@@ -48,22 +48,36 @@ module.exports = {
         // All conditional criteria is met so go ahead and write the file
 
         const message_string =
-        'const constants = require(\'../functions/firebasefunctions.js\');' + '\n' + 
-        '\n' +
-        'module.exports = {' + '\n' +
-        '    name: \'' + name + '\',' + '\n' +
-        '    description: \'\',' + '\n' +
-        '    users: [],' + '\n' +
-        '    servers: [],' + '\n' +
-        '    syntax: \'&' + name + '\',' + '\n' +
-        '    async execute(client, message, args, Discord, firedb) {' + '\n' +
-        '        firebasefunctions.IncrementImageUsage(this.name, firedb, 1);' + '\n' + 
-        '\n' +
-        '        images.GetImage(message, this.name, firedb);' + '\n' +
-        '    },' + '\n' +
-        '};' + '\n';
-
-
+            "const constants = require('../functions/firebasefunctions.js');" +
+            '\n' +
+            '\n' +
+            'module.exports = {' +
+            '\n' +
+            "    name: '" +
+            name +
+            "'," +
+            '\n' +
+            "    description: ''," +
+            '\n' +
+            '    users: [],' +
+            '\n' +
+            '    servers: [],' +
+            '\n' +
+            "    syntax: '&" +
+            name +
+            "'," +
+            '\n' +
+            '    async execute(client, message, args, Discord, firedb) {' +
+            '\n' +
+            '        firebasefunctions.IncrementImageUsage(this.name, firedb, 1);' +
+            '\n' +
+            '\n' +
+            '        images.GetImage(message, this.name, firedb);' +
+            '\n' +
+            '    },' +
+            '\n' +
+            '};' +
+            '\n';
 
         const success = await firebasefunctions.InitializeImage(name, firedb);
 
