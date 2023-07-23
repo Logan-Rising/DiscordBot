@@ -14,9 +14,9 @@ module.exports = {
         const count = await firebasefunctions.GetImageUsage(args[0], firedb);
 
         if (count === -1) {
-            messages.send_reply(message, 'Databse image element does not exist');
+            messages.send_reply(firedb, message, 'Databse image element does not exist');
         } else {
-            messages.send_reply(message, count);
+            messages.send_reply(firedb, message, count);
         }
     },
 };

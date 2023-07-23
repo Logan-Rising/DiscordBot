@@ -10,6 +10,6 @@ module.exports = {
     async execute(client, message, args, Discord, firedb) {
         await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
-        messages.send_message(message.channel, 'pong!');
+        messages.send_message(firedb, message.channel, 'pong!');
     },
 };

@@ -31,6 +31,6 @@ module.exports = {
             'Outlook not so good',
             'Very doubtful',
         ];
-        messages.send_reply(message, eight_ball[Math.floor(Math.random() * eight_ball.length)]);
+        messages.send_reply(firedb, message, eight_ball[Math.floor(Math.random() * eight_ball.length)]);
     },
 };

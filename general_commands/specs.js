@@ -21,6 +21,6 @@ module.exports = {
             .setDescription(constants.specs.specsString)
             .setImage(constants.specs.specsPhoto);
 
-        messages.send_message(message.channel, embed);
+        messages.send_message(firedb, message.channel, embed);
     },
 };

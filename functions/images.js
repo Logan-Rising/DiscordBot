@@ -15,8 +15,8 @@ async function GetImage(message, name, firedb) {
 
     var imagemNum = Math.floor(Math.random() * num);
     const file = { files: [constants.imagesFilePath + name + '/' + name + '_' + imagemNum + '.jpg'] };
-    if (file) messages.send_message(message.channel, file);
-    else messages.send_reply(message, 'Internal error occurred. Please try again.');
+    if (file) messages.send_message(firedb, message.channel, file);
+    else messages.send_reply(firedb, message, 'Internal error occurred. Please try again.');
 }
 
 module.exports = {

@@ -224,7 +224,7 @@ module.exports = {
         }
 
         if (embed_string === 'Prefix: &\n') {
-            messages.send_reply(message, 'Could not find that command. Use &help to list commands.');
+            messages.send_reply(firedb, message, 'Could not find that command. Use &help to list commands.');
             return;
         }
 
@@ -235,6 +235,6 @@ module.exports = {
             .setTitle(constants.botName + ' Commands')
             .setDescription(embed_string);
 
-        messages.send_message(message.channel, embed);
+        messages.send_message(firedb, message.channel, embed);
     },
 };

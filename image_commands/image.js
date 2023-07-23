@@ -18,11 +18,11 @@ module.exports = {
         await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         const image_query = args.join(' ');
-        if (!image_query) return messages.send_reply(message, 'Please enter an image name');
+        if (!image_query) return messages.send_reply(firedb, message, 'Please enter an image name');
 
         const image_results = await google.scrape(image_query, 100);
         const num = Math.floor(Math.random() * image_results.length);
         if (image_results[num].url !== undefined)
-            messages.send_reply(message, image_results[num].url);
+            messages.send_reply(firedb, message, image_results[num].url);
     },
 };

@@ -20,7 +20,7 @@ module.exports = {
 
         // Name is not in the database (not been initialized)
         if (num === undefined) {
-            messages.send_reply(message, 'Invalid name');
+            messages.send_reply(firedb, message, 'Invalid name');
             return;
         }
 
@@ -47,9 +47,9 @@ module.exports = {
         });
 
         if (total === 0) {
-            messages.send_reply(message, 'No images were attached');
+            messages.send_reply(firedb, message, 'No images were attached');
         } else {
-            messages.send_message(message.channel, 'Successfully saved ' + total + ' images!');
+            messages.send_message(firedb, message.channel, 'Successfully saved ' + total + ' images!');
         }
 
         await firebasefunctions.SetImageIndex(name, num, firedb);

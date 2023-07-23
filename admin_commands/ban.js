@@ -20,20 +20,20 @@ module.exports = {
             } else if (!isNaN(args[0])) {
                 id = args[0];
             } else {
-                return messages.send_message(message.channel, "Error: Couldn't ban that member");
+                return messages.send_message(firedb, message.channel, "Error: Couldn't ban that member");
             }
 
             const filter = (reaction, user) =>
                 [green_check, red_x].includes(reaction.emoji.name) && user.id === message.member.id;
-            let banMessage = await messages.send_message(message.channel, `Are you sure you want to ban <@${id}>?`);
+            let banMessage = await messages.send_message(firedb, message.channel, `Are you sure you want to ban <@${id}>?`);
             member = banMessage.mentions.users.first();
             if (!member) {
                 banMessage.delete();
-                return messages.send_message(message.channel, 'That Is An Invalid User');
+                return messages.send_message(firedb, message.channel, 'That Is An Invalid User');
             }
             const memberTarget = await message.guild.members.cache.get(member.id);
             if (!memberTarget.bannable) {
-                messages.send_reply(message, 'Cannot kick that member. Member is not bannable.');
+                messages.send_reply(firedb, message, 'Cannot kick that member. Member is not bannable.');
                 return;
             }
             await banMessage.react(green_check);
@@ -47,7 +47,7 @@ module.exports = {
                         collector.stop();
                         break;
                     default:
-                        messages.send_message(message.channel, `<@${id}> lives to see another day`);
+                        messages.send_message(firedb, message.channel, `<@${id}> lives to see another day`);
                         collector.stop();
                         break;
                 }

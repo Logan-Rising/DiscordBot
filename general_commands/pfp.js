@@ -12,9 +12,9 @@ module.exports = {
 
         const member = message.mentions.users.first();
         if (member) {
-            messages.send_reply(message, member.avatarURL());
+            messages.send_reply(firedb, message, member.avatarURL());
         } else {
-            messages.send_reply(message, 'Error fetching profile picture');
+            messages.send_reply(firedb, message, 'Error fetching profile picture');
         }
     },
 };

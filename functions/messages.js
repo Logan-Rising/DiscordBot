@@ -1,6 +1,6 @@
 const firebasefunctions = require('./firebasefunctions.js');
 
-async function send_message(channel, content, firedb) {
+async function send_message(firedb, channel, content) {
     if (!channel) {
         console.log('messages.js: Must include channel to send to');
     }
@@ -13,7 +13,7 @@ async function send_message(channel, content, firedb) {
     }
 }
 
-async function send_reply(message, content) {
+async function send_reply(firedb, message, content) {
     if (!message) {
         console.log('messages.js: Must include message to reply to');
     }

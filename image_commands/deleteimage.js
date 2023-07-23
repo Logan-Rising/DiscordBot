@@ -22,7 +22,7 @@ module.exports = {
         var counter;
         if (!args[1]) counter = 1;
         else if (Number.isNaN(parseInt(args[1])))
-            return messages.send_reply(message, 'Must enter a number (default is 1) not: ' + args[1]);
+            return messages.send_reply(firedb, message, 'Must enter a number (default is 1) not: ' + args[1]);
         else counter = parseInt(args[1]);
 
         let return_counter = counter;
@@ -30,7 +30,7 @@ module.exports = {
         console.log('num: ', num);
 
         if (num === -1 || Number.isNaN(num)) {
-            messages.send_reply(message, 'Internal Error: Could Not Fetch Image Index');
+            messages.send_reply(firedb, message, 'Internal Error: Could Not Fetch Image Index');
             return;
         }
 
@@ -50,6 +50,6 @@ module.exports = {
         }
 
         firebasefunctions.SetImageIndex(name, num, firedb);
-        messages.send_message(message.channel, 'Successfully deleted ' + return_counter + ' images!');
+        messages.send_message(firedb, message.channel, 'Successfully deleted ' + return_counter + ' images!');
     },
 };

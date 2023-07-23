@@ -54,7 +54,7 @@ module.exports = {
             )
             .setFooter('Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(','));
 
-        let messageEmbed = await messages.send_message(message.channel, embed);
+        let messageEmbed = await messages.send_message(firedb, message.channel, embed);
 
         const filter = m =>
             [
@@ -92,7 +92,7 @@ module.exports = {
 
         collector.on('collect', m => {
             if (m.content.toLowerCase() === 'end') {
-                messages.send_message(message.channel, 'Thanks for playing! Game will end now. Word was: ' + word);
+                messages.send_message(firedb, message.channel, 'Thanks for playing! Game will end now. Word was: ' + word);
                 collector.stop();
             }
             if (!lettersGuessed.includes(m.content.toLowerCase())) {
@@ -286,7 +286,7 @@ module.exports = {
                         )
                         .setFooter('Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(','));
                     messageEmbed.edit(newEmbed);
-                    messages.send_message(message.channel, 'You lost! Feel free to try again! The word was: ' + word);
+                    messages.send_message(firedb, message.channel, 'You lost! Feel free to try again! The word was: ' + word);
                     gameOver = true;
                     collector.stop();
                 }
@@ -300,14 +300,14 @@ module.exports = {
                 }
 
                 if (found === false) {
-                    messages.send_message(message.channel, 'You won! The word was: ' + word);
+                    messages.send_message(firedb, message.channel, 'You won! The word was: ' + word);
                     collector.stop();
                 }
                 found = false;
 
                 m.delete();
             } else {
-                messages.send_message(message.channel, 'You have already guessed that letter');
+                messages.send_message(firedb, message.channel, 'You have already guessed that letter');
                 m.delete();
             }
         });

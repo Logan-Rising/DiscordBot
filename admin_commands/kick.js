@@ -21,20 +21,20 @@ module.exports = {
             } else if (!isNaN(args[0])) {
                 id = args[0];
             } else {
-                return messages.send_reply(message, "Error: Couldn't kick that member.");
+                return messages.send_reply(firedb, message, "Error: Couldn't kick that member.");
             }
 
             const filter = (reaction, user) =>
                 [green_check, red_x].includes(reaction.emoji.name) && user.id === message.member.id;
-            let kickMessage = await messages.send_message(message.channel, `Are you sure you want to kick <@${id}>?`);
+            let kickMessage = await messages.send_message(firedb, message.channel, `Are you sure you want to kick <@${id}>?`);
             member = kickMessage.mentions.users.first();
             if (!member) {
                 kickMessage.delete();
-                return messages.send_message(message.channel, 'That Is An Invalid User.');
+                return messages.send_message(firedb, message.channel, 'That Is An Invalid User.');
             }
             const memberTarget = await message.guild.members.cache.get(member.id);
             if (!memberTarget.kickable) {
-                messages.send_reply(message, 'Cannot kick that member. Member is not kickable.');
+                messages.send_reply(firedb, message, 'Cannot kick that member. Member is not kickable.');
                 return;
             }
             await kickMessage.react(green_check);
@@ -48,7 +48,7 @@ module.exports = {
                         collector.stop();
                         break;
                     default:
-                        messages.send_message(message.channel, `<@${id}> lives to see another day`);
+                        messages.send_message(firedb, message.channel, `<@${id}> lives to see another day`);
                         collector.stop();
                         break;
                 }

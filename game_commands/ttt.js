@@ -13,7 +13,7 @@ module.exports = {
         const player_1 = message.author.id;
 
         if (!message.mentions.users.first()) {
-            return messages.send_message(message.channel, 'Must play with a user');
+            return messages.send_message(firedb, message.channel, 'Must play with a user');
         }
 
         const player_2 = message.mentions.users.first().id;
@@ -49,7 +49,7 @@ module.exports = {
             .setTitle('Tic-Tac-Toe')
             .setDescription(ul + um + ur + '\n' + ml + mm + mr + '\n' + bl + bm + br);
 
-        let messageEmbed = await messages.send_message(message.channel, embed);
+        let messageEmbed = await messages.send_message(firedb, message.channel, embed);
 
         await messageEmbed.react(up_left);
         await messageEmbed.react(up_mid);
@@ -182,37 +182,37 @@ module.exports = {
 
             if (ul === um && um === ur && ul != placeholder) {
                 //First row
-                messages.send_message(message.channel, ul + ' Won');
+                messages.send_message(firedb, message.channel, ul + ' Won');
                 collector.stop();
             } else if (ml === mm && mm === mr && ml != placeholder) {
                 //Second Row
-                messages.send_message(message.channel, ml + ' Won');
+                messages.send_message(firedb, message.channel, ml + ' Won');
                 collector.stop();
             } else if (bl === bm && bm === br && bl != placeholder) {
                 //Third row
-                messages.send_message(message.channel, bl + ' Won');
+                messages.send_message(firedb, message.channel, bl + ' Won');
                 collector.stop();
             } else if (ul === ml && ml === bl && ul != placeholder) {
                 //First column
-                messages.send_message(message.channel, ul + ' Won');
+                messages.send_message(firedb, message.channel, ul + ' Won');
                 collector.stop();
             } else if (um === mm && mm === bm && um != placeholder) {
                 //Second Column
-                messages.send_message(message.channel, um + ' Won');
+                messages.send_message(firedb, message.channel, um + ' Won');
                 collector.stop();
             } else if (ur === mr && mr === br && ur != placeholder) {
                 //Third Column
-                messages.send_message(message.channel, ur + ' Won');
+                messages.send_message(firedb, message.channel, ur + ' Won');
                 collector.stop();
             } else if (ul === mm && mm === br && ul != placeholder) {
                 //First Diagonal
-                messages.send_message(message.channel, ul + ' Won');
+                messages.send_message(firedb, message.channel, ul + ' Won');
                 collector.stop();
             } else if (ur === mm && mm === bl && ur != placeholder) {
-                messages.send_message(message.channel, ur + ' Won');
+                messages.send_message(firedb, message.channel, ur + ' Won');
                 collector.stop();
             } else if (turn === 10) {
-                messages.send_message(message.channel, 'It was a tie');
+                messages.send_message(firedb, message.channel, 'It was a tie');
                 collector.stop();
             }
         });

@@ -22,6 +22,6 @@ module.exports = {
             .setTitle(constants.botName + ' Dependencies')
             .setDescription(dependencies_string);
 
-        messages.send_message(message.channel, embed);
+        messages.send_message(firedb, message.channel, embed);
     },
 };

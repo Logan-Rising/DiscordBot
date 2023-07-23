@@ -13,7 +13,7 @@ module.exports = {
         await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         if (!args[0] || !args[1] || args[2]) {
-            messages.send_reply(message, 'Must input name and type. Syntax: ' + this.syntax);
+            messages.send_reply(firedb, message, 'Must input name and type. Syntax: ' + this.syntax);
             return;
         }
 
@@ -22,7 +22,7 @@ module.exports = {
 
         // Check if command name already exists in the database
         if (await firebasefunctions.GetCommandCount(name, firedb) !== -1) {
-            messages.send_reply(message, 'Name already exists: Database');
+            messages.send_reply(firedb, message, 'Name already exists: Database');
             return;
         }
 
@@ -45,12 +45,12 @@ module.exports = {
                 path = './custom_commands/' + name + '.js';
                 break;
             default:
-                messages.send_reply(message, 'Type not recognized. Valid types are: admin, general, game, image, and custom.');
+                messages.send_reply(firedb, message, 'Type not recognized. Valid types are: admin, general, game, image, and custom.');
                 return;
         }
 
         if (fs.existsSync(path)) {
-            messages.send_reply(message, 'Name already exists: File Location');
+            messages.send_reply(firedb, message, 'Name already exists: File Location');
             return;
         }
 
@@ -75,7 +75,7 @@ module.exports = {
         const success = await firebasefunctions.InitializeCommand(name, type, firedb);
 
         if (!success) {
-            messages.send_reply(message, 'Failed to initialize ' + name + ' in the database');
+            messages.send_reply(firedb, message, 'Failed to initialize ' + name + ' in the database');
         }
 
         // Everything initialized correctly so write to the file
@@ -83,7 +83,7 @@ module.exports = {
             if (err) {
                 console.error(err);
             }
-            messages.send_message(message.channel, 'Successfully wrote new command.');
+            messages.send_message(firedb, message.channel, 'Successfully wrote new command.');
         });
         return;
     },
