@@ -6,7 +6,7 @@
 
 ## About
 
-This project is made to be a versitile Discord bot that with a little initialization, anyone can run with their own personal Discord bot. The primary functions of the bot are to provide administrator help for Discord servers, image management, game hosting and generalized commands that users can interact with the bot through. The bot is made to be run cross platform between macOS and Windows. One of the key features of this bot is to provide bot usage information via Google Firebase. Bot usage refers to how many messages the bot is reading and sending as well as how many times commands have been used. Utilizing Google Firebase allows for this information to be accessed from multiple platforms including the companion Android mobile app DiscordBotDashboardMobile.
+This project is made to be a versitile Discord bot that with a little initialization, anyone can run with their own personal Discord bot. The primary functions of the bot are to provide administrator help for Discord servers, image management, game hosting and generalized commands that users can interact with the bot through. The bot is made to be run cross platform between macOS and Windows. One of the key features of this bot is to provide bot usage information via Google Firebase. Bot usage refers to how many messages the bot is reading and sending as well as how many times commands have been used. Utilizing Google Firebase allows for this information to be accessed from multiple platforms including the companion Android mobile app DiscordBotDashboard.
 
 ## How To Use
 
