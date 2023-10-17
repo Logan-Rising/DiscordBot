@@ -1,11 +1,14 @@
 const permissions = require('../../functions/permissionscheck.js');
 const firebasefunctions = require('../../functions/firebasefunctions.js');
+const customfunctions = require('../../functions/customfunctions.js');
 
 module.exports = (Discord, client, firedb, message) => {
     const prefix = '&';
 
     // Increment messages parsed counter
     firebasefunctions.IncrementMessageRead(firedb, 1);
+
+    customfunctions.CheckMessage(message);
 
     if (message.guild === null) {
         // DM
