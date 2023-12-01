@@ -91,6 +91,11 @@ async function onStartup() {
     return;
 }
 
+// Function that runs when the bot reads a message
+async function CheckMessage(message) {
+    
+}
+
 module.exports = {
     gifEdit,
     onStartup,
