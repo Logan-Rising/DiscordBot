@@ -48,8 +48,7 @@ module.exports = {
                 switch (reaction.emoji.name) {
                     case green_check:
                         memberTarget.ban();
-                        messages.send_message(firedb, message.channel, `<@${id}> has been banished`)
-                        banfunction.onKickBan(firedb, memberTarget.user.tag, message.channel);
+                        banfunction.onKickBan(firedb, memberTarget.user.tag, message.channel, id);
                         collector.stop();
                         break;
                     default:

@@ -50,8 +50,7 @@ module.exports = {
                     case green_check:
                         console.log('green check')
                         memberTarget.kick();
-                        messages.send_message(firedb, message.channel, `<@${id}> got Thanos snapped <a:dusted:846409553829953556>`)
-                        kickfunction.onKickBan(firedb, memberTarget.user.tag, message.channel);
+                        kickfunction.onKickBan(firedb, memberTarget.user.tag, message.channel, id);
                         collector.stop();
                         break;
                     default:
