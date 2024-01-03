@@ -1,6 +1,8 @@
 const permissions = require('../../functions/permissionscheck.js');
 const firebasefunctions = require('../../functions/firebasefunctions.js');
 const customfunctions = require('../../functions/customfunctions.js');
+const messagefunctions = require('../../functions/messages.js');
+const { PermissionsBitField } = require('discord.js');
 
 module.exports = (Discord, client, firedb, message) => {
     const prefix = '&';
@@ -27,7 +29,7 @@ module.exports = (Discord, client, firedb, message) => {
             command,
             message.author.id,
             message.guild.id,
-            message.member.hasPermission('ADMINISTRATOR')
+            message.member.permissions.has(PermissionsBitField.Flags.Administrator)
         )
     )
         command.execute(client, message, args, Discord, firedb);

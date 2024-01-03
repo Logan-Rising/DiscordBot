@@ -1,6 +1,7 @@
 const messages = require('../functions/messages.js');
 const firebasefunctions = require('../functions/firebasefunctions.js');
 const constants = require('../constants.js');
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
     name: 'specs',
@@ -15,12 +16,12 @@ module.exports = {
             return;
         }
 
-        const embed = new Discord.MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor('#BFCDEB')
             .setTitle(constants.botName + ' Specs')
             .setDescription(constants.specs.specsString)
             .setImage(constants.specs.specsPhoto);
 
-        messages.send_message(firedb, message.channel, embed);
+        messages.send_message(firedb, message.channel, { embeds: [embed] });
     },
 };

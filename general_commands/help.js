@@ -3,6 +3,8 @@ const messages = require('../functions/messages.js');
 const firebasefunctions = require('../functions/firebasefunctions.js');
 const permissions = require('../functions/permissionscheck.js');
 const constants = require('../constants.js');
+const { PermissionsBitField } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
     name: 'help',
@@ -13,14 +15,24 @@ module.exports = {
     async execute(client, message, args, Discord, firedb) {
         await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
-        var embed_string = 'Prefix: &\n';
+        let embed_string = 'Prefix: &\n';
 
-        var admin = message.member.hasPermission('ADMINISTRATOR');
+        let admin = message.member.permissions.has(PermissionsBitField.Flags.Administrator);
+
 
         const channel = message.channel,
             guild = channel.guild,
-            everyone = guild.roles.everyone;
-        var private = !channel.permissionsFor(everyone).has('VIEW_CHANNEL');
+            everyone = guild.roles.everyone,
+            ageRestricted = channel.nsfw;
+
+        // Privacy of the channel
+        let private = !channel.permissionsFor(everyone).has(PermissionsBitField.Flags.ViewChannel);
+        const privateInitial = private;
+
+        if(!private) {
+            // If channel is age restricted and not private but should be included as private
+            private = ageRestricted && constants.includeAgeRestrictionAsPrivate;
+        }
 
         let general_bool = false,
             game_bool = false,
@@ -28,7 +40,7 @@ module.exports = {
             image_bool = false,
             custom_bool = false,
             searchForCommand = false;
-        commandFound = false;
+            commandFound = false;
 
         if (!args[0]) {
             general_bool = true;
@@ -155,7 +167,7 @@ module.exports = {
 
         // Admin commands
         if (admin_bool && !commandFound) {
-            if (admin && private) {
+            if (admin && privateInitial) {
                 const command_files_admin = fs.readdirSync('./admin_commands/').filter(file => file.endsWith('.js'));
                 !searchForCommand ? (embed_string += '\nAdmin: \n') : (embed_string += '');
 
@@ -191,6 +203,8 @@ module.exports = {
         }
 
         // Custom Commands
+        console.log(custom_bool && !commandFound && private)
+        console.log('private: ' + private)
         if (custom_bool && !commandFound && private) {
             const command_files_general = fs.readdirSync('./custom_commands/').filter(file => file.endsWith('.js'));
             !searchForCommand ? (embed_string += '\nCustom: \n') : (embed_string += '');
@@ -232,11 +246,11 @@ module.exports = {
             ? (embed_string += '\nNeed help with a specific command?  Use &help <command name>')
             : (embed_string += '');
 
-        const embed = new Discord.MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor('#BFCDEB')
             .setTitle(constants.botName + ' Commands')
             .setDescription(embed_string);
 
-        messages.send_message(firedb, message.channel, embed);
+        messages.send_message(firedb, message.channel, {embeds: [embed] });
     },
 };

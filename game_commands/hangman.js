@@ -2,6 +2,7 @@ const { Channel } = require('discord.js');
 const randomWord = require('random-word');
 const messages = require('../functions/messages.js');
 const firebasefunctions = require('../functions/firebasefunctions.js');
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
     name: 'hangman',
@@ -27,7 +28,7 @@ module.exports = {
 
         str = answerArray.join(' ');
 
-        const embed = new Discord.MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor('#BFCDEB')
             .setTitle('Hangman')
             .setDescription(
@@ -52,9 +53,9 @@ module.exports = {
                     '⬜ ⬜ ⬜ ⬜ ⬜ ⬜ ' +
                     '\n'
             )
-            .setFooter('Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(','));
+            .setFooter({text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',')});
 
-        let messageEmbed = await messages.send_message(firedb, message.channel, embed);
+        let messageEmbed = await messages.send_message(firedb, message.channel, {embeds: [embed] });
 
         const filter = m =>
             [
@@ -114,7 +115,7 @@ module.exports = {
                 if (found === false) wrong++;
 
                 if (wrong === 0) {
-                    const newEmbed = new Discord.MessageEmbed()
+                    const newEmbed = new EmbedBuilder()
                         .setDescription(
                             '⬜ ⬜ ⬜ ⬜ ⬜ ' +
                                 '\n' +
@@ -136,12 +137,12 @@ module.exports = {
                                 '\n' +
                                 '⬜ ⬜ ⬜ ⬜ ⬜ ⬜ '
                         )
-                        .setFooter('Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(','));
-                    messageEmbed.edit(newEmbed);
+                        .setFooter({text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',')});
+                    messageEmbed.edit({ embeds: [newEmbed] });
                 }
 
                 if (wrong === 1) {
-                    const newEmbed = new Discord.MessageEmbed()
+                    const newEmbed = new EmbedBuilder()
                         .setDescription(
                             '⬜ ⬜ ⬜ ⬜ ⬜ ' +
                                 '\n' +
@@ -163,10 +164,10 @@ module.exports = {
                                 '\n' +
                                 '⬜ ⬜ ⬜ ⬜ ⬜ ⬜ '
                         )
-                        .setFooter('Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(','));
-                    messageEmbed.edit(newEmbed);
+                        .setFooter({text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',')});
+                    messageEmbed.edit({ embeds: [newEmbed] });
                 } else if (wrong === 2) {
-                    const newEmbed = new Discord.MessageEmbed()
+                    const newEmbed = new EmbedBuilder()
                         .setDescription(
                             '⬜ ⬜ ⬜ ⬜ ⬜ ' +
                                 '\n' +
@@ -188,10 +189,10 @@ module.exports = {
                                 '\n' +
                                 '⬜ ⬜ ⬜ ⬜ ⬜ ⬜ '
                         )
-                        .setFooter('Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(','));
-                    messageEmbed.edit(newEmbed);
+                        .setFooter({text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',')});
+                    messageEmbed.edit({ embeds: [newEmbed] });
                 } else if (wrong === 3) {
-                    const newEmbed = new Discord.MessageEmbed()
+                    const newEmbed = new EmbedBuilder()
                         .setDescription(
                             '⬜ ⬜ ⬜ ⬜ ⬜ ' +
                                 '\n' +
@@ -213,10 +214,10 @@ module.exports = {
                                 '\n' +
                                 '⬜ ⬜ ⬜ ⬜ ⬜ ⬜ '
                         )
-                        .setFooter('Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(','));
-                    messageEmbed.edit(newEmbed);
+                        .setFooter({text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',')});
+                    messageEmbed.edit({ embeds: [newEmbed] });
                 } else if (wrong === 4) {
-                    const newEmbed = new Discord.MessageEmbed()
+                    const newEmbed = new EmbedBuilder()
                         .setDescription(
                             '⬜ ⬜ ⬜ ⬜ ⬜ ' +
                                 '\n' +
@@ -238,10 +239,10 @@ module.exports = {
                                 '\n' +
                                 '⬜ ⬜ ⬜ ⬜ ⬜ ⬜ '
                         )
-                        .setFooter('Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(','));
-                    messageEmbed.edit(newEmbed);
+                        .setFooter({text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',')});
+                    messageEmbed.edit({ embeds: [newEmbed] });
                 } else if (wrong === 5) {
-                    const newEmbed = new Discord.MessageEmbed()
+                    const newEmbed = new EmbedBuilder()
                         .setDescription(
                             '⬜ ⬜ ⬜ ⬜ ⬜ ' +
                                 '\n' +
@@ -263,10 +264,10 @@ module.exports = {
                                 '\n' +
                                 '⬜ ⬜ ⬜ ⬜ ⬜ ⬜ '
                         )
-                        .setFooter('Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(','));
-                    messageEmbed.edit(newEmbed);
+                        .setFooter({text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',')});
+                    messageEmbed.edit({ embeds: [newEmbed] });
                 } else if (wrong === 6) {
-                    const newEmbed = new Discord.MessageEmbed()
+                    const newEmbed = new EmbedBuilder()
                         .setDescription(
                             '⬜ ⬜ ⬜ ⬜ ⬜ ' +
                                 '\n' +
@@ -288,8 +289,8 @@ module.exports = {
                                 '\n' +
                                 '⬜ ⬜ ⬜ ⬜ ⬜ ⬜ '
                         )
-                        .setFooter('Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(','));
-                    messageEmbed.edit(newEmbed);
+                        .setFooter({text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',')});
+                    messageEmbed.edit({ embeds: [newEmbed] });
                     messages.send_message(
                         firedb,
                         message.channel,

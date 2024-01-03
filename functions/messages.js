@@ -20,7 +20,7 @@ async function send_reply(firedb, message, content) {
 
     try {
         await firebasefunctions.IncrementMessageSent(firedb, 1);
-        return message.lineReply(content);
+        return message.channel.send({content, reply: {messageReference: message.id}})
     } catch (error) {
         console.error(error);
     }

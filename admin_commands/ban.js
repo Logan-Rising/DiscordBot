@@ -1,6 +1,7 @@
 const messages = require('../functions/messages.js');
 const firebasefunctions = require('../functions/firebasefunctions.js');
 const banfunction = require('../functions/customfunctions.js');
+const { PermissionsBitField } = require('discord.js');
 
 module.exports = {
     name: 'ban',
@@ -10,7 +11,7 @@ module.exports = {
     syntax: '&ban <@user or user id>',
     async execute(client, message, args, Discord, firedb) {
         await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
-        if (message.member.hasPermission('BAN_MEMBERS') && !message.member.bot) {
+        if (await message.member.permissions.has(PermissionsBitField.Flags.BanMembers) && !message.member.bot) {
             const green_check = '✅';
             const red_x = '❌';
             let member = message.mentions.users.first();
@@ -47,7 +48,8 @@ module.exports = {
                 switch (reaction.emoji.name) {
                     case green_check:
                         memberTarget.ban();
-                        banfunction.onKickBan(memberTarget.user.tag, message.channel);
+                        messages.send_message(firedb, message.channel, `<@${id}> has been banished`)
+                        banfunction.onKickBan(firedb, memberTarget.user.tag, message.channel);
                         collector.stop();
                         break;
                     default:

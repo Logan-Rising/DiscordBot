@@ -1,5 +1,6 @@
 const messages = require('../functions/messages.js');
 const firebasefunctions = require('../functions/firebasefunctions.js');
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
     name: 'ttt',
@@ -11,17 +12,17 @@ module.exports = {
         await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         const player_1 = message.author.id;
+        const player1_name = message.author.username;
 
         if (!message.mentions.users.first()) {
             return messages.send_message(firedb, message.channel, 'Must play with a user');
         }
 
         const player_2 = message.mentions.users.first().id;
-        var current_player = player_1;
+        const player2_name = message.mentions.users.first().username;
+        let current_player = player_1;
 
-        const channel = message.channel.id;
-
-        var ul, um, ur, ml, mm, mr, bl, bm, br;
+        let ul, um, ur, ml, mm, mr, bl, bm, br;
         ul = um = ur = ml = mm = mr = bl = bm = br = '⬜';
 
         const up_left = '↖️',
@@ -37,19 +38,21 @@ module.exports = {
             o = '⭕',
             placeholder = '⬜';
 
-        var turn = 1;
+        let turn = 1;
 
-        const filter = (reaction, user) =>
+        const reactionCollectorFilter = (reaction, user) =>
             [up_left, up_mid, up_right, mid_left, mid_mid, mid_right, bot_left, bot_mid, bot_right].includes(
                 reaction.emoji.name
             ) && user.id === current_player;
 
-        const embed = new Discord.MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor('#BFCDEB')
             .setTitle('Tic-Tac-Toe')
-            .setDescription(ul + um + ur + '\n' + ml + mm + mr + '\n' + bl + bm + br);
+            .setDescription(
+                ((turn % 2) ? player1_name : player2_name) + '\'s turn\n' + 
+                ul + um + ur + '\n' + ml + mm + mr + '\n' + bl + bm + br);
 
-        let messageEmbed = await messages.send_message(firedb, message.channel, embed);
+        let messageEmbed = await messages.send_message(firedb, message.channel, { embeds: [embed] });
 
         await messageEmbed.react(up_left);
         await messageEmbed.react(up_mid);
@@ -61,7 +64,7 @@ module.exports = {
         await messageEmbed.react(bot_mid);
         await messageEmbed.react(bot_right);
 
-        const collector = messageEmbed.createReactionCollector(filter, { maxEmojis: 9 });
+        const collector = messageEmbed.createReactionCollector({ filter: reactionCollectorFilter, maxEmojis: 9 });
 
         collector.on('collect', (reaction, user) => {
             switch (reaction.emoji.name) {
@@ -175,45 +178,58 @@ module.exports = {
                     break;
             }
 
-            const newEmbed = new Discord.MessageEmbed().setDescription(
+            const newEmbed = new EmbedBuilder()
+            .setColor('#BFCDEB')
+            .setTitle('Tic-Tac-Toe')
+            .setDescription(
+                ((turn % 2) ? player1_name : player2_name) + '\'s turn\n' + 
                 ul + um + ur + '\n' + ml + mm + mr + '\n' + bl + bm + br
             );
-            messageEmbed.edit(newEmbed);
+            messageEmbed.edit({ embeds: [newEmbed] });
 
+            let winner;
             if (ul === um && um === ur && ul != placeholder) {
                 //First row
-                messages.send_message(firedb, message.channel, ul + ' Won');
+                winner = ul;
                 collector.stop();
             } else if (ml === mm && mm === mr && ml != placeholder) {
                 //Second Row
-                messages.send_message(firedb, message.channel, ml + ' Won');
+                winner = ml;
                 collector.stop();
             } else if (bl === bm && bm === br && bl != placeholder) {
                 //Third row
-                messages.send_message(firedb, message.channel, bl + ' Won');
+                winner = bl;
                 collector.stop();
             } else if (ul === ml && ml === bl && ul != placeholder) {
                 //First column
-                messages.send_message(firedb, message.channel, ul + ' Won');
+                winner = ul;
                 collector.stop();
             } else if (um === mm && mm === bm && um != placeholder) {
                 //Second Column
-                messages.send_message(firedb, message.channel, um + ' Won');
+                winner = um;
                 collector.stop();
             } else if (ur === mr && mr === br && ur != placeholder) {
                 //Third Column
-                messages.send_message(firedb, message.channel, ur + ' Won');
+                winner = ur;
                 collector.stop();
             } else if (ul === mm && mm === br && ul != placeholder) {
                 //First Diagonal
-                messages.send_message(firedb, message.channel, ul + ' Won');
+                winner = ul;
                 collector.stop();
             } else if (ur === mm && mm === bl && ur != placeholder) {
-                messages.send_message(firedb, message.channel, ur + ' Won');
+                winner = ur;
                 collector.stop();
             } else if (turn === 10) {
                 messages.send_message(firedb, message.channel, 'It was a tie');
                 collector.stop();
+            }
+
+            if (winner != undefined) {
+                if (winner === x) { // Player 1 won
+                    messages.send_message(firedb, message.channel, `<@${player_1}> Won!`);
+                } else {
+                    messages.send_message(firedb, message.channel, `<@${player_2}> Won!`);
+                }
             }
         });
     },

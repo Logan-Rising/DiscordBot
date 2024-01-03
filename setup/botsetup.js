@@ -52,6 +52,9 @@ const startupMessage = botName + ' Is Online!';
 // Path to suggestions.txt file. Can change to desired directory.
 const suggestionsPath = '../suggestions.txt';
 
+// Whether to include age restricted channels as private channels or not
+const includeAgeRestrictionAsPrivate = false;
+
 module.exports = {
     Image_Permissions,
     Record_Permissions,
@@ -65,6 +68,7 @@ module.exports = {
     kickGifPath,
     startupMessage,
     suggestionsPath,
+    includeAgeRestrictionAsPrivate,
 };
 `;
 

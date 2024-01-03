@@ -1,17 +1,21 @@
-const Discord = require('discord.js');
-require('discord-reply');
-const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
+const { Discord, Client, Collection, Events, GatewayIntentBits } = require('discord.js');
+const client = new Client({
+	intents: [
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.MessageContent,
+		GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessageReactions,
+	],
+});
+
 const app = require('firebase/app');
 const fire = require('firebase/firestore');
 const constants = require('./constants.js');
 const functions = require('./functions/customfunctions.js');
 
-// client.on('ready', function() {
-//     client.user.setUsername(constants.botName);
-// })
-
-client.commands = new Discord.Collection();
-client.events = new Discord.Collection();
+client.commands = new Collection();
+client.events = new Collection();
 
 const firebaseConfig = constants.firebaseConfig;
 
@@ -35,4 +39,6 @@ const db = fire.getFirestore(firebaseApp);
 
 client.login(constants.DISCORD_TOKEN);
 
-functions.onStartup(client);
+client.on('ready', () => {
+    functions.onStartup(client);
+});

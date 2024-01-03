@@ -2,6 +2,7 @@ const messages = require('../functions/messages.js');
 const firebasefunctions = require('../functions/firebasefunctions.js');
 const package = require('../package.json');
 const constants = require('../constants.js');
+const { EmbedBuilder } = require('discord.js');
 module.exports = {
     name: 'dependencies',
     description: 'Returns the packages used in the discord bot',
@@ -17,11 +18,11 @@ module.exports = {
             dependencies_string += `${pkg}:${package.dependencies[pkg]}` + '\n';
         }
 
-        const embed = new Discord.MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor('#BFCDEB')
             .setTitle(constants.botName + ' Dependencies')
             .setDescription(dependencies_string);
 
-        messages.send_message(firedb, message.channel, embed);
+        messages.send_message(firedb, message.channel, { embeds: [embed] });
     },
 };
