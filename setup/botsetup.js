@@ -6,7 +6,10 @@ const fs = require('fs');
 
 /* Initialize constants file. Fill in variable values once initialized. */
 const constantsPath = '../constants.js';
-const constantsContent = `// Ids of users who will have access to addimage and deleteimage commands
+const constantsContent = `// Whether or not to run certain things based on if bot is in debug or not
+const debug = false;
+
+// Ids of users who will have access to addimage and deleteimage commands
 // Leave blank for all users to be able to use
 const Image_Permissions = [];
 
