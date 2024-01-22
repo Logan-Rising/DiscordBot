@@ -1,16 +1,16 @@
 const fs = require('fs');
 const messages = require('../functions/messages.js');
-const firebasefunctions = require('../functions/firebasefunctions.js');
+const databasefunctions = require('../functions/databasefunctions.js');
 const constants = require('../constants.js');
 
 module.exports = {
-    name: 'initializenewcommand',
+    name: 'initializenewimagecommand',
     users: [constants.ownerId],
     servers: [],
     description: 'Add a new command to the bot',
     syntax: '&initializenewimagecommand <command name> <type>',
     async execute(client, message, args, Discord, firedb) {
-        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         if (!args[0] || !args[1] || args[2]) {
             messages.send_reply(firedb, message, 'Must input name and type. Syntax: ' + this.syntax);
@@ -21,7 +21,7 @@ module.exports = {
         var type = args[1].toLowerCase();
 
         // Check if command name already exists in the database
-        if ((await firebasefunctions.GetImageUsage(name, firedb)) !== -1) {
+        if ((await databasefunctions.GetImageUsage(name, firedb)) !== -1) {
             messages.send_reply(firedb, message, 'Name already exists: Database');
             return;
         }
@@ -48,7 +48,7 @@ module.exports = {
         // All conditional criteria is met so go ahead and write the file
 
         const message_string =
-            "const constants = require('../functions/firebasefunctions.js');" +
+            "const constants = require('../functions/databasefunctions.js');" +
             '\n' +
             '\n' +
             'module.exports = {' +
@@ -69,7 +69,7 @@ module.exports = {
             '\n' +
             '    async execute(client, message, args, Discord, firedb) {' +
             '\n' +
-            '        firebasefunctions.IncrementImageUsage(this.name, firedb, 1);' +
+            '        databasefunctions.IncrementImageUsage(this.name, firedb, 1);' +
             '\n' +
             '\n' +
             '        images.GetImage(message, this.name, firedb);' +
@@ -79,7 +79,7 @@ module.exports = {
             '};' +
             '\n';
 
-        const success = await firebasefunctions.InitializeImage(name, firedb);
+        const success = await databasefunctions.InitializeImage(name, firedb);
 
         if (!success) {
             messages.send_reply(firedb, message, 'Failed to initialize ' + name + ' in the database');

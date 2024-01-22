@@ -1,7 +1,7 @@
 /* Windows Only */
 
 const { exec } = require('child_process');
-const firebasefunctions = require('../functions/firebasefunctions.js');
+const databasefunctions = require('../functions/databasefunctions.js');
 const constants = require('../constants.js');
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
     servers: [],
     syntax: '&turnoffcomputer',
     async execute(client, message, args, Discord, firedb) {
-        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         if (process.platform === 'win32') exec('shutdown /s');
         else return;

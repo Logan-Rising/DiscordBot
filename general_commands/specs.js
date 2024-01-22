@@ -1,5 +1,5 @@
 const messages = require('../functions/messages.js');
-const firebasefunctions = require('../functions/firebasefunctions.js');
+const databasefunctions = require('../functions/databasefunctions.js');
 const constants = require('../constants.js');
 const { EmbedBuilder } = require('discord.js');
 
@@ -10,7 +10,7 @@ module.exports = {
     servers: [],
     syntax: '&specs',
     async execute(client, message, args, Discord, firedb) {
-        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         if (!constants.specs.specsString || !constants.specs.specsPhoto || !constants.botName) {
             return;

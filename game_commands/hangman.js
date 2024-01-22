@@ -1,7 +1,7 @@
 const { Channel } = require('discord.js');
 const randomWord = require('random-word');
 const messages = require('../functions/messages.js');
-const firebasefunctions = require('../functions/firebasefunctions.js');
+const databasefunctions = require('../functions/databasefunctions.js');
 const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
     servers: [],
     syntax: '&hangman',
     async execute(client, message, args, Discord, firedb) {
-        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         let word = randomWord();
         var answerArray = new Array(word.length);
@@ -314,10 +314,10 @@ module.exports = {
                 }
                 found = false;
 
-                m.delete();
+                messages.delete_message(firedb, m);
             } else {
                 messages.send_message(firedb, message.channel, 'You have already guessed that letter');
-                m.delete();
+                messages.delete_message(firedb, m);
             }
         });
     },

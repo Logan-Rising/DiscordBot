@@ -13,6 +13,7 @@ const app = require('firebase/app');
 const fire = require('firebase/firestore');
 const constants = require('./constants.js');
 const functions = require('./functions/customfunctions.js');
+const databasefunctions = require('./functions/databasefunctions.js');
 
 client.commands = new Collection();
 client.events = new Collection();
@@ -41,4 +42,8 @@ client.login(constants.DISCORD_TOKEN);
 
 client.on('ready', () => {
     functions.onStartup(client);
+
+    if (!constants.debug) {
+        databasefunctions.SyncCachedServerFilterSettings(db);
+    }
 });

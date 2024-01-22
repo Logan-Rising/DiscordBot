@@ -1,5 +1,5 @@
 const messages = require('../functions/messages.js');
-const firebasefunctions = require('../functions/firebasefunctions.js');
+const databasefunctions = require('../functions/databasefunctions.js');
 const constants = require('../constants.js');
 
 module.exports = {
@@ -9,9 +9,9 @@ module.exports = {
     servers: [],
     syntax: '&getimageusage <command name>',
     async execute(client, message, args, Discord, firedb) {
-        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
-        const count = await firebasefunctions.GetImageUsage(args[0], firedb);
+        const count = await databasefunctions.GetImageUsage(args[0], firedb);
 
         if (count === -1) {
             messages.send_reply(firedb, message, 'Databse image element does not exist');

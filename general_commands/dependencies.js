@@ -1,5 +1,5 @@
 const messages = require('../functions/messages.js');
-const firebasefunctions = require('../functions/firebasefunctions.js');
+const databasefunctions = require('../functions/databasefunctions.js');
 const package = require('../package.json');
 const constants = require('../constants.js');
 const { EmbedBuilder } = require('discord.js');
@@ -10,7 +10,7 @@ module.exports = {
     servers: [],
     syntax: '&dependencies',
     async execute(client, message, args, Discord, firedb) {
-        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         let dependencies_string = '';
 

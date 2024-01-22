@@ -1,6 +1,6 @@
 const download = require('image-downloader');
 const messages = require('../functions/messages.js');
-const firebasefunctions = require('../functions/firebasefunctions.js');
+const databasefunctions = require('../functions/databasefunctions.js');
 const constants = require('../constants.js');
 
 module.exports = {
@@ -10,13 +10,13 @@ module.exports = {
     servers: constants.Image_Servers,
     syntax: '&addimage <name>',
     async execute(client, message, args, Discord, firedb) {
-        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         var name = args[0];
 
         var total = 0;
 
-        var num = await firebasefunctions.GetImageIndex(name, firedb);
+        var num = await databasefunctions.GetImageIndex(name, firedb);
 
         // Name is not in the database (not been initialized)
         if (num === undefined) {
@@ -52,6 +52,6 @@ module.exports = {
             messages.send_message(firedb, message.channel, 'Successfully saved ' + total + ' images!');
         }
 
-        await firebasefunctions.SetImageIndex(name, num, firedb);
+        await databasefunctions.SetImageIndex(name, num, firedb);
     },
 };

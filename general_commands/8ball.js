@@ -1,5 +1,5 @@
 const messages = require('../functions/messages.js');
-const firebasefunctions = require('../functions/firebasefunctions.js');
+const databasefunctions = require('../functions/databasefunctions.js');
 module.exports = {
     name: '8ball',
     description: 'Recieve a randomly generated 8-ball phrase in response to a message',
@@ -7,7 +7,7 @@ module.exports = {
     servers: [],
     syntax: '&8ball <message>',
     async execute(client, message, args, Discord, firedb) {
-        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         var eight_ball = [
             'It is certain',

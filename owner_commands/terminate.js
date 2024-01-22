@@ -1,6 +1,6 @@
 /* Windows Only */
 
-const firebasefunctions = require('../functions/firebasefunctions.js');
+const databasefunctions = require('../functions/databasefunctions.js');
 const constants = require('../constants.js');
 
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
     servers: [],
     syntax: '&terminate',
     async execute(client, message, args, Discord, firedb) {
-        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         if (process.platform === 'win32') process.exit(1);
         else return;

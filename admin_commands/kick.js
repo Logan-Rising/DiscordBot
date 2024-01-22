@@ -1,5 +1,5 @@
 const messages = require('../functions/messages.js');
-const firebasefunctions = require('../functions/firebasefunctions.js');
+const databasefunctions = require('../functions/databasefunctions.js');
 const kickfunction = require('../functions/customfunctions.js');
 const { PermissionsBitField } = require('discord.js');
 
@@ -10,7 +10,7 @@ module.exports = {
     servers: [],
     syntax: '&kick <@user or user id>',
     async execute(client, message, args, Discord, firedb) {
-        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         if (await message.member.permissions.has(PermissionsBitField.Flags.KickMembers) && !message.member.bot) {
             const green_check = '✅';
@@ -34,7 +34,7 @@ module.exports = {
             );
             member = kickMessage.mentions.users.first();
             if (!member) {
-                kickMessage.delete();
+                messages.delete_message(firedb, kickMessage);
                 return messages.send_message(firedb, message.channel, 'That Is An Invalid User.');
             }
             const memberTarget = await message.guild.members.cache.get(member.id);

@@ -1,5 +1,9 @@
 const fire = require('firebase/firestore');
 
+// Local cache json database
+const JSONdb = require('simple-json-db');
+const db = new JSONdb('./events/guild/server_message_filter_cache.json');
+
 async function CheckIfImageNameExists(firedb, name) {
     try {
         const docRef = await fire.doc(firedb, 'images', name);
@@ -248,6 +252,163 @@ async function IncrementMessageSent(firedb, number) {
     }
 }
 
+async function IncrementMessagesDeleted(firedb, number) {
+    try {
+        const docRef = await fire.doc(firedb, 'messaging', 'messages_deleted');
+        const docSnap = await fire.getDoc(docRef);
+
+        const currentCount = docSnap.data().index;
+
+        await fire.setDoc(docRef, { index: currentCount + number });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function SyncCachedServerFilterSettings(firedb) {
+    try {
+        const servers = fire.query(fire.collection(firedb, 'servers'));
+
+        const querySnapshot = await fire.getDocs(servers);
+        querySnapshot.forEach((doc) => {
+          const serverId = doc.id;
+          const serverFilterInfo = doc.data();
+          const serverFilterStatus = serverFilterInfo.filter_status;
+          const serverFilteredWords = serverFilterInfo.filtered_words;
+
+          const serverInfoObject = {
+            filter_status: serverFilterStatus,
+            filtered_words: serverFilteredWords,
+          };
+
+          db.set(serverId, serverInfoObject);
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function GetServerFilterSetting(serverId) {
+    const cacheServerFilterInfo = await db.get(serverId);
+    return cacheServerFilterInfo.filter_status;
+}
+
+async function SetServerFilterSetting(firedb, serverId, setting) {
+    let success = true;
+
+    try {
+        const cacheServerFilteredWords = await GetServerFilterList(serverId);
+
+        const serverFilterInfo = {
+            filter_status: setting,
+            filtered_words: cacheServerFilteredWords,
+        };
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverFilterInfo);
+
+        db.set(serverId, serverFilterInfo);
+    } catch (error) {
+        console.log(error);
+        success = false;
+    }
+    return success;
+}
+
+async function GetServerFilterList(serverId) {
+    const cacheServerFilterInfo = await db.get(serverId);
+    return cacheServerFilterInfo.filtered_words;
+}
+
+async function SetServerFilterList(firedb, serverId, list) {
+    let success = true;
+
+    try {
+        const cacheServerFilterSetting = await GetServerFilterSetting(serverId);
+
+        const serverFilterInfo = {
+            filter_status: cacheServerFilterSetting,
+            filtered_words: list,
+        };
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverFilterInfo);
+
+        db.set(serverId, serverFilterInfo);
+    } catch (error) {
+        console.log(error);
+        success = false;
+    }
+    return success;
+}
+
+async function RemoveServerFilteredWord(firedb, serverId, word) {
+    let cacheServerFilteredWords = await GetServerFilterList(serverId);
+
+    if(cacheServerFilteredWords.includes(word)) {
+        cacheServerFilteredWords = cacheServerFilteredWords.filter(e => e !== word);
+        const cacheServerFilterSetting = await GetServerFilterSetting(serverId);
+
+        const serverFilterInfo = {
+            filter_status: cacheServerFilterSetting,
+            filtered_words: cacheServerFilteredWords,
+        };
+
+        db.set(serverId, serverFilterInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverFilterInfo);
+    }
+    else {
+        return;
+    }
+}
+
+async function AddServerFilteredWord(firedb, serverId, word) {
+    let cacheServerFilteredWords = await GetServerFilterList(serverId);
+
+    if(cacheServerFilteredWords.includes(word))
+        return;
+    else {
+        cacheServerFilteredWords.push(word);
+        const cacheServerFilterSetting = await GetServerFilterSetting(serverId);
+
+        const serverFilterInfo = {
+            filter_status: cacheServerFilterSetting,
+            filtered_words: cacheServerFilteredWords,
+        };
+
+        db.set(serverId, serverFilterInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverFilterInfo);
+    }
+}
+
+async function GetServerFilterInfo(serverId) {
+    return db.get(serverId);
+}
+
+async function InitializeNewServerFilter(firedb, serverId) {
+    let success = true;
+
+    try {
+        const serverFilterInfo = {
+            filter_status: false,
+            filtered_words: [],
+        };
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverFilterInfo);
+
+        db.set(serverId, serverFilterInfo);
+    } catch (error) {
+        console.log(error);
+        success = false;
+    }
+    return success;
+}
+
 module.exports = {
     CheckIfImageNameExists,
     GetImageIndex,
@@ -267,4 +428,14 @@ module.exports = {
     GetMessagesSent,
     IncrementMessageRead,
     IncrementMessageSent,
+    IncrementMessagesDeleted,
+    SyncCachedServerFilterSettings,
+    SetServerFilterSetting,
+    AddServerFilteredWord,
+    RemoveServerFilteredWord,
+    GetServerFilterList,
+    GetServerFilterSetting,
+    SetServerFilterList,
+    GetServerFilterInfo,
+    InitializeNewServerFilter,
 };

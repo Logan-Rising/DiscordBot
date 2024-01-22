@@ -1,5 +1,5 @@
 const messages = require('../functions/messages.js');
-const firebasefunctions = require('../functions/firebasefunctions.js');
+const databasefunctions = require('../functions/databasefunctions.js');
 const constants = require('../constants.js');
 
 module.exports = {
@@ -9,9 +9,9 @@ module.exports = {
     servers: [],
     syntax: '&getcommandusage <command name>',
     async execute(client, message, args, Discord, firedb) {
-        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
-        const count = await firebasefunctions.GetCommandCount(args[0], firedb);
+        const count = await databasefunctions.GetCommandCount(args[0], firedb);
 
         if (count === -1) {
             messages.send_reply(firedb, message, 'Databse command element does not exist');

@@ -1,6 +1,6 @@
 const fs = require('fs');
 const messages = require('../functions/messages.js');
-const firebasefunctions = require('../functions/firebasefunctions.js');
+const databasefunctions = require('../functions/databasefunctions.js');
 const permissions = require('../functions/permissionscheck.js');
 const constants = require('../constants.js');
 const { PermissionsBitField } = require('discord.js');
@@ -13,7 +13,7 @@ module.exports = {
     servers: [],
     syntax: '&help [command type or command name]',
     async execute(client, message, args, Discord, firedb) {
-        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         let embed_string = 'Prefix: &\n';
 
@@ -203,8 +203,6 @@ module.exports = {
         }
 
         // Custom Commands
-        console.log(custom_bool && !commandFound && private)
-        console.log('private: ' + private)
         if (custom_bool && !commandFound && private) {
             const command_files_general = fs.readdirSync('./custom_commands/').filter(file => file.endsWith('.js'));
             !searchForCommand ? (embed_string += '\nCustom: \n') : (embed_string += '');

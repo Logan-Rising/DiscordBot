@@ -9,3 +9,4 @@ script.bat
 /functions/customfunctions.js
 output.gif
 suggestions.txt
+/events/guild/server_message_filter_cache.json

@@ -20,6 +20,7 @@
         "prettier": "^2.8.8",
         "quickchart-js": "^3.1.0",
         "random-word": "^2.0.0",
-        "request": "^2.88.2"
+        "request": "^2.88.2",
+        "simple-json-db": "^2.0.0"
     }
 }

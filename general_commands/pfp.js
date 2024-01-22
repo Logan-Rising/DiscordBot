@@ -1,5 +1,5 @@
 const messages = require('../functions/messages.js');
-const firebasefunctions = require('../functions/firebasefunctions.js');
+const databasefunctions = require('../functions/databasefunctions.js');
 
 module.exports = {
     name: 'pfp',
@@ -8,7 +8,7 @@ module.exports = {
     servers: [],
     syntax: '&pfp <@user>',
     async execute(client, message, args, Discord, firedb) {
-        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         const member = message.mentions.users.first();
         if (member) {

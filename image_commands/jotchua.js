@@ -1,4 +1,4 @@
-const firebasefunctions = require('../functions/firebasefunctions.js');
+const databasefunctions = require('../functions/databasefunctions.js');
 const images = require('../functions/images.js');
 
 module.exports = {
@@ -8,7 +8,7 @@ module.exports = {
     servers: [],
     syntax: '&jotchua',
     async execute(client, message, args, Discord, firedb) {
-        firebasefunctions.IncrementImageUsage(this.name, firedb, 1);
+        databasefunctions.IncrementImageUsage(this.name, firedb, 1);
 
         images.GetImage(message, this.name, firedb);
     },

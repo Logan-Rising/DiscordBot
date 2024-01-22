@@ -1,5 +1,5 @@
 const messages = require('../functions/messages.js');
-const firebasefunctions = require('../functions/firebasefunctions.js');
+const databasefunctions = require('../functions/databasefunctions.js');
 const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
     servers: [],
     syntax: '&ttt <@user>',
     async execute(client, message, args, Discord, firedb) {
-        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         const player_1 = message.author.id;
         const player1_name = message.author.username;

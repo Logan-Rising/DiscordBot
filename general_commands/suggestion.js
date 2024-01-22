@@ -1,5 +1,5 @@
 const fs = require('fs');
-const firebasefunctions = require('../functions/firebasefunctions.js');
+const databasefunctions = require('../functions/databasefunctions.js');
 const constants = require('../constants.js');
 
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
     servers: [],
     syntax: '&suggestion <request>',
     async execute(client, message, args, Discord, firedb) {
-        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         var message_string = '\n' + message.author.username + ', ' + message.guild.name + ': ';
 

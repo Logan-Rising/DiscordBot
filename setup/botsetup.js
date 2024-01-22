@@ -34,6 +34,9 @@ const firebaseConfig = {
 // Name of the discord bot
 const botName = '';
 
+// This bot's discord id
+const botId = '';
+
 // Discord bot token from the developer portal
 const DISCORD_TOKEN = 0;
 
@@ -55,6 +58,9 @@ const suggestionsPath = '../suggestions.txt';
 // Whether to include age restricted channels as private channels or not
 const includeAgeRestrictionAsPrivate = false;
 
+// Default list of filtered words in messages
+const defaultBannedWordList = [];
+
 module.exports = {
     Image_Permissions,
     Record_Permissions,
@@ -62,6 +68,7 @@ module.exports = {
     specs,
     firebaseConfig,
     botName,
+    botId,
     DISCORD_TOKEN,
     imagesFilePath,
     ownerId,
@@ -126,3 +133,7 @@ fs.access(customCommands, error => {
         });
     }
 });
+
+// Create server message filter cache
+var createStream = fs.createWriteStream("./events/guild/server_message_filter_cache.json");
+createStream.end();

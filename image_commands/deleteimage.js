@@ -1,6 +1,6 @@
 const fs = require('fs');
 const messages = require('../functions/messages.js');
-const firebasefunctions = require('../functions/firebasefunctions.js');
+const databasefunctions = require('../functions/databasefunctions.js');
 const constants = require('../constants.js');
 
 module.exports = {
@@ -10,11 +10,11 @@ module.exports = {
     servers: constants.Image_Servers,
     syntax: '&deleteimage <name> [number to delete]',
     async execute(client, message, args, Discord, firedb) {
-        await firebasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
 
         var name = args[0];
 
-        if (!(await firebasefunctions.CheckIfImageNameExists(firedb, name))) {
+        if (!(await databasefunctions.CheckIfImageNameExists(firedb, name))) {
             return;
         }
 
@@ -26,7 +26,7 @@ module.exports = {
         else counter = parseInt(args[1]);
 
         let return_counter = counter;
-        var num = await firebasefunctions.GetImageIndex(name, firedb);
+        var num = await databasefunctions.GetImageIndex(name, firedb);
         console.log('num: ', num);
 
         if (num === -1 || Number.isNaN(num)) {
@@ -49,7 +49,7 @@ module.exports = {
             console.log(path + ' deleted'); // Log image deleted
         }
 
-        firebasefunctions.SetImageIndex(name, num, firedb);
+        databasefunctions.SetImageIndex(name, num, firedb);
         messages.send_message(firedb, message.channel, 'Successfully deleted ' + return_counter + ' images!');
     },
 };
