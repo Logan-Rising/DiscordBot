@@ -12,7 +12,7 @@ module.exports = {
 
         const word = args[0];
 
-        await databasefunctions.AddServerFilteredWord(firedb, message.guild.id, word);
+        await databasefunctions.AddServerFilteredWord(firedb, message.guild.id, word.toLowerCase());
 
         messagefunctions.send_reply(firedb, message, 'Successfully added word to filter list');
 

@@ -7,7 +7,7 @@ async function FilterMessage(firedb, message) { // Server exists in filter datab
         if (await databasefunctions.GetServerFilterSetting(message.guild.id)) {
             const serverFilteredWordList = await databasefunctions.GetServerFilterList(message.guild.id);
 
-            const messageString = message.content;
+            const messageString = message.content.toLowerCase().split(" ").join("");
 
             for (i = 0; i < serverFilteredWordList.length; i++) {
                 if (messageString.includes(serverFilteredWordList[i])) {
