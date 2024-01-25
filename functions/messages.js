@@ -1,4 +1,5 @@
 const databasefunctions = require('./databasefunctions.js');
+const discordfunctions = require('./discordfunctions.js');
 
 async function send_message(firedb, channel, content) {
     if (!channel) {
@@ -20,6 +21,10 @@ async function send_reply(firedb, message, content) {
 
     try {
         await databasefunctions.IncrementMessageSent(firedb, 1);
+        
+        if(!await discordfunctions.GetMessageWithMessage(message.id, message))
+            return;
+
         return message.channel.send({content, reply: {messageReference: message.id}})
     } catch (error) {
         console.error(error);

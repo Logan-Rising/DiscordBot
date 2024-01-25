@@ -15,9 +15,14 @@ async function ReactToMessage(message, emoji) {
     return await message.react(emoji);
 }
 
+async function GetMessageWithMessage(MESSAGE_ID, message) {
+    return await message.channel.messages.fetch(MESSAGE_ID)
+}
+
 module.exports = {
     GetChannel,
     GetUser,
     GetServerCount,
     ReactToMessage,
+    GetMessageWithMessage,
 };
