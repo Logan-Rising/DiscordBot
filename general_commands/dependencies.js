@@ -1,7 +1,7 @@
 const messages = require('../functions/messages.js');
 const databasefunctions = require('../functions/databasefunctions.js');
 const package = require('../package.json');
-const constants = require('../constants.js');
+const constants = require('../constants/constants.js');
 const { EmbedBuilder } = require('discord.js');
 module.exports = {
     name: 'dependencies',

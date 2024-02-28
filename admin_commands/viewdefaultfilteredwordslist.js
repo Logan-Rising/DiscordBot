@@ -1,6 +1,6 @@
 const databasefunctions = require('../functions/databasefunctions.js');
 const messagefunctions = require('../functions/messages.js');
-const constants = require('../constants.js');
+const constants = require('../constants/constants.js');
 
 module.exports = {
     name: 'viewdefaultfilteredwordslist',

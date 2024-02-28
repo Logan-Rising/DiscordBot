@@ -1,7 +1,7 @@
 const fs = require('fs');
 const messages = require('../functions/messages.js');
 const databasefunctions = require('../functions/databasefunctions.js');
-const constants = require('../constants.js');
+const constants = require('../constants/constants.js');
 
 module.exports = {
     name: 'initializenewcommand',
@@ -43,6 +43,9 @@ module.exports = {
                 break;
             case 'custom':
                 path = './custom_commands/' + name + '.js';
+                break;
+            case 'owner':
+                path = './owner_commands/' + name + '.js';
                 break;
             default:
                 messages.send_reply(

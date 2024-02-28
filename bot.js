@@ -11,9 +11,10 @@ const client = new Client({
 
 const app = require('firebase/app');
 const fire = require('firebase/firestore');
-const constants = require('./constants.js');
+const constants = require('./constants/constants.js');
 const functions = require('./functions/customfunctions.js');
 const databasefunctions = require('./functions/databasefunctions.js');
+const reactionmessagefunctions = require('./functions/reactionmessagefunctions.js');
 
 client.commands = new Collection();
 client.events = new Collection();
@@ -40,10 +41,11 @@ const db = fire.getFirestore(firebaseApp);
 
 client.login(constants.DISCORD_TOKEN);
 
-client.on('ready', () => {
+client.on('ready', async () => {
     functions.onStartup(client);
 
     if (!constants.debug) {
-        databasefunctions.SyncCachedServerFilterSettings(db);
+        await databasefunctions.SyncCachedServerSettings(db);
+        await reactionmessagefunctions.SetupOldReactionMessages(db, client);
     }
 });

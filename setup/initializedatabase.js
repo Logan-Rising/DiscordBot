@@ -1,5 +1,5 @@
 const databasefunctions = require('../functions/databasefunctions.js');
-const constants = require('../constants.js');
+const constants = require('../constants/constants.js');
 
 const firebaseConfig = constants.firebaseConfig;
 
@@ -86,3 +86,6 @@ const firedb = fire.getFirestore(firebaseApp);
 (await databasefunctions.SetMessagesSent(firedb, 0))
     ? console.log('messages_sent initialized successfully')
     : console.log('messages_sent initialization failed');
+(await databasefunctions.SetInteractionCount(firedb, 0))
+    ? console.log('interactions_received initialized successfully')
+    : console.log('interactions_received initialization failed');

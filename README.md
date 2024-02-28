@@ -34,7 +34,7 @@ Navigate to the `src/setup` directory in Command Prompt (Windows) or Terminal (m
 node botsetup.js
 ```
 
-Once the script is finished, find the `constant.js` file located in `src/constants.js` and fill in all of the variables as described in the comments.
+Once the script is finished, find the `constant.js` file located in `src/constants/constants.js` and fill in all of the variables as described in the comments.
 
 Once the `constants.js` file is filled in, run the following command, ensuring the firebaseConfig is correct from your Google Firebase project.
 

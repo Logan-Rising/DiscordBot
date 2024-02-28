@@ -1,6 +1,6 @@
 const databasefunctions = require('./databasefunctions.js');
 const messagefunctions = require('./messages.js');
-const constants = require('../constants.js');
+const constants = require('../constants/constants.js');
 
 async function FilterMessage(firedb, message) { // Server exists in filter database
     if (await databasefunctions.GetServerFilterInfo(message.guild.id)) {
@@ -19,7 +19,7 @@ async function FilterMessage(firedb, message) { // Server exists in filter datab
             }
         }
     } else {    // Server does not exist in filter database
-        databasefunctions.InitializeNewServerFilter(firedb, message.guild.id);
+        databasefunctions.InitializeNewServer(firedb, message.guild.id);
     }
 }
 

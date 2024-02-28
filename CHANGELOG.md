@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## v3.0
+
+### Added
+
+-   ...
+
+### Changed
+
+-   ...
+
+### Removed
+
+-   ...
+
 ## v2.0
 
 ### Added
@@ -17,7 +31,7 @@
 
 -   Changed database from local json to firebase to track command usage and image management.
 -   Separated shared functions into separate files.
--   Changed all constants to be pulled from a constants.js file in src/constants.js for the code base to be run with different instances and reusability of code for other bots.
+-   Changed all constants to be pulled from a constants.js file in src/constants/constants.js for the code base to be run with different instances and reusability of code for other bots.
 -   Changed help command to work with new folder layout.
 -   Updated README file for bot initialization.
 -   Changed commands to have users[] and servers[] arrays for permissions instead of if statements inside the execute() function.

@@ -4,7 +4,7 @@ const customfunctions = require('../../functions/customfunctions.js');
 const messagefunctions = require('../../functions/messages.js');
 const messagefilter = require('../../functions/messagefilter.js');
 const { PermissionsBitField } = require('discord.js');
-const constants = require('../../constants.js');
+const constants = require('../../constants/constants.js');
 
 module.exports = async (Discord, client, firedb, message) => {
     const prefix = '&';

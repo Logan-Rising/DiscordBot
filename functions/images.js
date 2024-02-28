@@ -1,6 +1,6 @@
 const databasefunctions = require('../functions/databasefunctions.js');
 const messages = require('../functions/messages.js');
-const constants = require('../constants');
+const constants = require('../constants/constants.js');
 
 async function GetImage(message, name, firedb) {
     let num = await databasefunctions.GetImageIndex(name, firedb);

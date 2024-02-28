@@ -14,6 +14,18 @@ async function send_message(firedb, channel, content) {
     }
 }
 
+async function edit_message(message, content) {
+    if (!message) {
+        console.log('messages.js: Must include message to edit');
+    }
+
+    try {
+        return await message.edit(content);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 async function send_reply(firedb, message, content) {
     if (!message) {
         console.log('messages.js: Must include message to reply to');
@@ -25,7 +37,7 @@ async function send_reply(firedb, message, content) {
         if(!await discordfunctions.GetMessageWithMessage(message.id, message))
             return;
 
-        return message.channel.send({content, reply: {messageReference: message.id}})
+        return message.channel.send({content, reply: {messageReference: message.id}});
     } catch (error) {
         console.error(error);
     }
@@ -44,4 +56,4 @@ async function delete_message(firedb, message) {
     }
 }
 
-module.exports = { send_message, send_reply, delete_message };
+module.exports = { send_message, edit_message, send_reply, delete_message };

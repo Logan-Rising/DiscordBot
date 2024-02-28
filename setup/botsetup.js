@@ -5,7 +5,7 @@
 const fs = require('fs');
 
 /* Initialize constants file. Fill in variable values once initialized. */
-const constantsPath = '../constants.js';
+const constantsPath = '../constants/constants.js';
 const constantsContent = `// Whether or not to run certain things based on if bot is in debug or not
 const debug = false;
 
@@ -40,6 +40,9 @@ const botName = '';
 // This bot's discord id
 const botId = '';
 
+// Bot's application id from developer portal
+const CLIENT_ID = '';
+
 // Discord bot token from the developer portal
 const DISCORD_TOKEN = 0;
 
@@ -72,6 +75,7 @@ module.exports = {
     firebaseConfig,
     botName,
     botId,
+    CLIENT_ID,
     DISCORD_TOKEN,
     imagesFilePath,
     ownerId,
@@ -93,7 +97,7 @@ const customFunctionsPath = '../functions/customfunctions.js';
 const customFunctionsContent = `const fs = require('fs');
 const canvasGif = require('canvas-gif');
 const path = require('path');
-const constants = require('../constants.js');
+const constants = require('../constants/constants.js');
 
 // Edit a gif when a user is kicked
 async function onKickBan(name, channel) {
