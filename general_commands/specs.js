@@ -10,7 +10,7 @@ module.exports = {
     servers: [],
     syntax: '&specs',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
+        await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
         if (!constants.specs.specsString || !constants.specs.specsPhoto || !constants.botName) {
             return;

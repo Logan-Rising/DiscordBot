@@ -9,7 +9,7 @@ module.exports = {
     servers: [],
     syntax: '&suggestion <request>',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
+        await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
         var message_string = '\n' + message.author.username + ', ' + message.guild.name + ': ';
 

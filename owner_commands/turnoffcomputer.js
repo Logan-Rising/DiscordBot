@@ -11,7 +11,7 @@ module.exports = {
     servers: [],
     syntax: '&turnoffcomputer',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
+        await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
         if (process.platform === 'win32') exec('shutdown /s');
         else return;

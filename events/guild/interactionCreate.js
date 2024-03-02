@@ -3,7 +3,7 @@ const databasefunctions = require('../../functions/databasefunctions.js');
 module.exports = async (Discord, client, firedb, interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
-    databasefunctions.IncrementIndex(firedb, 1, 'messaging', 'interactions_received');
+    databasefunctions.IncrementDaily(firedb, 1, 'messaging', 'interactions_received');
 
 	const command = client.commands.get(interaction.commandName);
 

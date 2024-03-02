@@ -10,7 +10,7 @@ module.exports = {
     servers: constants.Image_Servers,
     syntax: '&deleteimage <name> [number to delete]',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
+        await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
         var name = args[0];
 

@@ -9,7 +9,7 @@ module.exports = {
     servers: [],
     syntax: '&ttt <@user>',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
+        await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
         const player_1 = message.author.id;
         const player1_name = message.author.username;

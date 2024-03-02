@@ -14,6 +14,24 @@ async function DeleteFirebaseDocument(firedb, collection, document) {
     return await fire.deleteDoc(fire.doc(firedb, collection, document));
 }
 
+async function IncrementDaily(firedb, number, collection, document) {
+    try {
+        const docRef = await fire.doc(firedb, collection, document);
+        const docSnap = await fire.getDoc(docRef);
+
+        if (!docSnap.exists()) {
+            return console.log('Could not find data with specified collection and document.');
+        }
+
+        let data = docSnap.data();
+        data.daily = data.daily + number;
+
+        await fire.setDoc( docRef, data );
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 async function IncrementIndex(firedb, number, collection, document) {
     try {
         const docRef = await fire.doc(firedb, collection, document);
@@ -26,7 +44,7 @@ async function IncrementIndex(firedb, number, collection, document) {
         let data = docSnap.data();
         data.index = data.index + number;
 
-        await fire.setDoc(docRef, data );
+        await fire.setDoc( docRef, data );
     } catch (error) {
         console.log(error);
     }
@@ -329,11 +347,11 @@ async function SetReactionRoleMessageCount(firedb, serverId, count) {
 
 async function RolloverDailyData(firedb) {
     var now = new Date();
-    var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 15, 10, 0, 0) - now;
+    var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 0, 0) - now;
     if (millisTill10 < 0) {
-        millisTill10 += 86400000; // it's after 10am, try 10am tomorrow.
+        millisTill10 += 86400000;
     }
-    setTimeout(function(){console.log("It's 3:10 pm!")}, millisTill10);
+    setTimeout(function(){ResetDailyCommands(firedb)}, millisTill10);
 }
 
 async function ResetDailyCommands(firedb) {
@@ -378,6 +396,7 @@ async function ResetDailyCommands(firedb) {
 module.exports = {
     SetCloudData,
     DeleteFirebaseDocument,
+    IncrementDaily,
     IncrementIndex,
     SetIndex,
     GetIndex,

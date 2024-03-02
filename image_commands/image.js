@@ -15,7 +15,7 @@ module.exports = {
     servers: [],
     syntax: '&image <query>',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
+        await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
         const image_query = args.join(' ');
         if (!image_query) return messages.send_reply(firedb, message, 'Please enter an image name');

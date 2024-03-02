@@ -10,7 +10,7 @@ module.exports = {
     description: 'Add a new command to the bot',
     syntax: '&initializenewcommand <command name> <type>',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
+        await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
         if (!args[0] || !args[1] || args[2]) {
             messages.send_reply(firedb, message, 'Must input name and type. Syntax: ' + this.syntax);
@@ -85,7 +85,7 @@ module.exports = {
             '\n' +
             '    async execute(client, message, args, Discord, firedb) {' +
             '\n' +
-            '        await databasefunctions.IncrementIndex(firedb, 1, \'commands\', this.name);' +
+            '        await databasefunctions.IncrementDaily(firedb, 1, \'commands\', this.name);' +
             '\n' +
             '\n' +
             '        return;' +

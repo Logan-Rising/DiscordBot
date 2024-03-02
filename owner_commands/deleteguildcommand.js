@@ -9,7 +9,7 @@ module.exports = {
     servers: [],
     syntax: '&deleteguildcommand',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
+        await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
         const rest = new REST({ version: '10' }).setToken(constants.DISCORD_TOKEN);
 

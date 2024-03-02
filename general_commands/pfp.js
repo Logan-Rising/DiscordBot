@@ -8,7 +8,7 @@ module.exports = {
     servers: [],
     syntax: '&pfp <@user>',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
+        await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
         const member = message.mentions.users.first();
         if (member) {
