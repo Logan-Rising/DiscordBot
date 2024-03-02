@@ -9,9 +9,9 @@ module.exports = {
     servers: [],
     syntax: '&getcommandusage <command name>',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
 
-        const count = await databasefunctions.GetCommandCount(args[0], firedb);
+        const count = await databasefunctions.GetIndex(firedb, 'commands', args[0]);
 
         if (count === -1) {
             messages.send_reply(firedb, message, 'Databse command element does not exist');

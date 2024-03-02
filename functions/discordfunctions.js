@@ -25,7 +25,10 @@ async function GetMessageWithMessage(MESSAGE_ID, message) {
 
 async function GetMessage(client, messageId, channelId) {
     let channel = await GetChannel(client, channelId);
-    return await channel.messages.fetch(messageId);
+    let message;
+    // Set message if if it exists, else set it to undefined
+    try { message = await channel.messages.fetch(messageId) } catch { message = undefined };
+    return message;
 }
 
 async function GetRole(client, guildId, roleId) {

@@ -8,7 +8,7 @@ module.exports = {
     servers: [],
     syntax: '&setfiltersettings <true/false>',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
 
         if (args[0].toLowerCase() === 'true') {
             await databasefunctions.SetServerFilterSetting(firedb, message.guild.id, true);

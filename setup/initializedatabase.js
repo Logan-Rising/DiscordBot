@@ -80,10 +80,10 @@ const firedb = fire.getFirestore(firebaseApp);
     : console.log('getcommandusage initialization failed');
 
 // Messaging
-(await databasefunctions.SetMessagesRead(firedb, 0))
+(await databasefunctions.SetIndex(firedb, 0, 'messaging', 'messages_read'))
     ? console.log('messages_read initialized successfully')
     : console.log('messages_read initialization failed');
-(await databasefunctions.SetMessagesSent(firedb, 0))
+(await databasefunctions.SetIndex(firedb, 0, 'messaging', 'messages_sent'))
     ? console.log('messages_sent initialized successfully')
     : console.log('messages_sent initialization failed');
 (await databasefunctions.SetInteractionCount(firedb, 0))

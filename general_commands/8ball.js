@@ -7,7 +7,7 @@ module.exports = {
     servers: [],
     syntax: '&8ball <message>',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
 
         var eight_ball = [
             'It is certain',

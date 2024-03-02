@@ -10,7 +10,7 @@ module.exports = async (Discord, client, firedb, message) => {
     const prefix = '&';
 
     // Increment messages parsed counter
-    databasefunctions.IncrementMessageRead(firedb, 1);
+    await databasefunctions.IncrementIndex(firedb, 1, 'messaging', 'messages_read');
 
     if (message.guild === null) {
         // DM

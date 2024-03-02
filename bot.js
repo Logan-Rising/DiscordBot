@@ -45,7 +45,8 @@ client.on('ready', async () => {
     functions.onStartup(client);
 
     if (!constants.debug) {
-        await databasefunctions.SyncCachedServerSettings(db);
+        // await databasefunctions.SyncCachedServerSettings(db);
         await reactionmessagefunctions.SetupOldReactionMessages(db, client);
+        await databasefunctions.RolloverDailyData(db);
     }
 });

@@ -9,7 +9,7 @@ module.exports = {
     servers: [],
     syntax: '&seedefaultfilteredwordslist',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
 
         const reactionCollectorFilter = (reaction, user) => ['✅'].includes(reaction.emoji.name) && user.id === message.author.id;
 

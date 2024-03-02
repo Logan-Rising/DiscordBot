@@ -14,6 +14,57 @@ async function DeleteFirebaseDocument(firedb, collection, document) {
     return await fire.deleteDoc(fire.doc(firedb, collection, document));
 }
 
+async function IncrementIndex(firedb, number, collection, document) {
+    try {
+        const docRef = await fire.doc(firedb, collection, document);
+        const docSnap = await fire.getDoc(docRef);
+
+        if (!docSnap.exists()) {
+            return console.log('Could not find data with specified collection and document.');
+        }
+
+        let data = docSnap.data();
+        data.index = data.index + number;
+
+        await fire.setDoc(docRef, data );
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function SetIndex(firedb, number, collection, document) {
+    try {
+        const docRef = await fire.doc(firedb, collection, document);
+        const docSnap = await fire.getDoc(docRef);
+
+        if (!docSnap.exists()) {
+            return console.log('Could not find data with specified collection and document.');
+        }
+
+        let data = docSnap.data();
+        data.index = number;
+
+        await fire.setDoc(docRef, { command_usage: number, data });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function GetIndex(firedb, collection, document) {
+    try {
+        const docRef = await fire.doc(firedb, collection, document);
+        const docSnap = await fire.getDoc(docRef);
+
+        if (docSnap.exists()) {
+            return docSnap.data().index;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+    return -1;
+}
+
 async function CheckIfImageNameExists(firedb, name) {
     try {
         const docRef = await fire.doc(firedb, 'images', name);
@@ -26,21 +77,6 @@ async function CheckIfImageNameExists(firedb, name) {
     }
 
     return false;
-}
-
-async function GetImageIndex(name, firedb) {
-    try {
-        const docRef = await fire.doc(firedb, 'images', name);
-        const docSnap = await fire.getDoc(docRef);
-
-        if (docSnap.exists()) {
-            return docSnap.data().index;
-        }
-    } catch (error) {
-        console.log(error);
-    }
-
-    return -1;
 }
 
 async function GetImageUsage(name, firedb) {
@@ -63,10 +99,10 @@ async function IncrementImageUsage(name, firedb, number) {
         const docRef = await fire.doc(firedb, 'images', name);
         const docSnap = await fire.getDoc(docRef);
 
-        const currentIndex = docSnap.data().index;
-        const currentCommandUsage = docSnap.data().command_usage;
+        let data = docSnap.data();
+        data.currentCommandUsage = data.currentCommandUsage + number;
 
-        await fire.setDoc(docRef, { command_usage: currentCommandUsage + number, index: currentIndex });
+        await fire.setDoc(docRef, data);
     } catch (error) {
         console.log(error);
     }
@@ -77,36 +113,10 @@ async function SetImageUsage(name, firedb, number) {
         const docRef = await fire.doc(firedb, 'images', name);
         const docSnap = await fire.getDoc(docRef);
 
-        const currentCommandIndex = docSnap.data().index;
+        let data = docSnap.data();
+        data.index = number;
 
-        await fire.setDoc(docRef, { command_usage: number, index: currentCommandIndex });
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-async function IncrementImageIndex(name, number, firedb) {
-    try {
-        const docRef = await fire.doc(firedb, 'images', name);
-        const docSnap = await fire.getDoc(docRef);
-
-        const currentCommandUsage = docSnap.data().command_usage;
-        const currentCommandIndex = docSnap.data().index;
-
-        await fire.setDoc(docRef, { command_usage: currentCommandUsage, index: currentCommandIndex + number });
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-async function SetImageIndex(name, number, firedb) {
-    try {
-        const docRef = await fire.doc(firedb, 'images', name);
-        const docSnap = await fire.getDoc(docRef);
-
-        const currentCommandUsage = docSnap.data().command_usage;
-
-        await fire.setDoc(docRef, { command_usage: currentCommandUsage, index: number });
+        await fire.setDoc(docRef, { command_usage: number, data });
     } catch (error) {
         console.log(error);
     }
@@ -125,154 +135,17 @@ async function InitializeImage(name, firedb) {
     return success;
 }
 
-async function GetCommandCount(commandName, firedb) {
-    try {
-        const docRef = await fire.doc(firedb, 'commands', commandName);
-        const docSnap = await fire.getDoc(docRef);
-
-        if (docSnap.exists()) {
-            return docSnap.data().index;
-        }
-    } catch (error) {
-        console.log(error);
-    }
-
-    return -1;
-}
-
-async function IncrementCommandCount(commandName, number, firedb) {
-    try {
-        const docRef = await fire.doc(firedb, 'commands', commandName);
-        const docSnap = await fire.getDoc(docRef);
-
-        const currentCount = docSnap.data().index;
-        const currentType = docSnap.data().type;
-
-        await fire.setDoc(docRef, { index: currentCount + number, type: currentType });
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-async function SetCommandCount(commandName, number, firedb) {
-    try {
-        const docRef = await fire.doc(firedb, 'commands', commandName);
-        const docSnap = await fire.getDoc(docRef);
-
-        const currentType = docSnap.data().type;
-
-        await fire.setDoc(docRef, { index: number, type: currentType });
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 async function InitializeCommand(commandName, type, firedb) {
     let success = true;
 
     try {
         const docRef = await fire.doc(firedb, 'commands', commandName);
-        await fire.setDoc(docRef, { index: 0, type: type });
+        await fire.setDoc(docRef, { index: 0, type: type, daily: 0 });
     } catch (error) {
         console.log(error);
         success = false;
     }
     return success;
-}
-
-async function SetMessagesRead(firedb, number) {
-    let success = true;
-
-    try {
-        const docRef = await fire.doc(firedb, 'messaging', 'messages_read');
-        await fire.setDoc(docRef, { index: number });
-    } catch (error) {
-        console.log(error);
-        success = false;
-    }
-    return success;
-}
-
-async function GetMessagesRead(firedb) {
-    try {
-        const docRef = await fire.doc(firedb, 'messaging', 'messages_read');
-        const docSnap = await fire.getDoc(docRef);
-
-        if (docSnap.exists()) {
-            return docSnap.data().index;
-        }
-    } catch (error) {
-        console.log(error);
-    }
-
-    return -1;
-}
-
-async function SetMessagesSent(firedb, number) {
-    let success = true;
-
-    try {
-        const docRef = await fire.doc(firedb, 'messaging', 'messages_sent');
-        await fire.setDoc(docRef, { index: number });
-    } catch (error) {
-        console.log(error);
-        success = false;
-    }
-    return success;
-}
-
-async function GetMessagesSent(firedb) {
-    try {
-        const docRef = await fire.doc(firedb, 'messaging', 'messages_sent');
-        const docSnap = await fire.getDoc(docRef);
-
-        if (docSnap.exists()) {
-            return docSnap.data().index;
-        }
-    } catch (error) {
-        console.log(error);
-    }
-
-    return -1;
-}
-
-async function IncrementMessageRead(firedb, number) {
-    try {
-        const docRef = await fire.doc(firedb, 'messaging', 'messages_read');
-        const docSnap = await fire.getDoc(docRef);
-
-        const currentCount = docSnap.data().index;
-
-        await fire.setDoc(docRef, { index: currentCount + number });
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-async function IncrementMessageSent(firedb, number) {
-    try {
-        const docRef = await fire.doc(firedb, 'messaging', 'messages_sent');
-        const docSnap = await fire.getDoc(docRef);
-
-        const currentCount = docSnap.data().index;
-
-        await fire.setDoc(docRef, { index: currentCount + number });
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-async function IncrementMessagesDeleted(firedb, number) {
-    try {
-        const docRef = await fire.doc(firedb, 'messaging', 'messages_deleted');
-        const docSnap = await fire.getDoc(docRef);
-
-        const currentCount = docSnap.data().index;
-
-        await fire.setDoc(docRef, { index: currentCount + number });
-    } catch (error) {
-        console.log(error);
-    }
 }
 
 async function SyncCachedServerSettings(firedb) {
@@ -405,19 +278,6 @@ async function InitializeNewServer(firedb, serverId) {
     return success;
 }
 
-async function IncrementInteractionCount(firedb, number) {
-    try {
-        const docRef = await fire.doc(firedb, 'messaging', 'interactions_received');
-        const docSnap = await fire.getDoc(docRef);
-
-        const currentCount = docSnap.data().index;
-
-        await fire.setDoc(docRef, { index: currentCount + number });
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 async function SetInteractionCount(firedb, number) {
     let success = true;
 
@@ -467,29 +327,48 @@ async function SetReactionRoleMessageCount(firedb, serverId, count) {
     return success;
 }
 
-async function IncrementReactionCollectionCount(firedb, number) {
-    try {
-        const docRef = await fire.doc(firedb, 'messaging', 'reaction_collections');
-        const docSnap = await fire.getDoc(docRef);
-
-        const currentCount = docSnap.data().index;
-
-        await fire.setDoc(docRef, { index: currentCount + number });
-    } catch (error) {
-        console.log(error);
+async function RolloverDailyData(firedb) {
+    var now = new Date();
+    var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 15, 10, 0, 0) - now;
+    if (millisTill10 < 0) {
+        millisTill10 += 86400000; // it's after 10am, try 10am tomorrow.
     }
+    setTimeout(function(){console.log("It's 3:10 pm!")}, millisTill10);
 }
 
-async function SetupReactionMessages() {
+async function ResetDailyCommands(firedb) {
     try {
-        const reactionMessages = fire.query(fire.collection(firedb, 'reaction_role_messages'));
+        // Roll over commands
+        const commands = fire.query(fire.collection(firedb, 'commands'));
+        const querySnapshotCommands = await fire.getDocs(commands);
+        querySnapshotCommands.forEach((doc) => {
+          const data = doc.data();
 
-        const querySnapshot = await fire.getDocs(reactionMessages);
-        querySnapshot.forEach((doc) => {
-          const messageId = doc.id;
-          const messageInfo = doc.data();
+          data.index = data.index + data.daily;
+          data.daily = 0;
 
-          
+        });
+
+        // Roll over messaging related information
+        const messaging = fire.query(fire.collection(firedb, 'messaging'));
+        const querySnapshotMessaging = await fire.getDocs(messaging);
+        querySnapshotMessaging.forEach((doc) => {
+          const data = doc.data();
+
+          data.index = data.index + data.daily;
+          data.daily = 0;
+
+        });
+
+        // Roll over image commands
+        const images = fire.query(fire.collection(firedb, 'images'));
+        const querySnapshotImages = await fire.getDocs(images);
+        querySnapshotImages.forEach((doc) => {
+          const data = doc.data();
+
+          data.command_usage = data.command_usage + data.daily;
+          data.daily = 0;
+
         });
     } catch (error) {
         console.log(error);
@@ -499,25 +378,15 @@ async function SetupReactionMessages() {
 module.exports = {
     SetCloudData,
     DeleteFirebaseDocument,
+    IncrementIndex,
+    SetIndex,
+    GetIndex,
     CheckIfImageNameExists,
-    GetImageIndex,
     GetImageUsage,
     IncrementImageUsage,
     SetImageUsage,
     InitializeImage,
-    IncrementImageIndex,
-    SetImageIndex,
-    GetCommandCount,
-    IncrementCommandCount,
-    SetCommandCount,
     InitializeCommand,
-    SetMessagesRead,
-    GetMessagesRead,
-    SetMessagesSent,
-    GetMessagesSent,
-    IncrementMessageRead,
-    IncrementMessageSent,
-    IncrementMessagesDeleted,
     SyncCachedServerSettings,
     SetServerFilterSetting,
     AddServerFilteredWord,
@@ -527,9 +396,8 @@ module.exports = {
     SetServerFilterList,
     GetServerFilterInfo,
     InitializeNewServer,
-    IncrementInteractionCount,
     SetInteractionCount,
     IncrementReactionRoleMessageCount,
     DecrementReactionRoleMessageCount,
-    IncrementReactionCollectionCount,
+    RolloverDailyData,
 };

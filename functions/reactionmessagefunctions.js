@@ -60,7 +60,7 @@ async function CreateComponentCollector(firedb, message, role1, role2, role3, ro
 }
 
 async function HandleReaction(firedb, reaction, role1, role2, role3, role4, role5) {
-        await databasefunctions.IncrementReactionCollectionCount(firedb, 1);
+        await databasefunctions.IncrementIndex(firedb, 1, 'messaging', 'reaction_collections');
 
         const member = reaction.member;
 

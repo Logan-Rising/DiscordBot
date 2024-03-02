@@ -10,7 +10,7 @@ module.exports = {
     servers: [],
     syntax: '&dependencies',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
 
         let dependencies_string = '';
 

@@ -10,13 +10,13 @@ module.exports = {
     servers: constants.Image_Servers,
     syntax: '&addimage <name>',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
 
         var name = args[0];
 
         var total = 0;
 
-        var num = await databasefunctions.GetImageIndex(name, firedb);
+        var num = await databasefunctions.GetIndex(firedb, 'images', name);
 
         // Name is not in the database (not been initialized)
         if (num === undefined) {
@@ -52,6 +52,6 @@ module.exports = {
             messages.send_message(firedb, message.channel, 'Successfully saved ' + total + ' images!');
         }
 
-        await databasefunctions.SetImageIndex(name, num, firedb);
+        await databasefunctions.SetIndex(firedb, num, 'images', name);
     },
 };

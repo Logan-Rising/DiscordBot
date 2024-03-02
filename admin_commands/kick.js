@@ -10,7 +10,7 @@ module.exports = {
     servers: [],
     syntax: '&kick <@user or user id>',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
 
         if (await message.member.permissions.has(PermissionsBitField.Flags.KickMembers) && !message.member.bot) {
             const green_check = '✅';

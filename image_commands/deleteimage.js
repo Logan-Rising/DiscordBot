@@ -10,7 +10,7 @@ module.exports = {
     servers: constants.Image_Servers,
     syntax: '&deleteimage <name> [number to delete]',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
 
         var name = args[0];
 
@@ -26,7 +26,7 @@ module.exports = {
         else counter = parseInt(args[1]);
 
         let return_counter = counter;
-        var num = await databasefunctions.GetImageIndex(name, firedb);
+        var num = await databasefunctions.GetIndex(firedb, 'images', name);
         console.log('num: ', num);
 
         if (num === -1 || Number.isNaN(num)) {
@@ -49,7 +49,7 @@ module.exports = {
             console.log(path + ' deleted'); // Log image deleted
         }
 
-        databasefunctions.SetImageIndex(name, num, firedb);
+        databasefunctions.SetIndex(firedb, num, 'images', name);
         messages.send_message(firedb, message.channel, 'Successfully deleted ' + return_counter + ' images!');
     },
 };

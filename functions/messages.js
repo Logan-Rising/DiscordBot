@@ -7,7 +7,7 @@ async function send_message(firedb, channel, content) {
     }
 
     try {
-        await databasefunctions.IncrementMessageSent(firedb, 1);
+        await databasefunctions.IncrementIndex(firedb, 1, 'messaging', 'messages_sent');
         return channel.send(content);
     } catch (error) {
         console.error(error);
@@ -32,7 +32,7 @@ async function send_reply(firedb, message, content) {
     }
 
     try {
-        await databasefunctions.IncrementMessageSent(firedb, 1);
+        await databasefunctions.IncrementIndex(firedb, 1, 'messaging', 'messages_sent');
         
         if(!await discordfunctions.GetMessageWithMessage(message.id, message))
             return;
@@ -49,7 +49,7 @@ async function delete_message(firedb, message) {
     }
 
     try {
-        await databasefunctions.IncrementMessagesDeleted(firedb, 1);
+        await databasefunctions.IncrementIndex(firedb, 1, 'messaging', 'messages_deleted');
         return message.delete();
     } catch (error) {
         console.error(error);

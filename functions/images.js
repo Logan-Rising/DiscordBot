@@ -3,7 +3,7 @@ const messages = require('../functions/messages.js');
 const constants = require('../constants/constants.js');
 
 async function GetImage(message, name, firedb) {
-    let num = await databasefunctions.GetImageIndex(name, firedb);
+    let num = await databasefunctions.GetIndex(firedb, 'images', name);
 
     if (num === -1) {
         console.log(name + ' does not exist in database');

@@ -11,7 +11,7 @@ module.exports = {
     servers: [],
     syntax: '&hangman',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
 
         let word = randomWord();
         var answerArray = new Array(word.length);

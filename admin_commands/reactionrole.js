@@ -65,7 +65,7 @@ module.exports = {
         const embed = new EmbedBuilder()
         .setColor('Blue')
         .setTitle(title ? title : 'Reaction Roles')
-        .setDescription(`React with the buttons below to get the specified roles! ` + (role1 ? `${role1}` + `\n` : `` ) + (role2 ? `${role2}` + `\n` : `` )  + (role3 ? `${role3}` + `\n` : `` )  + (role4 ? `${role4}` + `\n` : `` )  + (role5 ? `${role5}` : `` ) );
+        .setDescription(`React with the buttons below to get the specified roles! \n` + (role1 ? `${role1}` + `\n` : `` ) + (role2 ? `${role2}` + `\n` : `` )  + (role3 ? `${role3}` + `\n` : `` )  + (role4 ? `${role4}` + `\n` : `` )  + (role5 ? `${role5}` : `` ) );
 
         let reply = await interactionfunctions.Reply(firedb, interaction, { embeds: [embed], components: [button] });
 

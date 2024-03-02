@@ -9,19 +9,21 @@ module.exports = {
     servers: [],
     syntax: '&deleteguildcommand',
     async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementCommandCount(this.name, 1, firedb);
+        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
 
         const rest = new REST({ version: '10' }).setToken(constants.DISCORD_TOKEN);
 
         // ...
 
+        // Comment out which ever one is not in use
+
         // for guild-based commands
-        rest.delete(Routes.applicationGuildCommand(constants.CLIENT_ID, message.guild.id, '1203235279729598464'))
-            .then(() => console.log('Successfully deleted guild command'))
-            .catch(console.error);
+        // rest.delete(Routes.applicationGuildCommand(constants.CLIENT_ID, message.guild.id, args[0]))
+        //     .then(() => console.log('Successfully deleted guild command'))
+        //     .catch(console.error);
 
         // for global commands
-        rest.delete(Routes.applicationCommand(constants.CLIENT_ID, 'commandId'))
+        rest.delete(Routes.applicationCommand(constants.CLIENT_ID, args[0]))
             .then(() => console.log('Successfully deleted application command'))
             .catch(console.error);
 

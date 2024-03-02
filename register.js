@@ -1,24 +1,15 @@
-const databasefunctions = require('../functions/databasefunctions.js');
-const constants = require('../constants/constants.js');
+const databasefunctions = require('./functions/databasefunctions.js');
+const constants = require('./constants/constants.js');
 const { REST, Routes, ApplicationCommandOptionType  } = require('discord.js');
 
-module.exports = {
-    name: 'registerguildcommand',
-    description: '',
-    users: [constants.ownerId],
-    servers: [],
-    syntax: '&registerguildcommand <command name>',
-    async execute(client, message, args, Discord, firedb) {
-        await databasefunctions.IncrementIndex(firedb, 1, 'commands', this.name);
-
-        const commandName = args[0];
+        const commandName = 'reactionrole';
         let description = '';
         const clientId = constants.CLIENT_ID;
-        const guildId = message.guild.id;
+        const guildId = null;
 
-        for ( let i = 1; i < args.length; i++ ){
-            description += args[i] + ' ';
-        }
+        // for ( let i = 1; i < args.length; i++ ){
+        //     description += args[i] + ' ';
+        // }
 
         const commands = [
             {
@@ -77,7 +68,3 @@ module.exports = {
                 console.error(error);
             }
         })();
-
-        return;
-    },
-};
