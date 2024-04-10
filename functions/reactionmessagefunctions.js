@@ -31,6 +31,7 @@ async function SetupOldReactionMessages(firedb, client) {
           // Delete message from database if it does not exist
           if (!message) {
             databasefunctions.DeleteFirebaseDocument(firedb, "reaction_role_messages", messageId);
+            databasefunctions.DecrementReactionRoleMessageCount(firedb, messageInfo.guild_id);
             return;
           }
 

@@ -1,7 +1,9 @@
 const fire = require('firebase/firestore');
+const utilities = require('./utilities.js');
 
 // Local cache json database
 const JSONdb = require('simple-json-db');
+const { util } = require('prettier');
 const db = new JSONdb('./cache/server_message_filter_cache.json');
 
 async function SetCloudData(firedb, document, collection, data) {
@@ -62,7 +64,7 @@ async function SetIndex(firedb, number, collection, document) {
         let data = docSnap.data();
         data.index = number;
 
-        await fire.setDoc(docRef, { command_usage: number, data });
+        await fire.setDoc(docRef, data);
     } catch (error) {
         console.log(error);
     }
@@ -118,7 +120,7 @@ async function IncrementImageUsage(name, firedb, number) {
         const docSnap = await fire.getDoc(docRef);
 
         let data = docSnap.data();
-        data.currentCommandUsage = data.currentCommandUsage + number;
+        data.daily = data.daily + number;
 
         await fire.setDoc(docRef, data);
     } catch (error) {
@@ -323,7 +325,7 @@ async function IncrementReactionRoleMessageCount(firedb, serverId) {
 async function DecrementReactionRoleMessageCount(firedb, serverId) {
     let newCount = await GetServerReactionRoleCount(serverId) - 1;
 
-    SetReactionRoleMessageCount(firedb, serverId, newCount);
+    await SetReactionRoleMessageCount(firedb, serverId, newCount);
 }
 
 async function SetReactionRoleMessageCount(firedb, serverId, count) {
@@ -351,43 +353,82 @@ async function RolloverDailyData(firedb) {
     if (millisTill10 < 0) {
         millisTill10 += 86400000;
     }
-    setTimeout(function(){ResetDailyCommands(firedb)}, millisTill10);
+    setTimeout(async function(){
+        await ResetDailyCommands(firedb);     // Reset daily statistics
+        RolloverDailyData(firedb);      // Rollover again tomorrow
+    }, millisTill10);
 }
 
 async function ResetDailyCommands(firedb) {
     try {
+        let commandInfo = {};
+        let imageInfo = {};
+        let messagingInfo = {};
+        
         // Roll over commands
         const commands = fire.query(fire.collection(firedb, 'commands'));
         const querySnapshotCommands = await fire.getDocs(commands);
-        querySnapshotCommands.forEach((doc) => {
-          const data = doc.data();
+        querySnapshotCommands.forEach(async (doc) => {
+            const data = doc.data();
 
-          data.index = data.index + data.daily;
-          data.daily = 0;
+            const currentCommandInfo = {
+                type: data.type,
+                index: data.daily,
+            };
 
+            commandInfo[doc.id] = currentCommandInfo;
+
+            data.index = data.index + data.daily;
+            data.daily = 0;
+
+            await fire.setDoc(fire.doc(firedb, 'commands', doc.id), data);
         });
 
         // Roll over messaging related information
         const messaging = fire.query(fire.collection(firedb, 'messaging'));
         const querySnapshotMessaging = await fire.getDocs(messaging);
-        querySnapshotMessaging.forEach((doc) => {
+        querySnapshotMessaging.forEach(async (doc) => {
           const data = doc.data();
+
+          const currentMessagingInfo = {
+            index: data.daily,
+          }
+
+          messagingInfo[doc.id] = currentMessagingInfo;
 
           data.index = data.index + data.daily;
           data.daily = 0;
 
+          await fire.setDoc(fire.doc(firedb, 'messaging', doc.id), data);
         });
 
         // Roll over image commands
         const images = fire.query(fire.collection(firedb, 'images'));
         const querySnapshotImages = await fire.getDocs(images);
-        querySnapshotImages.forEach((doc) => {
+        querySnapshotImages.forEach(async (doc) => {
           const data = doc.data();
+
+          const currentImageInfo = {
+            index: data.daily,
+          };
+
+          imageInfo[doc.id] = currentImageInfo;
 
           data.command_usage = data.command_usage + data.daily;
           data.daily = 0;
 
+          await fire.setDoc(fire.doc(firedb, 'images', doc.id), data);
         });
+
+        const dateInfo = {
+            commands: commandInfo,
+            messaging: messagingInfo,
+            images: imageInfo,
+        }
+
+        const date = utilities.GetDateNoTime();
+
+        await SetCloudData(firedb, 'daily_stats', date, dateInfo);
     } catch (error) {
         console.log(error);
     }
