@@ -348,18 +348,19 @@ async function SetReactionRoleMessageCount(firedb, serverId, count) {
 }
 
 async function RolloverDailyData(firedb) {
+    const todayDate = utilities.GetDateNoTime(); // Current date
     var now = new Date();
     var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 0, 0) - now;
     if (millisTill10 < 0) {
         millisTill10 += 86400000;
     }
     setTimeout(async function(){
-        await ResetDailyCommands(firedb);     // Reset daily statistics
+        await ResetDailyCommands(firedb, todayDate);     // Reset daily statistics
         RolloverDailyData(firedb);      // Rollover again tomorrow
     }, millisTill10);
 }
 
-async function ResetDailyCommands(firedb) {
+async function ResetDailyCommands(firedb, todayDate) {
     try {
         let commandInfo = {};
         let imageInfo = {};
@@ -426,9 +427,7 @@ async function ResetDailyCommands(firedb) {
             images: imageInfo,
         }
 
-        const date = utilities.GetDateNoTime();
-
-        await SetCloudData(firedb, 'daily_stats', date, dateInfo);
+        await SetCloudData(firedb, 'daily_stats', todayDate, dateInfo);
     } catch (error) {
         console.log(error);
     }
