@@ -60,7 +60,7 @@ For formatting your code to align with styling provided by [Prettier Formatter],
 npx prettier --write <path>
 ```
 
-Store your files that are not tracked by git, such as `constants.js` and `customfunctions.js`, somewhere in the cloud if you intend to run on multiple computers.
+Store your files that are not tracked by git, such as `constants.js`, somewhere in the cloud if you intend to run on multiple computers.
 
 To run this project locally on a pc, set up a .bat file that launched on startup of your pc to run `node bot.js`. This will run the bot when your pc is powered.
 

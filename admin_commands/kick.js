@@ -1,6 +1,7 @@
 const messages = require('../functions/messages.js');
 const databasefunctions = require('../functions/databasefunctions.js');
-const kickfunction = require('../functions/customfunctions.js');
+const kickfunction = require('../constants/constants.js');
+const constants = require('../constants/constants.js');
 const { PermissionsBitField } = require('discord.js');
 
 module.exports = {
@@ -44,17 +45,20 @@ module.exports = {
             }
             await kickMessage.react(green_check);
             await kickMessage.react(red_x);
-            const collector = kickMessage.createReactionCollector(filter, { maxEmojis: 1 });
+            const collector = kickMessage.createReactionCollector(filter, { maxEmojis: 2 });
             collector.on('collect', (reaction, user) => {
+                console.log(`Collected ${reaction.emoji.name} from ${user.tag}`);
                 switch (reaction.emoji.name) {
                     case green_check:
-                        console.log('green check')
+                        if (user.id === constants.botId)
+                            break;
                         memberTarget.kick();
                         kickfunction.onKickBan(firedb, memberTarget.user.tag, message.channel, id);
                         collector.stop();
                         break;
                     default:
-                        console.log('other')
+                        if (user.id === constants.botId)
+                            break;
                         messages.send_message(firedb, message.channel, `<@${id}> lives to see another day`);
                         collector.stop();
                         break;

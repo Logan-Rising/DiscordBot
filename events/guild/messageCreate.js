@@ -1,7 +1,5 @@
 const permissions = require('../../functions/permissionscheck.js');
 const databasefunctions = require('../../functions/databasefunctions.js');
-const customfunctions = require('../../functions/customfunctions.js');
-const messagefunctions = require('../../functions/messages.js');
 const messagefilter = require('../../functions/messagefilter.js');
 const { PermissionsBitField } = require('discord.js');
 const constants = require('../../constants/constants.js');

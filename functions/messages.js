@@ -8,8 +8,7 @@ async function send_message(firedb, channel, content) {
 
     try {
         await databasefunctions.IncrementDaily(firedb, 1, 'messaging', 'messages_sent');
-        await channel.send(content);
-        return;
+        return await channel.send(content);
     } catch (error) {
         console.error(error);
     }

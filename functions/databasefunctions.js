@@ -1,9 +1,11 @@
 const fire = require('firebase/firestore');
 const utilities = require('./utilities.js');
+const discordfunctions = require('./discordfunctions.js');
 
 // Local cache json database
 const JSONdb = require('simple-json-db');
 const { util } = require('prettier');
+const { image } = require('image-downloader');
 const db = new JSONdb('./cache/server_message_filter_cache.json');
 
 async function SetCloudData(firedb, document, collection, data) {
@@ -142,12 +144,12 @@ async function SetImageUsage(name, firedb, number) {
     }
 }
 
-async function InitializeImage(name, firedb) {
+async function InitializeImage(name, firedb, type) {
     let success = true;
     try {
         const docRef = await fire.doc(firedb, 'images', name);
 
-        await fire.setDoc(docRef, { command_usage: 0, index: 0 });
+        await fire.setDoc(docRef, { command_usage: 0, daily: 0, index: 0, type: type });
     } catch (error) {
         console.log(error);
         success = false;
@@ -363,7 +365,10 @@ async function RolloverDailyData(firedb) {
 async function ResetDailyCommands(firedb, todayDate) {
     try {
         let commandInfo = {};
-        let imageInfo = {};
+        let imageInfo = {
+            custom: 0,
+            all: 0,
+        };
         let messagingInfo = {};
         
         // Roll over commands
@@ -409,11 +414,11 @@ async function ResetDailyCommands(firedb, todayDate) {
         querySnapshotImages.forEach(async (doc) => {
           const data = doc.data();
 
-          const currentImageInfo = {
-            index: data.daily,
-          };
-
-          imageInfo[doc.id] = currentImageInfo;
+          if (imageInfo.type === 'all') {
+            imageInfo.all = imageInfo.all + data.daily;
+          } else {
+            imageInfo.custom = imageInfo.custom + data.daily;
+          } 
 
           data.command_usage = data.command_usage + data.daily;
           data.daily = 0;
@@ -428,6 +433,37 @@ async function ResetDailyCommands(firedb, todayDate) {
         }
 
         await SetCloudData(firedb, 'daily_stats', todayDate, dateInfo);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function SetStatus(firedb) {
+    try {
+        const docRef = await fire.doc(firedb, 'status', 'bot_status');
+        const docSnap = await fire.getDoc(docRef);
+
+        let data = docSnap.data();
+        data.timestamp = fire.Timestamp.now();
+
+        await fire.setDoc(docRef, data);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function SetServerCount(firedb, client) {
+    try {
+        const docRef = await fire.doc(firedb, 'servers', 'serving');
+        const docSnap = await fire.getDoc(docRef);
+
+        let data = docSnap.data();
+        const serverCount = await discordfunctions.GetServerCount(client);
+
+        if (data.server_count != serverCount) {
+            data.server_count = serverCount;
+            await fire.setDoc(docRef, data);
+        }
     } catch (error) {
         console.log(error);
     }
@@ -459,4 +495,6 @@ module.exports = {
     IncrementReactionRoleMessageCount,
     DecrementReactionRoleMessageCount,
     RolloverDailyData,
+    SetStatus,
+    SetServerCount,
 };

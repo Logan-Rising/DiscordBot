@@ -67,6 +67,16 @@ const includeAgeRestrictionAsPrivate = false;
 // Default list of filtered words in messages
 const defaultBannedWordList = [];
 
+// Function that is executed when user is kicked or banned
+async function onKickBan(name, channel) {
+    return;
+}
+
+// Function that runs when the bot starts up in src/bot.js
+async function onStartup() {
+    return;
+}
+
 module.exports = {
     Image_Permissions,
     Record_Permissions,
@@ -88,40 +98,6 @@ module.exports = {
 
 /* Initialize constants.js file. Fill out custom functions if desired to edit gifs upon user being kicked.*/
 fs.appendFile(constantsPath, constantsContent, err => {
-    if (err) {
-        console.error(err);
-    }
-});
-
-const customFunctionsPath = '../functions/customfunctions.js';
-const customFunctionsContent = `const fs = require('fs');
-const canvasGif = require('canvas-gif');
-const path = require('path');
-const constants = require('../constants/constants.js');
-
-// Edit a gif when a user is kicked
-async function onKickBan(name, channel) {
-    return;
-}
-
-// Function that runs when the bot starts up in src/bot.js
-async function onStartup() {
-    return;
-}
-
-// Function that runs when the bot reads a message
-async function CheckMessage(message) {
-    
-}
-
-module.exports = {
-    gifEdit,
-    onStartup,
-};
-`;
-
-// Write to customfunctions.js file
-fs.appendFile(customFunctionsPath, customFunctionsContent, err => {
     if (err) {
         console.error(err);
     }

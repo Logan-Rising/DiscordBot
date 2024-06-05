@@ -12,7 +12,6 @@ const client = new Client({
 const app = require('firebase/app');
 const fire = require('firebase/firestore');
 const constants = require('./constants/constants.js');
-const functions = require('./functions/customfunctions.js');
 const databasefunctions = require('./functions/databasefunctions.js');
 const reactionmessagefunctions = require('./functions/reactionmessagefunctions.js');
 
@@ -42,11 +41,20 @@ const db = fire.getFirestore(firebaseApp);
 client.login(constants.DISCORD_TOKEN);
 
 client.on('ready', async () => {
-    functions.onStartup(client);
+    constants.onStartup(client, db);
 
     if (!constants.debug) {
         // await databasefunctions.SyncCachedServerSettings(db);
         await reactionmessagefunctions.SetupOldReactionMessages(db, client);
         await databasefunctions.RolloverDailyData(db);
     }
+
+    // Set status then every 5 minutes set server count and update status
+    databasefunctions.SetStatus(db);
+    setInterval(async () => {
+        // Set server count
+        databasefunctions.SetServerCount(db, client);
+        // Set bot status
+        databasefunctions.SetStatus(db);
+    }, 300000);
 });
