@@ -4,7 +4,7 @@ const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
     name: 'ttt',
-    description: 'Play tic-tac-toe with another user',
+    description: 'Play tic-tac-toe with another user with a 2 minute time limit',
     users: [],
     servers: [],
     syntax: '&ttt <@user>',
@@ -64,7 +64,7 @@ module.exports = {
         await messageEmbed.react(bot_mid);
         await messageEmbed.react(bot_right);
 
-        const collector = messageEmbed.createReactionCollector({ filter: reactionCollectorFilter, maxEmojis: 9 });
+        const collector = messageEmbed.createReactionCollector({ filter: reactionCollectorFilter, maxEmojis: 9, time: 120_000 });
 
         collector.on('collect', (reaction, user) => {
             switch (reaction.emoji.name) {

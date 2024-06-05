@@ -6,7 +6,7 @@ const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
     name: 'hangman',
-    description: 'Play hangman with a randomly generated word. Send a letter guess as a message.',
+    description: 'Play hangman with a randomly generated word. Send a letter guess as a message. 2 minute time limit.',
     users: [],
     servers: [],
     syntax: '&hangman',
@@ -89,7 +89,7 @@ module.exports = {
             ].includes(m.content.toLowerCase()) &&
             gameOver === false &&
             m.author.id == message.author.id;
-        const collector = message.channel.createMessageCollector(filter, { maxProcessed: 27 });
+        const collector = message.channel.createMessageCollector({filter: filter, maxProcessed: 27, time: 120_000 }, );
 
         collector.on('collect', m => {
             if (m.content.toLowerCase() === 'end') {

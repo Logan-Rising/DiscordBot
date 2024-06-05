@@ -265,7 +265,7 @@ async function AddServerFilteredWord(firedb, serverId, word) {
         return;
     else {
         cacheServerFilteredWords.push(word);
-        const serverInfo = await GetServerFilterSetting(serverId);
+        let serverInfo = await GetServerFilterInfo(serverId);
 
         serverInfo.filtered_words = cacheServerFilteredWords;
 

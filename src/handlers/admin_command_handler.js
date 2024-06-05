@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 module.exports = (client, Discord, firedb) => {
-    const command_files = fs.readdirSync('./admin_commands/').filter(file => file.endsWith('.js'));
+    const command_files = fs.readdirSync('./src/admin_commands/').filter(file => file.endsWith('.js'));
 
     for (const file of command_files) {
         const command = require(`../admin_commands/${file}`);

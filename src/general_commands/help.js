@@ -42,13 +42,7 @@ module.exports = {
             searchForCommand = false;
             commandFound = false;
 
-        if (!args[0]) {
-            general_bool = true;
-            game_bool = true;
-            admin_bool = true;
-            image_bool = true;
-            custom_bool = true;
-        } else if (args[0].toLowerCase() === 'general') general_bool = true;
+        if (args[0].toLowerCase() === 'general') general_bool = true;
         else if (args[0].toLowerCase() === 'game') game_bool = true;
         else if (args[0].toLowerCase() === 'admin') admin_bool = true;
         else if (args[0].toLowerCase() === 'image') image_bool = true;
@@ -64,7 +58,7 @@ module.exports = {
 
         // General Commands
         if (general_bool && !commandFound) {
-            const command_files_general = fs.readdirSync('./general_commands/').filter(file => file.endsWith('.js'));
+            const command_files_general = fs.readdirSync('./src/general_commands/').filter(file => file.endsWith('.js'));
             !searchForCommand ? (embed_string += '\nGeneral: \n') : (embed_string += '');
 
             for (const file of command_files_general) {
@@ -97,7 +91,7 @@ module.exports = {
 
         // Game Commands
         if (game_bool && !commandFound) {
-            const command_files_game = fs.readdirSync('./game_commands/').filter(file => file.endsWith('.js'));
+            const command_files_game = fs.readdirSync('./src/game_commands/').filter(file => file.endsWith('.js'));
             !searchForCommand ? (embed_string += '\nGame: \n') : (embed_string += '');
 
             for (const file of command_files_game) {
@@ -132,7 +126,7 @@ module.exports = {
 
         // Image Commands
         if (image_bool && !commandFound) {
-            const command_files_image = fs.readdirSync('./image_commands/').filter(file => file.endsWith('.js'));
+            const command_files_image = fs.readdirSync('./src/image_commands/').filter(file => file.endsWith('.js'));
             !searchForCommand ? (embed_string += '\nImage: \n') : (embed_string += '');
 
             for (const file of command_files_image) {
@@ -168,7 +162,7 @@ module.exports = {
         // Admin commands
         if (admin_bool && !commandFound) {
             if (admin && privateInitial) {
-                const command_files_admin = fs.readdirSync('./admin_commands/').filter(file => file.endsWith('.js'));
+                const command_files_admin = fs.readdirSync('./src/admin_commands/').filter(file => file.endsWith('.js'));
                 !searchForCommand ? (embed_string += '\nAdmin: \n') : (embed_string += '');
 
                 for (const file of command_files_admin) {
@@ -199,12 +193,15 @@ module.exports = {
                         continue;
                     }
                 }
+            } else {
+                messages.send_reply(firedb, message, 'Must be in a private channel to view admin commands');
+                return;
             }
         }
 
         // Custom Commands
         if (custom_bool && !commandFound && private) {
-            const command_files_general = fs.readdirSync('./custom_commands/').filter(file => file.endsWith('.js'));
+            const command_files_general = fs.readdirSync('./src/custom_commands/').filter(file => file.endsWith('.js'));
             !searchForCommand ? (embed_string += '\nCustom: \n') : (embed_string += '');
 
             for (const file of command_files_general) {

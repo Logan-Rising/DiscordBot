@@ -2,11 +2,10 @@
 chart.png
 .DS_Store
 /custom_commands
-constants.js
+src/constants
 pc.jpg
 script.bat
 /functions/kick.gif
 output.gif
 suggestions.txt
 /cache
-/constants

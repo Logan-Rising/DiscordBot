@@ -1,19 +1,18 @@
 const messages = require('../functions/messages.js');
 const databasefunctions = require('../functions/databasefunctions.js');
-const kickfunction = require('../constants/constants.js');
-const constants = require('../constants/constants.js');
+const banfunction = require('../constants/constants.js');
 const { PermissionsBitField } = require('discord.js');
+const constants = require('../constants/constants.js');
 
 module.exports = {
-    name: 'kick',
-    description: 'Kick a user from the server',
+    name: 'ban',
+    description: 'Ban a user from the server',
     users: ['admin'],
     servers: [],
-    syntax: '&kick <@user or user id>',
+    syntax: '&ban <@user or user id>',
     async execute(client, message, args, Discord, firedb) {
         await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
-
-        if (await message.member.permissions.has(PermissionsBitField.Flags.KickMembers) && !message.member.bot) {
+        if (await message.member.permissions.has(PermissionsBitField.Flags.BanMembers) && !message.member.bot) {
             const green_check = '✅';
             const red_x = '❌';
             let member = message.mentions.users.first();
@@ -23,37 +22,36 @@ module.exports = {
             } else if (!isNaN(args[0])) {
                 id = args[0];
             } else {
-                return messages.send_reply(firedb, message, "Error: Couldn't kick that member.");
+                return messages.send_message(firedb, message.channel, "Error: Couldn't ban that member");
             }
 
             const filter = (reaction, user) =>
                 [green_check, red_x].includes(reaction.emoji.name) && user.id === message.member.id;
-            let kickMessage = await messages.send_message(
+            let banMessage = await messages.send_message(
                 firedb,
                 message.channel,
-                `Are you sure you want to kick <@${id}>?`
+                `Are you sure you want to ban <@${id}>?`
             );
-            member = kickMessage.mentions.users.first();
+            member = banMessage.mentions.users.first();
             if (!member) {
-                messages.delete_message(firedb, kickMessage);
-                return messages.send_message(firedb, message.channel, 'That Is An Invalid User.');
+                messages.delete_message(firedb, banMessage);
+                return messages.send_message(firedb, message.channel, 'That Is An Invalid User');
             }
             const memberTarget = await message.guild.members.cache.get(member.id);
-            if (!memberTarget.kickable) {
-                messages.send_reply(firedb, message, 'Cannot kick that member. Member is not kickable.');
+            if (!memberTarget.bannable) {
+                messages.send_reply(firedb, message, 'Cannot kick that member. Member is not bannable.');
                 return;
             }
-            await kickMessage.react(green_check);
-            await kickMessage.react(red_x);
-            const collector = kickMessage.createReactionCollector(filter, { maxEmojis: 2 });
+            await banMessage.react(green_check);
+            await banMessage.react(red_x);
+            const collector = banMessage.createReactionCollector(filter, { maxEmojis: 2 });
             collector.on('collect', (reaction, user) => {
-                console.log(`Collected ${reaction.emoji.name} from ${user.tag}`);
                 switch (reaction.emoji.name) {
                     case green_check:
                         if (user.id === constants.botId)
                             break;
-                        memberTarget.kick();
-                        kickfunction.onKickBan(firedb, memberTarget.user.tag, message.channel, id);
+                        memberTarget.ban();
+                        banfunction.onKickBan(firedb, memberTarget.user.tag, message.channel, id);
                         collector.stop();
                         break;
                     default:

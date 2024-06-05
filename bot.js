@@ -11,9 +11,9 @@ const client = new Client({
 
 const app = require('firebase/app');
 const fire = require('firebase/firestore');
-const constants = require('./constants/constants.js');
-const databasefunctions = require('./functions/databasefunctions.js');
-const reactionmessagefunctions = require('./functions/reactionmessagefunctions.js');
+const constants = require('./src/constants/constants.js');
+const databasefunctions = require('./src/functions/databasefunctions.js');
+const reactionmessagefunctions = require('./src/functions/reactionmessagefunctions.js');
 
 client.commands = new Collection();
 client.events = new Collection();
@@ -35,7 +35,7 @@ const db = fire.getFirestore(firebaseApp);
     'owner_command_handler',
     'custom_command_handler',
 ].forEach(handler => {
-    require(`./handlers/${handler}`)(client, Discord, db);
+    require(`./src/handlers/${handler}`)(client, Discord, db);
 });
 
 client.login(constants.DISCORD_TOKEN);

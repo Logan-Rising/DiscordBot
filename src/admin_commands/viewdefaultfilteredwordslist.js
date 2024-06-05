@@ -18,7 +18,7 @@ module.exports = {
 
         await warningMessage.react('✅');
 
-        const collector = warningMessage.createReactionCollector({ filter: reactionCollectorFilter, maxEmojis: 1 });
+        const collector = warningMessage.createReactionCollector({ filter: reactionCollectorFilter, maxEmojis: 1, time: 15_000 });
 
         collector.on('collect', async (reaction, user) => {
             await messagefunctions.send_message(firedb, message.channel, constants.defaultBannedWordList.join(', '));

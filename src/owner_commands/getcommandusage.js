@@ -16,7 +16,7 @@ module.exports = {
         if (count === -1) {
             messages.send_reply(firedb, message, 'Databse command element does not exist');
         } else {
-            messages.send_reply(firedb, message, count);
+            messages.send_reply(firedb, message, '' + count);
         }
     },
 };
