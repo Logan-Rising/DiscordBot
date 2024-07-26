@@ -6,9 +6,15 @@ async function GetChannel(client, channelId) {
     return await client.channels.cache.find(channel => channel.id === channelId);
 }
 
-// Needs testing
 async function GetUser(client, userId) {
-    return await client.users.fetch(userId);
+    let user;
+    try {
+         user = await client.users.fetch(userId);
+    } catch (err) {
+        console.log(err);
+        return undefined;
+    }
+    return user;
 }
 
 async function GetServerCount(client) {

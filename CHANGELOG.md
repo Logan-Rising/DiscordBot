@@ -4,15 +4,20 @@
 
 ### Added
 
--   ...
+-   Firestore logging every 5 minutes for bot active status
+-   Update server count every 5 minutes
+-   Message filter for messages with customizablity via commands for individual servers
+-   Cache for message filters to reduce Firestore reads
 
 ### Changed
 
--   ...
+-   Updated to Discord.js 14
+-   Move custom functions to constants.js file
+-   Reorganize project to put all source code under /src
 
 ### Removed
 
--   ...
+-   Removed discord-reply package and use native reply functionality
 
 ## v2.0
 
