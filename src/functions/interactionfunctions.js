@@ -17,7 +17,7 @@ async function FollowUp(firedb, interaction, followUpMessage) {
     return await interaction.followUp(followUpMessage);
 }
 
-async function EditRply(firedb, interaction, editedReply){
+async function EditRply(firedb, interaction, editedReply) {
     return await interaction.editReply(editedReply);
 }
 

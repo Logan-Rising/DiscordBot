@@ -15,7 +15,7 @@ module.exports = {
         } else if (args[0].toLowerCase() === 'false') {
             await databasefunctions.SetServerFilterSetting(firedb, message.guild.id, false);
         } else {
-            await messages.send_reply(firedb, message, 'Please enter \'true\' or \'false\'. Syntax: ' + this.syntax);
+            await messages.send_reply(firedb, message, "Please enter 'true' or 'false'. Syntax: " + this.syntax);
         }
 
         messages.send_reply(firedb, message, 'Successfully updated server filter settings');

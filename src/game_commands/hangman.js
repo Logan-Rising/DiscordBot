@@ -53,9 +53,9 @@ module.exports = {
                     '⬜ ⬜ ⬜ ⬜ ⬜ ⬜ ' +
                     '\n'
             )
-            .setFooter({text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',')});
+            .setFooter({ text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',') });
 
-        let messageEmbed = await messages.send_message(firedb, message.channel, {embeds: [embed] });
+        let messageEmbed = await messages.send_message(firedb, message.channel, { embeds: [embed] });
 
         const filter = m =>
             [
@@ -89,7 +89,7 @@ module.exports = {
             ].includes(m.content.toLowerCase()) &&
             gameOver === false &&
             m.author.id == message.author.id;
-        const collector = message.channel.createMessageCollector({filter: filter, maxProcessed: 27, time: 120_000 }, );
+        const collector = message.channel.createMessageCollector({ filter: filter, maxProcessed: 27, time: 120_000 });
 
         collector.on('collect', m => {
             if (m.content.toLowerCase() === 'end') {
@@ -137,7 +137,7 @@ module.exports = {
                                 '\n' +
                                 '⬜ ⬜ ⬜ ⬜ ⬜ ⬜ '
                         )
-                        .setFooter({text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',')});
+                        .setFooter({ text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',') });
                     messageEmbed.edit({ embeds: [newEmbed] });
                 }
 
@@ -164,7 +164,7 @@ module.exports = {
                                 '\n' +
                                 '⬜ ⬜ ⬜ ⬜ ⬜ ⬜ '
                         )
-                        .setFooter({text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',')});
+                        .setFooter({ text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',') });
                     messageEmbed.edit({ embeds: [newEmbed] });
                 } else if (wrong === 2) {
                     const newEmbed = new EmbedBuilder()
@@ -189,7 +189,7 @@ module.exports = {
                                 '\n' +
                                 '⬜ ⬜ ⬜ ⬜ ⬜ ⬜ '
                         )
-                        .setFooter({text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',')});
+                        .setFooter({ text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',') });
                     messageEmbed.edit({ embeds: [newEmbed] });
                 } else if (wrong === 3) {
                     const newEmbed = new EmbedBuilder()
@@ -214,7 +214,7 @@ module.exports = {
                                 '\n' +
                                 '⬜ ⬜ ⬜ ⬜ ⬜ ⬜ '
                         )
-                        .setFooter({text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',')});
+                        .setFooter({ text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',') });
                     messageEmbed.edit({ embeds: [newEmbed] });
                 } else if (wrong === 4) {
                     const newEmbed = new EmbedBuilder()
@@ -239,7 +239,7 @@ module.exports = {
                                 '\n' +
                                 '⬜ ⬜ ⬜ ⬜ ⬜ ⬜ '
                         )
-                        .setFooter({text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',')});
+                        .setFooter({ text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',') });
                     messageEmbed.edit({ embeds: [newEmbed] });
                 } else if (wrong === 5) {
                     const newEmbed = new EmbedBuilder()
@@ -264,7 +264,7 @@ module.exports = {
                                 '\n' +
                                 '⬜ ⬜ ⬜ ⬜ ⬜ ⬜ '
                         )
-                        .setFooter({text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',')});
+                        .setFooter({ text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',') });
                     messageEmbed.edit({ embeds: [newEmbed] });
                 } else if (wrong === 6) {
                     const newEmbed = new EmbedBuilder()
@@ -289,7 +289,7 @@ module.exports = {
                                 '\n' +
                                 '⬜ ⬜ ⬜ ⬜ ⬜ ⬜ '
                         )
-                        .setFooter({text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',')});
+                        .setFooter({ text: 'Word: ' + str + '\n' + 'Letters Guessed: ' + lettersGuessed.join(',') });
                     messageEmbed.edit({ embeds: [newEmbed] });
                     messages.send_message(
                         firedb,

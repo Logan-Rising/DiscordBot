@@ -118,5 +118,5 @@ fs.access(customCommands, error => {
 });
 
 // Create server message filter cache
-var createStream = fs.createWriteStream("./events/guild/server_message_filter_cache.json");
+var createStream = fs.createWriteStream('./events/guild/server_message_filter_cache.json');
 createStream.end();

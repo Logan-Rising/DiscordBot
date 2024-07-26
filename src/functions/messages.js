@@ -33,11 +33,10 @@ async function send_reply(firedb, message, content) {
 
     try {
         await databasefunctions.IncrementDaily(firedb, 1, 'messaging', 'messages_sent');
-        
-        if(!await discordfunctions.GetMessageWithMessage(message.id, message))
-            return;
 
-        return message.channel.send({content, reply: {messageReference: message.id}});
+        if (!(await discordfunctions.GetMessageWithMessage(message.id, message))) return;
+
+        return message.channel.send({ content, reply: { messageReference: message.id } });
     } catch (error) {
         console.error(error);
     }

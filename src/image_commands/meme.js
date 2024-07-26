@@ -2,7 +2,7 @@ const databasefunctions = require('../functions/databasefunctions.js');
 const messages = require('../functions/messages.js');
 const utilities = require('../functions/utilities.js');
 const fs = require('fs');
-const Jimp = require("jimp");
+const Jimp = require('jimp');
 
 module.exports = {
     name: 'meme',
@@ -16,7 +16,7 @@ module.exports = {
         let memeCaption = '';
 
         // Set meme description
-        for ( i = 0; i < args.length; i++ ) {
+        for (i = 0; i < args.length; i++) {
             memeCaption += args[i] + ' ';
         }
 
@@ -31,27 +31,37 @@ module.exports = {
         message.attachments.forEach(attachment => {
             Jimp.read({
                 url: attachment.proxyURL,
-            }).then( async (image) => {
-                image.print(font, 0, 0, {
-                    text: memeCaption,
-                    alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
-                    alignmentY: Jimp.VERTICAL_ALIGN_CENTER
-                }, image.bitmap.width, image.bitmap.height)
-                .write(fileIdName);
+            })
+                .then(async image => {
+                    image
+                        .print(
+                            font,
+                            0,
+                            0,
+                            {
+                                text: memeCaption,
+                                alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
+                                alignmentY: Jimp.VERTICAL_ALIGN_CENTER,
+                            },
+                            image.bitmap.width,
+                            image.bitmap.height
+                        )
+                        .write(fileIdName);
 
-                await utilities.WaitForFile(fileIdName, 1000);
-                await messages.send_message(firedb, message.channel, {files: [fileIdName]});
+                    await utilities.WaitForFile(fileIdName, 1000);
+                    await messages.send_message(firedb, message.channel, { files: [fileIdName] });
 
-                // Delete the image
-                fs.unlink(fileIdName, error => {
-                    if (error) {
-                        console.error(error);
-                        return;
-                    }
+                    // Delete the image
+                    fs.unlink(fileIdName, error => {
+                        if (error) {
+                            console.error(error);
+                            return;
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error(error);
                 });
-            }) .catch(error => {
-                console.error(error);
-            });
         });
 
         return;

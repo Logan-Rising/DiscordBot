@@ -3,7 +3,7 @@ const messagefunctions = require('../functions/messages.js');
 
 module.exports = {
     name: 'addfilteredword',
-    description: 'Add a filtered word from this server\'s filtered word list',
+    description: "Add a filtered word from this server's filtered word list",
     users: ['admin'],
     servers: [],
     syntax: '&addfilteredword',

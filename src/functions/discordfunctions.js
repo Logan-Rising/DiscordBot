@@ -1,4 +1,4 @@
-async function GetGuild(client, guildId) { 
+async function GetGuild(client, guildId) {
     return await client.guilds.fetch(guildId);
 }
 
@@ -9,7 +9,7 @@ async function GetChannel(client, channelId) {
 async function GetUser(client, userId) {
     let user;
     try {
-         user = await client.users.fetch(userId);
+        user = await client.users.fetch(userId);
     } catch (err) {
         console.log(err);
         return undefined;
@@ -26,14 +26,18 @@ async function ReactToMessage(message, emoji) {
 }
 
 async function GetMessageWithMessage(MESSAGE_ID, message) {
-    return await message.channel.messages.fetch(MESSAGE_ID)
+    return await message.channel.messages.fetch(MESSAGE_ID);
 }
 
 async function GetMessage(client, messageId, channelId) {
     let channel = await GetChannel(client, channelId);
     let message;
     // Set message if if it exists, else set it to undefined
-    try { message = await channel.messages.fetch(messageId) } catch { message = undefined };
+    try {
+        message = await channel.messages.fetch(messageId);
+    } catch {
+        message = undefined;
+    }
     return message;
 }
 

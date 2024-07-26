@@ -1,6 +1,6 @@
 const databasefunctions = require('../functions/databasefunctions.js');
 const constants = require('../constants/constants.js');
-const { REST, Routes, ApplicationCommandOptionType  } = require('discord.js');
+const { REST, Routes, ApplicationCommandOptionType } = require('discord.js');
 
 module.exports = {
     name: 'deleteguildcommand',

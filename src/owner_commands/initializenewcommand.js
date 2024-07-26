@@ -85,7 +85,7 @@ module.exports = {
             '\n' +
             '    async execute(client, message, args, Discord, firedb) {' +
             '\n' +
-            '        await databasefunctions.IncrementDaily(firedb, 1, \'commands\', this.name);' +
+            "        await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);" +
             '\n' +
             '\n' +
             '        return;' +

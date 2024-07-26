@@ -17,7 +17,11 @@ module.exports = {
         } else {
             const user = await discordfunctions.GetUser(client, args[0]);
             if (!user) {
-                return messages.send_reply(firedb, message, 'Error fetching profile picture. Make sure the user id is correct.');
+                return messages.send_reply(
+                    firedb,
+                    message,
+                    'Error fetching profile picture. Make sure the user id is correct.'
+                );
             } else {
                 return messages.send_reply(firedb, message, user.avatarURL());
             }

@@ -19,7 +19,6 @@ module.exports = {
 
         let admin = message.member.permissions.has(PermissionsBitField.Flags.Administrator);
 
-
         const channel = message.channel,
             guild = channel.guild,
             everyone = guild.roles.everyone,
@@ -29,7 +28,7 @@ module.exports = {
         let private = !channel.permissionsFor(everyone).has(PermissionsBitField.Flags.ViewChannel);
         const privateInitial = private;
 
-        if(!private) {
+        if (!private) {
             // If channel is age restricted and not private but should be included as private
             private = ageRestricted && constants.includeAgeRestrictionAsPrivate;
         }
@@ -40,7 +39,7 @@ module.exports = {
             image_bool = false,
             custom_bool = false,
             searchForCommand = false;
-            commandFound = false;
+        commandFound = false;
 
         if (args[0].toLowerCase() === 'general') general_bool = true;
         else if (args[0].toLowerCase() === 'game') game_bool = true;
@@ -58,7 +57,9 @@ module.exports = {
 
         // General Commands
         if (general_bool && !commandFound) {
-            const command_files_general = fs.readdirSync('./src/general_commands/').filter(file => file.endsWith('.js'));
+            const command_files_general = fs
+                .readdirSync('./src/general_commands/')
+                .filter(file => file.endsWith('.js'));
             !searchForCommand ? (embed_string += '\nGeneral: \n') : (embed_string += '');
 
             for (const file of command_files_general) {
@@ -162,7 +163,9 @@ module.exports = {
         // Admin commands
         if (admin_bool && !commandFound) {
             if (admin && privateInitial) {
-                const command_files_admin = fs.readdirSync('./src/admin_commands/').filter(file => file.endsWith('.js'));
+                const command_files_admin = fs
+                    .readdirSync('./src/admin_commands/')
+                    .filter(file => file.endsWith('.js'));
                 !searchForCommand ? (embed_string += '\nAdmin: \n') : (embed_string += '');
 
                 for (const file of command_files_admin) {
@@ -246,6 +249,6 @@ module.exports = {
             .setTitle(constants.botName + ' Commands')
             .setDescription(embed_string);
 
-        messages.send_message(firedb, message.channel, {embeds: [embed] });
+        messages.send_message(firedb, message.channel, { embeds: [embed] });
     },
 };

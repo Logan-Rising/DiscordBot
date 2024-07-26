@@ -8,6 +8,7 @@
 -   Update server count every 5 minutes
 -   Message filter for messages with customizablity via commands for individual servers
 -   Cache for message filters to reduce Firestore reads
+-   Ability to fetch user profile picture based on id as well as tag
 
 ### Changed
 

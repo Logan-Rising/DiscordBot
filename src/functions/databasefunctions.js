@@ -30,7 +30,7 @@ async function IncrementDaily(firedb, number, collection, document) {
         let data = docSnap.data();
         data.daily = data.daily + number;
 
-        await fire.setDoc( docRef, data );
+        await fire.setDoc(docRef, data);
     } catch (error) {
         console.log(error);
     }
@@ -48,7 +48,7 @@ async function IncrementIndex(firedb, number, collection, document) {
         let data = docSnap.data();
         data.index = data.index + number;
 
-        await fire.setDoc( docRef, data );
+        await fire.setDoc(docRef, data);
     } catch (error) {
         console.log(error);
     }
@@ -175,11 +175,11 @@ async function SyncCachedServerSettings(firedb) {
         const servers = fire.query(fire.collection(firedb, 'servers'));
 
         const querySnapshot = await fire.getDocs(servers);
-        querySnapshot.forEach((doc) => {
-          const serverId = doc.id;
-          const serverFilterInfo = doc.data();
+        querySnapshot.forEach(doc => {
+            const serverId = doc.id;
+            const serverFilterInfo = doc.data();
 
-          db.set(serverId, serverFilterInfo);
+            db.set(serverId, serverFilterInfo);
         });
     } catch (error) {
         console.log(error);
@@ -242,7 +242,7 @@ async function SetServerFilterList(firedb, serverId, list) {
 async function RemoveServerFilteredWord(firedb, serverId, word) {
     let cacheServerFilteredWords = await GetServerFilterList(serverId);
 
-    if(cacheServerFilteredWords.includes(word)) {
+    if (cacheServerFilteredWords.includes(word)) {
         cacheServerFilteredWords = cacheServerFilteredWords.filter(e => e !== word);
         let serverInfo = await GetServerInfo(serverId);
 
@@ -252,8 +252,7 @@ async function RemoveServerFilteredWord(firedb, serverId, word) {
 
         const docRef = await fire.doc(firedb, 'servers', serverId);
         await fire.setDoc(docRef, serverInfo);
-    }
-    else {
+    } else {
         return;
     }
 }
@@ -261,8 +260,7 @@ async function RemoveServerFilteredWord(firedb, serverId, word) {
 async function AddServerFilteredWord(firedb, serverId, word) {
     let cacheServerFilteredWords = await GetServerFilterList(serverId);
 
-    if(cacheServerFilteredWords.includes(word))
-        return;
+    if (cacheServerFilteredWords.includes(word)) return;
     else {
         cacheServerFilteredWords.push(word);
         let serverInfo = await GetServerFilterInfo(serverId);
@@ -313,19 +311,19 @@ async function SetInteractionCount(firedb, number) {
     return success;
 }
 
-async function GetServerReactionRoleCount (serverId) {
+async function GetServerReactionRoleCount(serverId) {
     const serverInfo = db.get(serverId);
     return serverInfo.reaction_role_messages;
 }
 
 async function IncrementReactionRoleMessageCount(firedb, serverId) {
-    let newCount = await GetServerReactionRoleCount(serverId) + 1;
+    let newCount = (await GetServerReactionRoleCount(serverId)) + 1;
 
     SetReactionRoleMessageCount(firedb, serverId, newCount);
 }
 
 async function DecrementReactionRoleMessageCount(firedb, serverId) {
-    let newCount = await GetServerReactionRoleCount(serverId) - 1;
+    let newCount = (await GetServerReactionRoleCount(serverId)) - 1;
 
     await SetReactionRoleMessageCount(firedb, serverId, newCount);
 }
@@ -356,9 +354,9 @@ async function RolloverDailyData(firedb) {
     if (millisTill10 < 0) {
         millisTill10 += 86400000;
     }
-    setTimeout(async function(){
-        await ResetDailyCommands(firedb, todayDate);     // Reset daily statistics
-        RolloverDailyData(firedb);      // Rollover again tomorrow
+    setTimeout(async function () {
+        await ResetDailyCommands(firedb, todayDate); // Reset daily statistics
+        RolloverDailyData(firedb); // Rollover again tomorrow
     }, millisTill10);
 }
 
@@ -370,11 +368,11 @@ async function ResetDailyCommands(firedb, todayDate) {
             all: 0,
         };
         let messagingInfo = {};
-        
+
         // Roll over commands
         const commands = fire.query(fire.collection(firedb, 'commands'));
         const querySnapshotCommands = await fire.getDocs(commands);
-        querySnapshotCommands.forEach(async (doc) => {
+        querySnapshotCommands.forEach(async doc => {
             const data = doc.data();
 
             const currentCommandInfo = {
@@ -393,44 +391,44 @@ async function ResetDailyCommands(firedb, todayDate) {
         // Roll over messaging related information
         const messaging = fire.query(fire.collection(firedb, 'messaging'));
         const querySnapshotMessaging = await fire.getDocs(messaging);
-        querySnapshotMessaging.forEach(async (doc) => {
-          const data = doc.data();
+        querySnapshotMessaging.forEach(async doc => {
+            const data = doc.data();
 
-          const currentMessagingInfo = {
-            index: data.daily,
-          }
+            const currentMessagingInfo = {
+                index: data.daily,
+            };
 
-          messagingInfo[doc.id] = currentMessagingInfo;
+            messagingInfo[doc.id] = currentMessagingInfo;
 
-          data.index = data.index + data.daily;
-          data.daily = 0;
+            data.index = data.index + data.daily;
+            data.daily = 0;
 
-          await fire.setDoc(fire.doc(firedb, 'messaging', doc.id), data);
+            await fire.setDoc(fire.doc(firedb, 'messaging', doc.id), data);
         });
 
         // Roll over image commands
         const images = fire.query(fire.collection(firedb, 'images'));
         const querySnapshotImages = await fire.getDocs(images);
-        querySnapshotImages.forEach(async (doc) => {
-          const data = doc.data();
+        querySnapshotImages.forEach(async doc => {
+            const data = doc.data();
 
-          if (imageInfo.type === 'all') {
-            imageInfo.all = imageInfo.all + data.daily;
-          } else {
-            imageInfo.custom = imageInfo.custom + data.daily;
-          } 
+            if (imageInfo.type === 'all') {
+                imageInfo.all = imageInfo.all + data.daily;
+            } else {
+                imageInfo.custom = imageInfo.custom + data.daily;
+            }
 
-          data.command_usage = data.command_usage + data.daily;
-          data.daily = 0;
+            data.command_usage = data.command_usage + data.daily;
+            data.daily = 0;
 
-          await fire.setDoc(fire.doc(firedb, 'images', doc.id), data);
+            await fire.setDoc(fire.doc(firedb, 'images', doc.id), data);
         });
 
         const dateInfo = {
             commands: commandInfo,
             messaging: messagingInfo,
             images: imageInfo,
-        }
+        };
 
         await SetCloudData(firedb, 'daily_stats', todayDate, dateInfo);
     } catch (error) {

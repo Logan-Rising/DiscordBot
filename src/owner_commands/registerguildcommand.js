@@ -1,6 +1,6 @@
 const databasefunctions = require('../functions/databasefunctions.js');
 const constants = require('../constants/constants.js');
-const { REST, Routes, ApplicationCommandOptionType  } = require('discord.js');
+const { REST, Routes, ApplicationCommandOptionType } = require('discord.js');
 
 module.exports = {
     name: 'registerguildcommand',
@@ -16,7 +16,7 @@ module.exports = {
         const clientId = constants.CLIENT_ID;
         const guildId = message.guild.id;
 
-        for ( let i = 1; i < args.length; i++ ){
+        for (let i = 1; i < args.length; i++) {
             description += args[i] + ' ';
         }
 
@@ -55,22 +55,19 @@ module.exports = {
                         description: 'The fifth role to include',
                         type: ApplicationCommandOptionType.Role,
                     },
-                ]
+                ],
             },
-        ]
-        
+        ];
+
         const rest = new REST().setToken(constants.DISCORD_TOKEN);
-        
+
         (async () => {
             try {
                 console.log(`Started refreshing ${commands.length} application (/) commands.`);
-        
+
                 // The put method is used to fully refresh all commands in the guild with the current set
-                const data = await rest.put(
-                    Routes.applicationCommands(clientId),
-                    { body: commands },
-                );
-        
+                const data = await rest.put(Routes.applicationCommands(clientId), { body: commands });
+
                 console.log(`Successfully reloaded ${data.length} application (/) commands.`);
             } catch (error) {
                 // And of course, make sure you catch and log any errors!

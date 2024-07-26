@@ -12,7 +12,7 @@ module.exports = {
     syntax: '&ban <@user or user id>',
     async execute(client, message, args, Discord, firedb) {
         await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
-        if (await message.member.permissions.has(PermissionsBitField.Flags.BanMembers) && !message.member.bot) {
+        if ((await message.member.permissions.has(PermissionsBitField.Flags.BanMembers)) && !message.member.bot) {
             const green_check = '✅';
             const red_x = '❌';
             let member = message.mentions.users.first();
@@ -48,15 +48,13 @@ module.exports = {
             collector.on('collect', (reaction, user) => {
                 switch (reaction.emoji.name) {
                     case green_check:
-                        if (user.id === constants.botId)
-                            break;
+                        if (user.id === constants.botId) break;
                         memberTarget.ban();
                         banfunction.onKickBan(firedb, memberTarget.user.tag, message.channel, id);
                         collector.stop();
                         break;
                     default:
-                        if (user.id === constants.botId)
-                            break;
+                        if (user.id === constants.botId) break;
                         messages.send_message(firedb, message.channel, `<@${id}> lives to see another day`);
                         collector.stop();
                         break;

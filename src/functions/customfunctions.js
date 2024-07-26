@@ -6,7 +6,7 @@ const messages = require('../functions/messages.js');
 const discordfunctions = require('../functions/discordfunctions.js');
 
 async function onKickBan(firedb, name, channel, id) {
-    messages.send_message(firedb, channel, `<@${id}> got Thanos snapped <a:dusted:846409553829953556>`)
+    messages.send_message(firedb, channel, `<@${id}> got Thanos snapped <a:dusted:846409553829953556>`);
     const callBack = (context, width, height, totalFrames, currentFrame) => {
         context.fillStyle = '#FFA500';
         context.font = '30px "Sans"';
@@ -62,9 +62,7 @@ async function onStartup(client, firedb) {
     return;
 }
 
-async function CheckMessage(message) {
-    
-}
+async function CheckMessage(message) {}
 
 module.exports = {
     onKickBan,

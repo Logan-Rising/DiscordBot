@@ -49,8 +49,20 @@ module.exports = {
             .setColor('#BFCDEB')
             .setTitle('Tic-Tac-Toe')
             .setDescription(
-                ((turn % 2) ? player1_name : player2_name) + '\'s turn\n' + 
-                ul + um + ur + '\n' + ml + mm + mr + '\n' + bl + bm + br);
+                (turn % 2 ? player1_name : player2_name) +
+                    "'s turn\n" +
+                    ul +
+                    um +
+                    ur +
+                    '\n' +
+                    ml +
+                    mm +
+                    mr +
+                    '\n' +
+                    bl +
+                    bm +
+                    br
+            );
 
         let messageEmbed = await messages.send_message(firedb, message.channel, { embeds: [embed] });
 
@@ -64,7 +76,11 @@ module.exports = {
         await messageEmbed.react(bot_mid);
         await messageEmbed.react(bot_right);
 
-        const collector = messageEmbed.createReactionCollector({ filter: reactionCollectorFilter, maxEmojis: 9, time: 120_000 });
+        const collector = messageEmbed.createReactionCollector({
+            filter: reactionCollectorFilter,
+            maxEmojis: 9,
+            time: 120_000,
+        });
 
         collector.on('collect', (reaction, user) => {
             switch (reaction.emoji.name) {
@@ -179,12 +195,23 @@ module.exports = {
             }
 
             const newEmbed = new EmbedBuilder()
-            .setColor('#BFCDEB')
-            .setTitle('Tic-Tac-Toe')
-            .setDescription(
-                ((turn % 2) ? player1_name : player2_name) + '\'s turn\n' + 
-                ul + um + ur + '\n' + ml + mm + mr + '\n' + bl + bm + br
-            );
+                .setColor('#BFCDEB')
+                .setTitle('Tic-Tac-Toe')
+                .setDescription(
+                    (turn % 2 ? player1_name : player2_name) +
+                        "'s turn\n" +
+                        ul +
+                        um +
+                        ur +
+                        '\n' +
+                        ml +
+                        mm +
+                        mr +
+                        '\n' +
+                        bl +
+                        bm +
+                        br
+                );
             messageEmbed.edit({ embeds: [newEmbed] });
 
             let winner;
@@ -225,7 +252,8 @@ module.exports = {
             }
 
             if (winner != undefined) {
-                if (winner === x) { // Player 1 won
+                if (winner === x) {
+                    // Player 1 won
                     messages.send_message(firedb, message.channel, `<@${player_1}> Won!`);
                 } else {
                     messages.send_message(firedb, message.channel, `<@${player_2}> Won!`);
