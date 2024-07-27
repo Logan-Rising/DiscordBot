@@ -38,8 +38,8 @@ module.exports = {
             admin_bool = false,
             image_bool = false,
             custom_bool = false,
-            searchForCommand = false;
-        commandFound = false;
+            searchForCommand = false,
+            commandFound = false;
 
         if (args[0] && args[0].toLowerCase() === 'general') general_bool = true;
         else if (args[0] && args[0].toLowerCase() === 'game') game_bool = true;
@@ -47,7 +47,6 @@ module.exports = {
         else if (args[0] && args[0].toLowerCase() === 'image') image_bool = true;
         else if (args[0] && args[0].toLowerCase() === 'custom') custom_bool = true;
         else {
-            searchForCommand = true;
             general_bool = true;
             game_bool = true;
             admin_bool = true;
@@ -196,9 +195,6 @@ module.exports = {
                         continue;
                     }
                 }
-            } else {
-                messages.send_reply(firedb, message, 'Must be in a private channel to view admin commands');
-                return;
             }
         }
 
