@@ -1,5 +1,6 @@
 const databasefunctions = require('../functions/databasefunctions.js');
 const constants = require('../constants/constants.js');
+const logging = require('../functions/logging.js');
 const { REST, Routes, ApplicationCommandOptionType } = require('discord.js');
 
 module.exports = {
@@ -19,12 +20,12 @@ module.exports = {
 
         // for guild-based commands
         // rest.delete(Routes.applicationGuildCommand(constants.CLIENT_ID, message.guild.id, args[0]))
-        //     .then(() => console.log('Successfully deleted guild command'))
+        //     .then(() => logging.log(firedb, 'Successfully deleted guild command'))
         //     .catch(console.error);
 
         // for global commands
         rest.delete(Routes.applicationCommand(constants.CLIENT_ID, args[0]))
-            .then(() => console.log('Successfully deleted application command'))
+            .then(() => logging.log(firedb, 'Successfully deleted application command'))
             .catch(console.error);
 
         return;

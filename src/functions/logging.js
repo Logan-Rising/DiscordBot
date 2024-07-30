@@ -23,6 +23,6 @@ async function info(firedb, content) {
 module.exports = {
     log,
     error,
-    warn, 
-    info
+    warn,
+    info,
 };

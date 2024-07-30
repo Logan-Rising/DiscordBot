@@ -28,7 +28,6 @@ module.exports = {
 
         let return_counter = counter;
         var num = await databasefunctions.GetIndex(firedb, 'images', name);
-        console.log('num: ', num);
 
         if (num === -1 || Number.isNaN(num)) {
             messages.send_reply(firedb, message, 'Internal Error: Could Not Fetch Image Index');
@@ -47,7 +46,7 @@ module.exports = {
                     return;
                 }
             });
-            console.log(path + ' deleted'); // Log image deleted
+            logging.log(firedb, path + ' deleted'); // Log image deleted
         }
 
         databasefunctions.SetIndex(firedb, num, 'images', name);

@@ -12,8 +12,8 @@ const db = new JSONdb('./cache/server_message_filter_cache.json');
 async function SetCloudData(firedb, document, collection, data) {
     let success = true;
     try {
-    const docRef = await fire.doc(firedb, document, collection);
-    await fire.setDoc(docRef, data);
+        const docRef = await fire.doc(firedb, document, collection);
+        await fire.setDoc(docRef, data);
     } catch (error) {
         logging.error(firedb, error);
         success = false;
@@ -32,7 +32,7 @@ async function IncrementDaily(firedb, number, collection, document) {
         const docSnap = await fire.getDoc(docRef);
 
         if (!docSnap.exists()) {
-            return console.log('Could not find data with specified collection and document.');
+            return logging.log(firedb, 'Could not find data with specified collection and document.');
         }
 
         let data = docSnap.data();
@@ -50,7 +50,7 @@ async function IncrementIndex(firedb, number, collection, document) {
         const docSnap = await fire.getDoc(docRef);
 
         if (!docSnap.exists()) {
-            return console.log('Could not find data with specified collection and document.');
+            return logging.log(firedb, 'Could not find data with specified collection and document.');
         }
 
         let data = docSnap.data();
@@ -68,7 +68,7 @@ async function SetIndex(firedb, number, collection, document) {
         const docSnap = await fire.getDoc(docRef);
 
         if (!docSnap.exists()) {
-            return console.log('Could not find data with specified collection and document.');
+            return logging.log(firedb, 'Could not find data with specified collection and document.');
         }
 
         let data = docSnap.data();

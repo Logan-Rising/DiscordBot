@@ -1,15 +1,16 @@
 const databasefunctions = require('../functions/databasefunctions.js');
 const messages = require('../functions/messages.js');
 const constants = require('../constants/constants.js');
+const logging = require('../functions/logging.js');
 
 async function GetImage(message, name, firedb) {
     let num = await databasefunctions.GetIndex(firedb, 'images', name);
 
     if (num === -1) {
-        console.log(name + ' does not exist in database');
+        logging.log(firedb, name + ' does not exist in database');
         return;
     } else if (num === 0) {
-        console.log(name + ' does not have an images. Use &addimage to add images for this category.');
+        logging.log(firedb, name + ' does not have an images. Use &addimage to add images for this category.');
         return;
     }
 

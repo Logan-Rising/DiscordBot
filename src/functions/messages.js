@@ -1,9 +1,10 @@
 const databasefunctions = require('./databasefunctions.js');
 const discordfunctions = require('./discordfunctions.js');
+const logging = require('./logging.js');
 
 async function send_message(firedb, channel, content) {
     if (!channel) {
-        console.log('messages.js: Must include channel to send to');
+        logging.log(firedb, 'messages.js: Must include channel to send to');
     }
 
     try {
@@ -16,7 +17,7 @@ async function send_message(firedb, channel, content) {
 
 async function edit_message(message, content) {
     if (!message) {
-        console.log('messages.js: Must include message to edit');
+        logging.log(firedb, 'messages.js: Must include message to edit');
     }
 
     try {
@@ -28,7 +29,7 @@ async function edit_message(message, content) {
 
 async function send_reply(firedb, message, content) {
     if (!message) {
-        console.log('messages.js: Must include message to reply to');
+        logging.log(firedb, 'messages.js: Must include message to reply to');
     }
 
     try {
@@ -44,7 +45,7 @@ async function send_reply(firedb, message, content) {
 
 async function delete_message(firedb, message) {
     if (!message) {
-        console.log('messages.js: Must include message to reply to');
+        logging.log(firedb, 'messages.js: Must include message to reply to');
     }
 
     try {

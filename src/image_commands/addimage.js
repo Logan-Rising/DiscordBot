@@ -2,6 +2,7 @@ const download = require('image-downloader');
 const messages = require('../functions/messages.js');
 const databasefunctions = require('../functions/databasefunctions.js');
 const constants = require('../constants/constants.js');
+const logging = require('../functions/logging.js');
 
 module.exports = {
     name: 'addimage',
@@ -31,7 +32,7 @@ module.exports = {
             num = num + 1;
 
             const ImageLink = attachment.proxyURL;
-            //console.log(`\`${ImageLink}\``)
+            //logging.log(firedb, `\`${ImageLink}\``)
 
             options = {
                 url: ImageLink,
@@ -41,7 +42,7 @@ module.exports = {
             download
                 .image(options)
                 .then(({ filename }) => {
-                    console.log('Saved to', filename); // saved to /path/to/dest/photo.jpg
+                    logging.log(firedb, 'Saved to', filename); // saved to /path/to/dest/photo.jpg
                 })
                 .catch(err => console.error(err));
         });
