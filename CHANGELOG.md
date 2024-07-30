@@ -22,6 +22,7 @@
 -   Moved the directory for custom commands to /src/custom_commands
 -   Help command can search for specific commands as well as a general list
 -   Suggestion command now writes to firestore database instead of /suggesstions.txt
+-   Changed database initialization script to be more concise
 
 ### Removed
 
