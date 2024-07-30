@@ -10,8 +10,15 @@ const { image } = require('image-downloader');
 const db = new JSONdb('./cache/server_message_filter_cache.json');
 
 async function SetCloudData(firedb, document, collection, data) {
+    let success = true;
+    try {
     const docRef = await fire.doc(firedb, document, collection);
     await fire.setDoc(docRef, data);
+    } catch (error) {
+        logging.error(firedb, error);
+        success = false;
+    }
+    return success;
 }
 
 // https://firebase.google.com/docs/firestore/manage-data/delete-data

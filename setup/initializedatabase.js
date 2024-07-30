@@ -1,5 +1,5 @@
-const databasefunctions = require('../functions/databasefunctions.js');
-const constants = require('../constants/constants.js');
+const databasefunctions = require('../src/functions/databasefunctions.js');
+const constants = require('../src/constants/constants.js');
 
 const firebaseConfig = constants.firebaseConfig;
 
@@ -7,85 +7,59 @@ const firebaseConfig = constants.firebaseConfig;
 const firebaseApp = app.initializeApp(firebaseConfig);
 const firedb = fire.getFirestore(firebaseApp);
 
-// Initialize Image Commands
-(await databasefunctions.InitializeImage('jotchua', firedb))
-    ? console.log('jotchua initialized successfully')
-    : console.log('jotchua initialization failed');
+const admin_commands = ['ban', 'kick', 'addfilteredword', 'removefilteredword', 'resetfilteredwordslist', 'setdefaultfilteredwords', 'seedefaultfilteredwordlist', 'setfiltersettings', 'viewdefaultfilteredwordslist'];
+const general_commands = ['8ball', 'dependencies', 'help', 'pfp', 'ping', 'specs', 'suggestion'];
+const game_commands = ['hangman', 'ttt'];
+const owner_commands = ['deleteguildcommand', 'getcommandusage', 'getimageusage', 'initializenewcommand', 'initializenewimagecommand', 'registerguildcommand', 'syncserverdatabase', 'terminate', 'turnoffcomputer'];
+const image_commands = ['addimage', 'deleteimage', 'image', 'jotchua', 'meme'];
+const console_logs = ['error', 'info', 'log', 'warn'];
+const messaging = ['interactions_recieved', 'messages_deleted', 'messages_read', 'messages_sent', 'reactions_collected'];
 
 // Admin Commands
-(await databasefunctions.InitializeCommand('ban', 'admin', firedb))
-    ? console.log('ban initialized successfully')
-    : console.log('ban initialization failed');
-(await databasefunctions.InitializeCommand('kick', 'admin', firedb))
-    ? console.log('kick initialized successfully')
-    : console.log('kick initialization failed');
-
-// Game Commands
-(await databasefunctions.InitializeCommand('hangman', 'game', firedb))
-    ? console.log('hangman initialized successfully')
-    : console.log('hangman initialization failed');
-(await databasefunctions.InitializeCommand('ttt', 'game', firedb))
-    ? console.log('ttt initialized successfully')
-    : console.log('ttt initialization failed');
+for ( let i = 0; i < admin_commands.length; i++ ) {
+    (await databasefunctions.InitializeCommand(admin_commands[i], 'admin', firedb))
+    ? console.log(admin_commands[i] + ' initialized successfully')
+    : console.log(admin_commands[i] + ' initialization failed');
+}
 
 // General Commands
-(await databasefunctions.InitializeCommand('8ball', 'general', firedb))
-    ? console.log('8ball initialized successfully')
-    : console.log('8ball initialization failed');
-(await databasefunctions.InitializeCommand('suggestion', 'general', firedb))
-    ? console.log('changerequest initialized successfully')
-    : console.log('changerequest initialization failed');
-(await databasefunctions.InitializeCommand('dependencies', 'general', firedb))
-    ? console.log('dependencies initialized successfully')
-    : console.log('dependencies initialization failed');
-(await databasefunctions.InitializeCommand('help', 'general', firedb))
-    ? console.log('help initialized successfully')
-    : console.log('help initialization failed');
-(await databasefunctions.InitializeCommand('pfp', 'general', firedb))
-    ? console.log('pfp initialized successfully')
-    : console.log('pfp initialization failed');
-(await databasefunctions.InitializeCommand('ping', 'general', firedb))
-    ? console.log('ping initialized successfully')
-    : console.log('ping initialization failed');
-(await databasefunctions.InitializeCommand('specs', 'general', firedb))
-    ? console.log('specs initialized successfully')
-    : console.log('specs initialization failed');
+for ( let i = 0; i < general_commands.length; i++ ) {
+    (await databasefunctions.InitializeCommand(general_commands[i], 'general', firedb))
+    ? console.log(general_commands[i] + ' initialized successfully')
+    : console.log(general_commands[i] + ' initialization failed');
+}
 
-// Image Commands
-(await databasefunctions.InitializeCommand('addimage', 'image', firedb))
-    ? console.log('addimage initialized successfully')
-    : console.log('addimage initialization failed');
-(await databasefunctions.InitializeCommand('deleteimage', 'image', firedb))
-    ? console.log('deleteimage initialized successfully')
-    : console.log('deleteimage initialization failed');
-(await databasefunctions.InitializeCommand('image', 'image', firedb))
-    ? console.log('imagev initialized successfully')
-    : console.log('image initialization failed');
+// Game Commands
+for ( let i = 0; i < game_commands.length; i++ ) {
+    (await databasefunctions.InitializeCommand(game_commands[i], 'game', firedb))
+    ? console.log(game_commands[i] + ' initialized successfully')
+    : console.log(game_commands[i] + ' initialization failed');
+}
 
 // Owner Commands
-(await databasefunctions.InitializeCommand('initializenewcommand', 'owner', firedb))
-    ? console.log('initializenewcommand initialized successfully')
-    : console.log('initializenewcommand initialization failed');
-(await databasefunctions.InitializeCommand('terminate', 'owner', firedb))
-    ? console.log('terminate initialized successfully')
-    : console.log('terminate initialization failed');
-(await databasefunctions.InitializeCommand('turnoffcomputer', 'owner', firedb))
-    ? console.log('turnoffcomputer initialized successfully')
-    : console.log('turnoffcomputer initialization failed');
-(await databasefunctions.InitializeCommand('getcommandusage', 'owner', firedb))
-    ? console.log('getcommandusage initialized successfully')
-    : console.log('getcommandusage initialization failed');
-(await databasefunctions.InitializeCommand('getimageusage', 'owner', firedb))
-    ? console.log('getcommandusage initialized successfully')
-    : console.log('getcommandusage initialization failed');
+for ( let i = 0; i < owner_commands.length; i++ ) {
+    (await databasefunctions.InitializeCommand(owner_commands[i], 'owner', firedb))
+    ? console.log(owner_commands[i] + ' initialized successfully')
+    : console.log(owner_commands[i] + ' initialization failed');
+}
+
+// Image Commnads
+for ( let i = 0; i < image_commands.length; i++ ) {
+    (await databasefunctions.InitializeCommand(image_commands[i], 'image', firedb))
+    ? console.log(image_commands[i] + ' initialized successfully')
+    : console.log(image_commands[i] + ' initialization failed');
+}
 
 // Messaging
-(await databasefunctions.SetIndex(firedb, 0, 'messaging', 'messages_read'))
-    ? console.log('messages_read initialized successfully')
-    : console.log('messages_read initialization failed');
-(await databasefunctions.SetIndex(firedb, 0, 'messaging', 'messages_sent'))
-    ? console.log('messages_sent initialized successfully')
-    : console.log('messages_sent initialization failed');
-(await databasefunctions.SetInteractionCount(firedb, 0))
-    ? console.log('interactions_received initialized successfully')
-    : console.log('interactions_received initialization failed');
+for ( let i = 0; i < messaging.length; i++ ) {
+    (await databasefunctions.SetCloudData(firedb, 'messaging', messaging[i], {index: 0, daily: 0}))
+    ? console.log(messaging[i] + ' initialized successfully')
+    : console.log(messaging[i] + ' initialization failed');
+}
+
+// Console
+for ( let i = 0; i < console_logs.length; i++ ) {
+    (await databasefunctions.SetCloudData(firedb, 'console', console_logs[i], {index: 0}))
+    ? console.log(console_logs[i] + ' initialized successfully')
+    : console.log(console_logs[i] + ' initialization failed');
+}
