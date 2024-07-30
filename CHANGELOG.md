@@ -11,6 +11,7 @@
 -   Ability to fetch user profile picture based on id as well as tag
 -   Added functionality for slash commands
 -   Added reaction role slash command with complete customizability
+-   Console logging, error, info, and warn tracking and functions for handling console
 
 ### Changed
 
@@ -18,10 +19,12 @@
 -   Move custom functions to constants.js file
 -   Reorganize project to put all source code under /src
 -   Changed setup scripts and setup information to be located under /setup
+-   Moved the directory for custom commands to /src/custom_commands
+-   Help command can search for specific commands as well as a general list
 
 ### Removed
 
--   Removed discord-reply package and use native reply functionality
+-   Removed discord-reply package to use native reply functionality
 
 ## v2.0
 

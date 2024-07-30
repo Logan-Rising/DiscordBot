@@ -6,7 +6,7 @@ const fs = require('fs');
 const logging = require('../src/functions/logging.js');
 
 /* Initialize constants file. Fill in variable values once initialized. */
-const constantsPath = '../constants/constants.js';
+const constantsPath = '../src/constants/constants.js';
 const constantsContent = `// Whether or not to run certain things based on if bot is in debug or not
 const debug = false;
 
@@ -105,7 +105,7 @@ fs.appendFile(constantsPath, constantsContent, error => {
 });
 
 /* Initialize custom commands directory */
-const customCommands = '../custom_commands';
+const customCommands = '../src/custom_commands';
 
 fs.access(customCommands, error => {
     if (error) {
@@ -119,5 +119,5 @@ fs.access(customCommands, error => {
 });
 
 // Create server message filter cache
-var createStream = fs.createWriteStream('./events/guild/server_message_filter_cache.json');
+var createStream = fs.createWriteStream('./cache/server_message_filter_cache.json');
 createStream.end();
