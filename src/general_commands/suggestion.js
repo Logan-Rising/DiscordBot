@@ -12,15 +12,16 @@ module.exports = {
     async execute(client, message, args, Discord, firedb) {
         await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
-        var message_string = '\n' + message.author.username + ', ' + message.guild.name + ': ';
+        const date = new Date(
+            new Date()
+                .toLocaleString("en-US", {timeZone: "America/New_York"}),
+        );
+
+        let message_string = '';
 
         for (var i = 0; i < args.length; i++) message_string += args[i] + ' ';
 
-        fs.appendFile(constants.suggestionsPath, message_string, error => {
-            if (error) {
-                logging.error(firedb, error);
-            }
-            // file written successfully
-        });
+        await databasefunctions.SetCloudData(firedb, 'feedback', date.toString(), {description: message_string, type: 'bot'});
+        await databasefunctions.IncrementIndex(firedb, 1, 'feedback', 'counter');
     },
 };
