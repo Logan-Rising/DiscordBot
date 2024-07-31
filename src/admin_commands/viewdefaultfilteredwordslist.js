@@ -7,7 +7,7 @@ module.exports = {
     description: 'View the default filtered word list',
     users: ['admin'],
     servers: [],
-    syntax: 'viewdefaultfilteredwordslist',
+    syntax: '&viewdefaultfilteredwordslist',
     async execute(client, message, args, Discord, firedb) {
         await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 

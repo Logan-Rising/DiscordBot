@@ -10,18 +10,41 @@ module.exports = {
     description: '',
     users: [],
     servers: [],
-    syntax: '&meme <description>',
+    syntax: '&meme [!black] <description>',
     async execute(client, message, args, Discord, firedb) {
         await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
         let memeCaption = '';
+        let length = 0;
+        let black = false;
+        let i = 0;
 
-        // Set meme description
-        for (i = 0; i < args.length; i++) {
-            memeCaption += args[i] + ' ';
+        // Check if the user wants the text black
+        if ( args[0].toLowerCase() === '!black') {
+            black = true;
+            i = 1;
         }
 
-        const font = await Jimp.loadFont(Jimp.FONT_SANS_64_WHITE);
+        let fontTitle = black ? Jimp.FONT_SANS_32_BLACK : Jimp.FONT_SANS_32_WHITE;
+
+        // Set meme description and track length
+        for ( i; i < args.length; i++ ) {
+            memeCaption += args[i] + (i !== args.length ? ' ' : '');
+            length += (args[i].length + 1);
+        }
+
+        // Adjust sizing based on length of meme text
+        if ( length > 16 && length <= 90 && !black ) {
+            fontTitle = Jimp.FONT_SANS_16_WHITE;
+        } else if ( length > 90 && !black ) {
+            fontTitle = Jimp.FONT_SANS_8_WHITE;
+        } else if ( length > 16 && length <= 90 && black ) {
+            fontTitle = Jimp.FONT_SANS_16_BLACK;
+        } else if ( length > 90 && black ) {
+            fontTitle = Jimp.FONT_SANS_8_BLACK;
+        }
+
+        const font = await Jimp.loadFont(fontTitle);
 
         // Create a identifier for this image
         // Not unique but close, 1/1000 for a number, 1/1,000,000 for the same number twice in a row
@@ -42,7 +65,6 @@ module.exports = {
                             {
                                 text: memeCaption,
                                 alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
-                                alignmentY: Jimp.VERTICAL_ALIGN_CENTER,
                             },
                             image.bitmap.width,
                             image.bitmap.height

@@ -20,7 +20,6 @@ const admin_commands = [
     'removefilteredword',
     'resetfilteredwordslist',
     'setdefaultfilteredwords',
-    'seedefaultfilteredwordlist',
     'setfiltersettings',
     'viewdefaultfilteredwordslist',
 ];

@@ -46,6 +46,14 @@ module.exports = {
         else if (args[0] && args[0].toLowerCase() === 'admin') admin_bool = true;
         else if (args[0] && args[0].toLowerCase() === 'image') image_bool = true;
         else if (args[0] && args[0].toLowerCase() === 'custom') custom_bool = true;
+        else if ( args[0] ) {
+            general_bool = true;
+            game_bool = true;
+            admin_bool = true;
+            image_bool = true;
+            custom_bool = true;
+            searchForCommand = true;
+        }
         else {
             general_bool = true;
             game_bool = true;
@@ -238,7 +246,7 @@ module.exports = {
 
         !searchForCommand
             ? (embed_string += '\nNeed help with a specific command?  Use &help <command name>')
-            : (embed_string += '');
+            : (embed_string += '\n\n[] = Optional Parameter <> = Required Parameter');
 
         const embed = new EmbedBuilder()
             .setColor('#BFCDEB')

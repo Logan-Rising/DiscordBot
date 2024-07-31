@@ -5,7 +5,7 @@ const messagefunctions = require('../functions/messages.js');
 module.exports = {
     name: 'setdefaultfilteredwords',
     description:
-        "Set this server's filtered word list to the default list. Use &seedefaultfilteredwordlist to view the default filtered words.",
+        "Set this server's filtered word list to the default list. Use &viewdefaultfilteredwordlist to view the default filtered words.",
     users: ['admin'],
     servers: [],
     syntax: '&setdefaultfilteredwords',
