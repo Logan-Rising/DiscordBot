@@ -27,7 +27,7 @@ async function edit_message(message, content) {
     }
 }
 
-async function send_reply(firedb, message, content) {
+async function send_reply(firedb, message, content, replyUser=true) {
     if (!message) {
         logging.log(firedb, 'messages.js: Must include message to reply to');
     }
@@ -37,7 +37,7 @@ async function send_reply(firedb, message, content) {
 
         if (!(await discordfunctions.GetMessageWithMessage(message.id, message))) return;
 
-        return message.channel.send({ content, reply: { messageReference: message.id } });
+        return message.channel.send({ content, reply: { messageReference: message.id }, allowedMentions: { repliedUser: replyUser } });
     } catch (error) {
         console.error(error);
     }
