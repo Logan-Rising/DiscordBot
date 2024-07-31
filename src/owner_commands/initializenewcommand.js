@@ -31,22 +31,22 @@ module.exports = {
 
         switch (type) {
             case 'general':
-                path = './general_commands/' + name + '.js';
+                path = './src/general_commands/' + name + '.js';
                 break;
             case 'admin':
-                path = './admin_commands/' + name + '.js';
+                path = './src/admin_commands/' + name + '.js';
                 break;
             case 'game':
-                path = './game_commands/' + name + '.js';
+                path = './src/game_commands/' + name + '.js';
                 break;
             case 'image':
-                path = './image_commands/' + name + '.js';
+                path = './src/image_commands/' + name + '.js';
                 break;
             case 'custom':
-                path = './custom_commands/' + name + '.js';
+                path = './src/custom_commands/' + name + '.js';
                 break;
             case 'owner':
-                path = './owner_commands/' + name + '.js';
+                path = './src/owner_commands/' + name + '.js';
                 break;
             default:
                 messages.send_reply(
@@ -105,6 +105,7 @@ module.exports = {
         // Everything initialized correctly so write to the file
         fs.appendFile(path, message_string, error => {
             if (error) {
+                console.log('Error writing file');
                 logging.error(firedb, error);
             }
             messages.send_message(firedb, message.channel, 'Successfully wrote new command.');

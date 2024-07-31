@@ -1,4 +1,5 @@
 const databasefunctions = require('../src/functions/databasefunctions.js');
+const logging = require('../src/functions/logging.js');
 const constants = require('../src/constants/constants.js');
 const fire = require('firebase/firestore');
 
@@ -37,7 +38,6 @@ const owner_commands = [
     'turnoffcomputer',
 ];
 const image_commands = ['addimage', 'deleteimage', 'image', 'jotchua', 'meme'];
-const console_logs = ['log', 'info', 'error', 'warn'];
 const messaging = [
     'interactions_recieved',
     'messages_deleted',
@@ -45,13 +45,6 @@ const messaging = [
     'messages_sent',
     'reactions_collected',
 ];
-
-// Console
-for (let i = 0; i < console_logs.length; i++) {
-    (await databasefunctions.SetCloudData(firedb, 'console', console_logs[i], { index: 0 }))
-        ? logging.log(firedb, console_logs[i] + ' initialized successfully')
-        : logging.log(firedb, console_logs[i] + ' initialization failed');
-}
 
 // Admin Commands
 for (let i = 0; i < admin_commands.length; i++) {
