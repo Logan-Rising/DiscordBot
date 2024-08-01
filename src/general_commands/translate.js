@@ -38,14 +38,13 @@ module.exports = {
         }
 
         try {
+            let repliedMessage = await discordfunctions.GetMessage(client, message.reference.messageId, message.reference.channelId);
 
-        let repliedMessage = await discordfunctions.GetMessage(client, message.reference.messageId, message.reference.channelId);
+            const translatedText = await translate(repliedMessage.content, { to: language });
 
-        const translatedText = await translate(repliedMessage.content, { to: language });
+            messages.delete_message(firedb, message);
 
-        messages.delete_message(firedb, message);
-
-        messages.send_reply(firedb, repliedMessage, translatedText, false);
+            messages.send_reply(firedb, repliedMessage, translatedText, false);
         } catch (error) {
             logging.error(error);
         }
