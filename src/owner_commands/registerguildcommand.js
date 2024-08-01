@@ -1,6 +1,6 @@
 const databasefunctions = require('../functions/databasefunctions.js');
 const logging = require('../functions/logging.js');
-const constants = require('../constants/constants.js');
+const constants = require('../assets/config.js');
 const { REST, Routes, ApplicationCommandOptionType } = require('discord.js');
 
 module.exports = {

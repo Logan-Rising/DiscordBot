@@ -1,7 +1,7 @@
 const download = require('image-downloader');
 const messages = require('../functions/messages.js');
 const databasefunctions = require('../functions/databasefunctions.js');
-const constants = require('../constants/constants.js');
+const constants = require('../assets/config.js');
 const logging = require('../functions/logging.js');
 
 module.exports = {

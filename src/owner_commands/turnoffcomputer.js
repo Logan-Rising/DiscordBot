@@ -2,7 +2,7 @@
 
 const { exec } = require('child_process');
 const databasefunctions = require('../functions/databasefunctions.js');
-const constants = require('../constants/constants.js');
+const constants = require('../assets/config.js');
 
 module.exports = {
     name: 'turnoffcomputer',

@@ -1,6 +1,6 @@
 const databasefunctions = require('../functions/databasefunctions.js');
 const messages = require('../functions/messages.js');
-const constants = require('../constants/constants.js');
+const constants = require('../assets/config.js');
 const logging = require('../functions/logging.js');
 
 async function GetImage(message, name, firedb) {

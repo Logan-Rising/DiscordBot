@@ -1,7 +1,7 @@
 const messages = require('../functions/messages.js');
 const databasefunctions = require('../functions/databasefunctions.js');
-const kickfunction = require('../constants/constants.js');
-const constants = require('../constants/constants.js');
+const kickfunction = require('../assets/config.js');
+const constants = require('../assets/config.js');
 const { PermissionsBitField } = require('discord.js');
 
 module.exports = {

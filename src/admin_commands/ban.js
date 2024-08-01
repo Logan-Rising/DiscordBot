@@ -1,8 +1,8 @@
 const messages = require('../functions/messages.js');
 const databasefunctions = require('../functions/databasefunctions.js');
-const banfunction = require('../constants/constants.js');
+const banfunction = require('../assets/config.js');
 const { PermissionsBitField } = require('discord.js');
-const constants = require('../constants/constants.js');
+const constants = require('../assets/config.js');
 
 module.exports = {
     name: 'ban',

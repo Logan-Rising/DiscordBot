@@ -1,7 +1,7 @@
 /* Windows Only */
 
 const databasefunctions = require('../functions/databasefunctions.js');
-const constants = require('../constants/constants.js');
+const constants = require('../assets/config.js');
 
 module.exports = {
     name: 'terminate',

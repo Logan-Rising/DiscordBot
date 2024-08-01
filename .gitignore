@@ -2,8 +2,8 @@
 .DS_Store
 /src/custom_commands
 script.bat
-/src/constants/kick.gif
+/src/assets/kick.gif
 /cache
 /src/functions/customfunctions.js
-/src/constants/pc.jpg
-/src/constants/constants.js
+/src/assets/pc.jpg
+/src/assets/config.js

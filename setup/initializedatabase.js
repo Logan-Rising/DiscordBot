@@ -1,6 +1,6 @@
 const databasefunctions = require('../src/functions/databasefunctions.js');
 const logging = require('../src/functions/logging.js');
-const constants = require('../src/constants/constants.js');
+const constants = require('../src/assets/config.js');
 const fire = require('firebase/firestore');
 
 const firebaseConfig = constants.firebaseConfig;

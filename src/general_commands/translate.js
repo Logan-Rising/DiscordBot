@@ -3,7 +3,7 @@ const discordfunctions = require('../functions/discordfunctions.js');
 const logging = require('../functions/logging.js');
 const messages = require('../functions/messages.js');
 const {translate} = require('free-translate');
-const languages = require('../constants/supportedlanguages.js');
+const languages = require('../assets/supportedlanguages.js');
 
 module.exports = {
     name: 'translate',

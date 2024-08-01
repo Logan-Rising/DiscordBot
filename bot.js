@@ -11,7 +11,7 @@ const client = new Client({
 
 const app = require('firebase/app');
 const fire = require('firebase/firestore');
-const constants = require('./src/constants/constants.js');
+const constants = require('./src/assets/config.js');
 const databasefunctions = require('./src/functions/databasefunctions.js');
 const reactionmessagefunctions = require('./src/functions/reactionmessagefunctions.js');
 

@@ -34,9 +34,9 @@ Navigate to the `src/setup` directory in Command Prompt (Windows) or Terminal (m
 node botsetup.js
 ```
 
-Once the script is finished, find the `constant.js` file located in `src/constants/constants.js` and fill in all of the variables as described in the comments.
+Once the script is finished, find the `constant.js` file located in `src/assets/config.js` and fill in all of the variables as described in the comments.
 
-Once the `constants.js` file is filled in, run the following command, ensuring the firebaseConfig is correct from your Google Firebase project.
+Once the `config.js` file is filled in, run the following command, ensuring the firebaseConfig is correct from your Google Firebase project.
 
 ```
 node initializedatabase.js
@@ -58,7 +58,7 @@ For formatting your code to align with styling provided by [Prettier Formatter],
 npx prettier --write <path>
 ```
 
-Store your files that are not tracked by git, such as `constants.js`, somewhere in the cloud if you intend to run on multiple computers.
+Store your files that are not tracked by git, such as `config.js`, somewhere in the cloud if you intend to run on multiple computers.
 
 To run this project locally on a pc, set up a .bat file that launched on startup of your pc to run `node bot.js`. This will run the bot when your pc is powered.
 

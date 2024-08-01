@@ -16,7 +16,7 @@
 ### Changed
 
 -   Updated to Discord.js 14
--   Move custom functions to constants.js file
+-   Move custom functions to config.js file
 -   Reorganize project to put all source code under /src
 -   Changed setup scripts and setup information to be located under /setup
 -   Moved the directory for custom commands to /src/custom_commands
@@ -45,7 +45,7 @@
 
 -   Changed database from local json to firebase to track command usage and image management.
 -   Separated shared functions into separate files.
--   Changed all constants to be pulled from a constants.js file in src/constants/constants.js for the code base to be run with different instances and reusability of code for other bots.
+-   Changed all constants to be pulled from a config.js file in src/assets/config.js for the code base to be run with different instances and reusability of code for other bots.
 -   Changed help command to work with new folder layout.
 -   Updated README file for bot initialization.
 -   Changed commands to have users[] and servers[] arrays for permissions instead of if statements inside the execute() function.

@@ -1,4 +1,4 @@
-const constants = require('../../constants/constants.js');
+const constants = require('../../assets/config.js');
 
 module.exports = () => {
     console.log(constants.startupMessage);

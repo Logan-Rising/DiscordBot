@@ -1,5 +1,5 @@
 const databasefunctions = require('../functions/databasefunctions.js');
-const constants = require('../constants/constants.js');
+const constants = require('../assets/config.js');
 const messagefunctions = require('../functions/messages.js');
 
 module.exports = {

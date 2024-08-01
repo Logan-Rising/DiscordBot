@@ -2,7 +2,7 @@ const fs = require('fs');
 const messages = require('../functions/messages.js');
 const databasefunctions = require('../functions/databasefunctions.js');
 const permissions = require('../functions/permissionscheck.js');
-const constants = require('../constants/constants.js');
+const constants = require('../assets/config.js');
 const { PermissionsBitField } = require('discord.js');
 const { EmbedBuilder } = require('discord.js');
 

@@ -1,6 +1,6 @@
 const databasefunctions = require('./databasefunctions.js');
 const messagefunctions = require('./messages.js');
-const constants = require('../constants/constants.js');
+const constants = require('../assets/config.js');
 
 async function FilterMessage(firedb, message) {
     // Server exists in filter database

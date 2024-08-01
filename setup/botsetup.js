@@ -6,7 +6,7 @@ const fs = require('fs');
 const logging = require('../src/functions/logging.js');
 
 /* Initialize constants file. Fill in variable values once initialized. */
-const constantsPath = '../src/constants/constants.js';
+const constantsPath = '../src/assets/config.js';
 const constantsContent = `// Whether or not to run certain things based on if bot is in debug or not
 const debug = false;
 
@@ -97,7 +97,7 @@ module.exports = {
 };
 `;
 
-/* Initialize constants.js file. Fill out custom functions if desired to edit gifs upon user being kicked.*/
+/* Initialize config.js file. Fill out custom functions if desired to edit gifs upon user being kicked.*/
 fs.appendFile(constantsPath, constantsContent, error => {
     if (error) {
         logging.error(firedb, error);
