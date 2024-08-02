@@ -1,4 +1,5 @@
 const databasefunctions = require('../functions/databasefunctions.js');
+const discordfunctions = require('../functions/discordfunctions.js');
 const messages = require('../functions/messages.js');
 const utilities = require('../functions/utilities.js');
 const logging = require('../functions/logging.js');
@@ -14,14 +15,23 @@ module.exports = {
     async execute(client, message, args, Discord, firedb) {
         await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
+        // Replied to another message so find the image in the replied to message
+        if ( message.type === 19 ) {
+            message = await discordfunctions.GetMessage(client, message.reference.messageId, message.reference.channelId);
+        } 
+
         let memeCaption = '';
         let length = 0;
         let black = false;
         let i = 0;
+        const width = 256;
+        const height = 256;
 
         // Check if the user wants the text black
         if ( args[0].toLowerCase() === '!black') {
             black = true;
+            i = 1;
+        } else if ( args[0].toLowerCase() === '!white') {
             i = 1;
         }
 
@@ -33,7 +43,7 @@ module.exports = {
             length += (args[i].length + 1);
         }
 
-        // Adjust sizing based on length of meme text
+        // Adjust font sizing based on length of meme text
         if ( length > 16 && length <= 90 && !black ) {
             fontTitle = Jimp.FONT_SANS_16_WHITE;
         } else if ( length > 90 && !black ) {
@@ -58,16 +68,17 @@ module.exports = {
             })
                 .then(async image => {
                     image
+                        .resize(width, height)
                         .print(
                             font,
                             0,
-                            0,
+                            height / 20 ,
                             {
                                 text: memeCaption,
                                 alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
                             },
-                            image.bitmap.width,
-                            image.bitmap.height
+                            width,
+                            height,
                         )
                         .write(fileIdName);
 

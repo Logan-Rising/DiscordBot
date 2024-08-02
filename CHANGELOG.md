@@ -12,6 +12,8 @@
 -   Added functionality for slash commands
 -   Added reaction role slash command with complete customizability
 -   Console logging, error, info, and warn tracking and functions for handling console
+-   Command for meme creation based on an image or replied to image
+-   Language translation command for replied to messages
 
 ### Changed
 
@@ -27,6 +29,7 @@
 ### Removed
 
 -   Removed discord-reply package to use native reply functionality
+-   Removed canvas-gif package due to being depricated and vunerable
 
 ## v2.0
 
