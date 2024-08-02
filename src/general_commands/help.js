@@ -46,15 +46,14 @@ module.exports = {
         else if (args[0] && args[0].toLowerCase() === 'admin') admin_bool = true;
         else if (args[0] && args[0].toLowerCase() === 'image') image_bool = true;
         else if (args[0] && args[0].toLowerCase() === 'custom') custom_bool = true;
-        else if ( args[0] ) {
+        else if (args[0]) {
             general_bool = true;
             game_bool = true;
             admin_bool = true;
             image_bool = true;
             custom_bool = true;
             searchForCommand = true;
-        }
-        else {
+        } else {
             general_bool = true;
             game_bool = true;
             admin_bool = true;

@@ -16,9 +16,13 @@ module.exports = {
         await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
         // Replied to another message so find the image in the replied to message
-        if ( message.type === 19 ) {
-            message = await discordfunctions.GetMessage(client, message.reference.messageId, message.reference.channelId);
-        } 
+        if (message.type === 19) {
+            message = await discordfunctions.GetMessage(
+                client,
+                message.reference.messageId,
+                message.reference.channelId
+            );
+        }
 
         let memeCaption = '';
         let length = 0;
@@ -28,29 +32,29 @@ module.exports = {
         const height = 256;
 
         // Check if the user wants the text black
-        if ( args[0].toLowerCase() === '!black') {
+        if (args[0].toLowerCase() === '!black') {
             black = true;
             i = 1;
-        } else if ( args[0].toLowerCase() === '!white') {
+        } else if (args[0].toLowerCase() === '!white') {
             i = 1;
         }
 
         let fontTitle = black ? Jimp.FONT_SANS_32_BLACK : Jimp.FONT_SANS_32_WHITE;
 
         // Set meme description and track length
-        for ( i; i < args.length; i++ ) {
+        for (i; i < args.length; i++) {
             memeCaption += args[i] + (i !== args.length ? ' ' : '');
-            length += (args[i].length + 1);
+            length += args[i].length + 1;
         }
 
         // Adjust font sizing based on length of meme text
-        if ( length > 16 && length <= 90 && !black ) {
+        if (length > 16 && length <= 90 && !black) {
             fontTitle = Jimp.FONT_SANS_16_WHITE;
-        } else if ( length > 90 && !black ) {
+        } else if (length > 90 && !black) {
             fontTitle = Jimp.FONT_SANS_8_WHITE;
-        } else if ( length > 16 && length <= 90 && black ) {
+        } else if (length > 16 && length <= 90 && black) {
             fontTitle = Jimp.FONT_SANS_16_BLACK;
-        } else if ( length > 90 && black ) {
+        } else if (length > 90 && black) {
             fontTitle = Jimp.FONT_SANS_8_BLACK;
         }
 
@@ -72,13 +76,13 @@ module.exports = {
                         .print(
                             font,
                             0,
-                            height / 20 ,
+                            height / 20,
                             {
                                 text: memeCaption,
                                 alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
                             },
                             width,
-                            height,
+                            height
                         )
                         .write(fileIdName);
 
