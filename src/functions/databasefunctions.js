@@ -501,6 +501,7 @@ module.exports = {
     IncrementReactionRoleMessageCount,
     DecrementReactionRoleMessageCount,
     RolloverDailyData,
+    ResetDailyCommands,
     SetStatus,
     SetServerCount,
 };

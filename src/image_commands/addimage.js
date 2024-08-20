@@ -42,7 +42,7 @@ module.exports = {
             download
                 .image(options)
                 .then(({ filename }) => {
-                    logging.log(firedb, 'Saved to', filename); // saved to /path/to/dest/photo.jpg
+                    logging.log(firedb, 'Saved to' + filename); // saved to /path/to/dest/photo.jpg
                 })
                 .catch(err => console.error(err));
         });

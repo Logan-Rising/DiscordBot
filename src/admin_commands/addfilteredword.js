@@ -6,7 +6,7 @@ module.exports = {
     description: "Add a filtered word from this server's filtered word list",
     users: ['admin'],
     servers: [],
-    syntax: '&addfilteredword',
+    syntax: '&addfilteredword <word>',
     async execute(client, message, args, Discord, firedb) {
         await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
