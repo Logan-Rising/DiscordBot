@@ -119,5 +119,5 @@ fs.access(customCommands, error => {
 });
 
 // Create server message filter cache
-var createStream = fs.createWriteStream('./cache/server_message_filter_cache.json');
+var createStream = fs.createWriteStream('./cache/servers.json');
 createStream.end();

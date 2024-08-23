@@ -7,7 +7,7 @@ const logging = require('./logging.js');
 const JSONdb = require('simple-json-db');
 const { util } = require('prettier');
 const { image } = require('image-downloader');
-const db = new JSONdb('./cache/server_message_filter_cache.json');
+const db = new JSONdb('./cache/servers.json');
 
 async function SetCloudData(firedb, document, collection, data) {
     let success = true;
@@ -42,6 +42,84 @@ async function IncrementDaily(firedb, number, collection, document) {
     } catch (error) {
         logging.error(firedb, error);
     }
+}
+
+async function IncrementDailyChannelReadMessage(firedb, serverId, channelId, count, message, client, memberId) {
+    let success = true;
+
+    try {
+        let serverInfo = await GetServerInfo(serverId);
+
+        if (!serverInfo) {
+            const channelList = await message.guild.channels.cache.values();
+            const guild = await client.guilds.resolve(message.guild);
+            const memberList = await guild.members.fetch().catch(console.error);
+            await InitializeNewServer(firedb, message.guild.id, channelList, memberList);
+            serverInfo = await GetServerInfo(serverId);
+        }
+
+        if ( !serverInfo.today_channels[channelId] )
+            serverInfo.today_channels[channelId] = 0;
+
+        if ( !serverInfo.today_members[memberId] )
+            serverInfo.today_members[memberId] = 0;
+
+        serverInfo.today_channels[channelId] = serverInfo.today_channels[channelId] += count;
+        serverInfo.today_members[memberId] = serverInfo.today_members[memberId] += count;
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+        success = false;
+    }
+    return success;
+}
+
+async function IncrementDailyServerCommandUsed(firedb, serverId, count) {
+    let success = true;
+
+    try {
+        let serverInfo = await GetServerInfo(serverId);
+
+        if ( !serverInfo.commands_today )
+            serverInfo.commands_today = 0;
+
+        serverInfo.commands_today = serverInfo.commands_today += count;
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+        success = false;
+    }
+    return success;
+}
+
+async function IncrementServerFilteredMessages(firedb, serverId, count) {
+    let success = true;
+
+    try {
+        let serverInfo = await GetServerInfo(serverId);
+
+        if ( !serverInfo.filtered_messages )
+            serverInfo.filtered_messages = 0;
+
+        serverInfo.filtered_messages = serverInfo.filtered_messages += count;
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+        success = false;
+    }
+    return success;
 }
 
 async function IncrementIndex(firedb, number, collection, document) {
@@ -286,13 +364,42 @@ async function GetServerFilterInfo(serverId) {
     return db.get(serverId);
 }
 
-async function InitializeNewServer(firedb, serverId) {
+async function InitializeNewServer(firedb, serverId, channelList, memberList) {
     let success = true;
 
     try {
+        let channelObj = {}, memberObj = {};
+        let i = 0;
+
+        // Add channels to server database
+        for (var channel of channelList) {
+            if (i === 0) guild = channel.guild.id;
+            channelObj[channel.id] = channel.name;
+            i++;
+        }
+
+        for (var member of memberList) {
+            memberObj[member[1].user.id] = member[1].user.username;
+        }
+
         const serverFilterInfo = {
             filter_status: false,
             filtered_words: [],
+            reaction_role_messages: 0,
+            today_channels: {},
+            last_7_days_channels: [
+                {}, {}, {}, {}, {}, {}, {}
+            ],
+            filtered_messages: 0,
+            commands_today: 0,
+            last_7_days_commands: 0,
+            today_members: {},
+            last_7_days_members: [
+                {}, {}, {}, {}, {}, {}, {}
+            ],
+            channels: channelObj,
+            members: memberObj,
+            log_channel: '',
         };
 
         const docRef = await fire.doc(firedb, 'servers', serverId);
@@ -439,9 +546,75 @@ async function ResetDailyCommands(firedb, todayDate) {
         };
 
         await SetCloudData(firedb, 'daily_stats', todayDate, dateInfo);
+
+        await RolloverDailyServerInfo(firedb);
     } catch (error) {
         logging.error(firedb, error);
     }
+}
+
+async function RolloverDailyServerInfo(firedb) {
+    const data = db.JSON();
+
+    for (const key in data) {   // key is server id
+        let channelDataToday = data[key].today_channels;
+
+        let commandDataToday = data[key].commands_today;
+
+        let last7Days = data[key].last_7_days_channels;
+
+        if (!last7Days) {
+            last7Days = [{}, {}, {}, {}, {}, {}, {}];
+        }
+
+        let last7DaysCommands = data[key].last_7_days_commands;
+
+        if (!last7DaysCommands) {
+            last7DaysCommands = [0, 0, 0, 0, 0, 0, 0];
+        }
+
+        let last7DaysMembers = data[key].last_7_days_members;
+
+        if (!last7DaysMembers) {
+            last7DaysMembers = [{}, {}, {}, {}, {}, {}, {}];
+        }
+
+        // Add newest data to array and replace old
+        last7Days.unshift(channelDataToday ? channelDataToday : {});
+        last7Days.pop();
+
+        last7DaysCommands.unshift(commandDataToday ? commandDataToday : 0);
+        last7DaysCommands.pop();
+
+        last7DaysMembers.unshift(data[key].today_members ? data[key].today_members : {});
+        last7DaysMembers.pop();
+
+        // Set new server info
+        let serverInfo = await GetServerInfo(key);
+        serverInfo.today_channels = {};
+        serverInfo.last_7_days_channels = last7Days;
+        serverInfo.last_7_days_commands = last7DaysCommands;
+        serverInfo.commands_today = 0;
+        serverInfo.today_members = {};
+        db.set(key, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', key);
+        await fire.setDoc(docRef, serverInfo);
+    }
+}
+
+async function GetTotalDailyMessages() {
+    let total = 0;
+    const data = db.JSON();
+
+    for (const key in data) {
+        let serverData = data[key].today_channels;
+        for (const key2 in serverData) {
+            total += serverData[key2];
+        }
+    }
+
+    return total;
 }
 
 async function SetStatus(firedb) {
@@ -475,10 +648,157 @@ async function SetServerCount(firedb, client) {
     }
 }
 
+async function AddMemberToServer(firedb, serverId, userId, userName) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        serverInfo.members[userId] = userName;
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function RemoveMemberFromServer(firedb, serverId, userId) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        delete serverInfo.members[userId];
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function AddChannelToServer(firedb, serverId, channelId, channelName) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        serverInfo.channels[channelId] = channelName;
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function RemoveChannelFromServer(firedb, serverId, channelId) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        delete serverInfo.channels[channelId];
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function UpdateChannelInServer(firedb, serverId, oldChannelId, newChannelId, newChannelName) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        delete serverInfo.channels[oldChannelId];
+
+        serverInfo.channels[newChannelId] = newChannelName;
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function SetChannelList(firedb, serverId, channelList) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        serverInfo.channels = channelList;
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function SetMemberList(firedb, serverId, memberList) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        serverInfo.members = memberList;
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function SetServerName(firedb, serverId, name) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        serverInfo.server_name = name;
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function GetLogChannel(firedb, serverId) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+        return serverInfo ? serverInfo.log_channel ? serverInfo.log_channel : '' : '';
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function SetLogChannel(firedb, serverId, channelId) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        serverInfo.log_channel = channelId;
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
 module.exports = {
     SetCloudData,
     DeleteFirebaseDocument,
     IncrementDaily,
+    IncrementDailyChannelReadMessage,
     IncrementIndex,
     SetIndex,
     GetIndex,
@@ -504,4 +824,18 @@ module.exports = {
     ResetDailyCommands,
     SetStatus,
     SetServerCount,
+    GetTotalDailyMessages,
+    RolloverDailyServerInfo,
+    IncrementDailyServerCommandUsed,
+    IncrementServerFilteredMessages,
+    AddMemberToServer,
+    RemoveMemberFromServer,
+    AddChannelToServer,
+    RemoveChannelFromServer,
+    UpdateChannelInServer,
+    SetChannelList,
+    SetMemberList,
+    SetServerName,
+    GetLogChannel,
+    SetLogChannel,
 };

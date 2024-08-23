@@ -1,5 +1,6 @@
 const permissions = require('../../functions/permissionscheck.js');
 const databasefunctions = require('../../functions/databasefunctions.js');
+const discordfunctions = require('../../functions/discordfunctions.js');
 const messagefilter = require('../../functions/messagefilter.js');
 const { PermissionsBitField } = require('discord.js');
 const constants = require('../../assets/config.js');
@@ -10,6 +11,8 @@ module.exports = async (Discord, client, firedb, message) => {
     // Increment messages parsed counter
     await databasefunctions.IncrementDaily(firedb, 1, 'messaging', 'messages_read');
 
+    await databasefunctions.IncrementDailyChannelReadMessage(firedb, message.guildId, message.channelId, 1, message, client, message.author.id);
+
     if (message.guild === null) {
         // DM
         return;
@@ -18,7 +21,7 @@ module.exports = async (Discord, client, firedb, message) => {
     if (message.author.id === constants.botId) return;
 
     if (!message.content.startsWith(prefix) || message.author.bot) {
-        messagefilter.FilterMessage(firedb, message);
+        messagefilter.FilterMessage(firedb, message, client);
         return;
     }
 
@@ -26,7 +29,7 @@ module.exports = async (Discord, client, firedb, message) => {
     const cmd = args.shift().toLowerCase();
 
     if (cmd != 'removefilteredword') {
-        messagefilter.FilterMessage(firedb, message);
+        messagefilter.FilterMessage(firedb, message, client);
     }
 
     const command = client.commands.get(cmd);
@@ -38,6 +41,8 @@ module.exports = async (Discord, client, firedb, message) => {
             message.guild.id,
             message.member.permissions.has(PermissionsBitField.Flags.Administrator)
         )
-    )
+    ){
         command.execute(client, message, args, Discord, firedb);
+        await databasefunctions.IncrementDailyServerCommandUsed(firedb, message.guildId, 1);
+    }
 };

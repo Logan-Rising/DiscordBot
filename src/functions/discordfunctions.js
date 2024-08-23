@@ -48,6 +48,15 @@ async function GetRole(client, guildId, roleId) {
     return await guild.roles.cache.get(roleId);
 }
 
+async function GetGuildChannels(message) {
+    return await message.guild.channels.cache.values();
+}
+
+async function GetGuildMembers(client, guildId) {
+    const guild = client.guilds.resolve(guildId);
+    return await guild.members.fetch().catch(console.error);
+}
+
 module.exports = {
     GetGuild,
     GetChannel,
@@ -57,4 +66,6 @@ module.exports = {
     GetMessageWithMessage,
     GetMessage,
     GetRole,
+    GetGuildChannels,
+    GetGuildMembers,
 };

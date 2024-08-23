@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## v3.1
+
+### Added
+
+-   Added data tracking for individual servers for with database logging
+-   Added server logging for events using stored logging channel
+-   Added setlogchannel command to set the logging channel for the server
+-   Added channelCreate, channelUpdate, channelRemove, guildMemberRemove, guildMemberAdd event handlers
+
+### Changed
+
+-   Changed default server database structure
+
+### Removed
+
+-   
+
 ## v3.0
 
 ### Added
