@@ -45,9 +45,10 @@ client.on('ready', async () => {
     constants.onStartup(client, db);
 
     if (!constants.debug) {
-        // await databasefunctions.SyncCachedServerSettings(db);
-        await reactionmessagefunctions.SetupOldReactionMessages(db, client);
-        await databasefunctions.RolloverDailyData(db);
+        // await databasefunctions.SyncCachedServerSettings(db);    // Sync firebase server data to cache database
+        await reactionmessagefunctions.SetupOldReactionMessages(db, client);    // Restart reaction role messages listeners
+        await databasefunctions.RolloverDailyData(db);  // Set up rolling data at midnight
+        await databasefunctions.CheckYesterday(db); // Roll over data if there was no data yesterday
     }
 
     // Set status then every 5 minutes set server count and update status

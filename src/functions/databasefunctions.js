@@ -462,6 +462,18 @@ async function SetReactionRoleMessageCount(firedb, serverId, count) {
     return success;
 }
 
+async function CheckYesterday(firedb) {
+    const date = new Date();
+    date.setDate(date.getDate() - 1);
+    const yesterday = date.toISOString().split('T')[0];
+    const docRef = await fire.doc(firedb, 'daily_stats', yesterday);
+    const docSnap = await fire.getDoc(docRef);
+    if (!docSnap.exists()) {
+        await logging.log(firedb, 'There was no data in the database for yesterday. Rolling over data now.');
+        await ResetDailyCommands(firedb, yesterday);
+    }
+}
+
 async function RolloverDailyData(firedb) {
     const todayDate = utilities.GetDateNoTime(); // Current date
     var now = new Date();
@@ -838,4 +850,5 @@ module.exports = {
     SetServerName,
     GetLogChannel,
     SetLogChannel,
+    CheckYesterday,
 };
