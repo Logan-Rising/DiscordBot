@@ -17,6 +17,11 @@ module.exports = {
     async execute(client, message, args, Discord, firedb) {
         await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
+        if (message.type !== 19) {
+            messages.send_reply(firedb, message, 'Must reply to a message to translate');
+            return;
+        }
+
         if (!args[0]) {
             messages.send_reply(firedb, message, 'Must specify language to translate to');
             return;
