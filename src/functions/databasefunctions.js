@@ -44,7 +44,7 @@ async function IncrementDaily(firedb, number, collection, document) {
     }
 }
 
-async function IncrementDailyChannelReadMessage(firedb, serverId, channelId, count, message, client, memberId) {
+async function IncrementDailyChannelReadMessage(firedb, serverId, channelId, count, message, client, memberId, serverName) {
     let success = true;
 
     try {
@@ -54,7 +54,7 @@ async function IncrementDailyChannelReadMessage(firedb, serverId, channelId, cou
             const channelList = await message.guild.channels.cache.values();
             const guild = await client.guilds.resolve(message.guild);
             const memberList = await guild.members.fetch().catch(console.error);
-            await InitializeNewServer(firedb, message.guild.id, channelList, memberList);
+            await InitializeNewServer(firedb, message.guild.id, channelList, memberList, serverName);
             serverInfo = await GetServerInfo(serverId);
         }
 
@@ -364,7 +364,7 @@ async function GetServerFilterInfo(serverId) {
     return db.get(serverId);
 }
 
-async function InitializeNewServer(firedb, serverId, channelList, memberList) {
+async function InitializeNewServer(firedb, serverId, channelList, memberList, guildName) {
     let success = true;
 
     try {
@@ -400,6 +400,9 @@ async function InitializeNewServer(firedb, serverId, channelList, memberList) {
             channels: channelObj,
             members: memberObj,
             log_channel: '',
+            server_name: guildName,
+            filter_violations: {},
+            max_violations: 10,
         };
 
         const docRef = await fire.doc(firedb, 'servers', serverId);
@@ -516,6 +519,7 @@ async function ResetDailyCommands(firedb, todayDate) {
         });
 
         // Roll over messaging related information
+        const messagesToday = await GetTotalDailyMessages();
         const messaging = fire.query(fire.collection(firedb, 'messaging'));
         const querySnapshotMessaging = await fire.getDocs(messaging);
         querySnapshotMessaging.forEach(async doc => {
@@ -527,8 +531,13 @@ async function ResetDailyCommands(firedb, todayDate) {
 
             messagingInfo[doc.id] = currentMessagingInfo;
 
-            data.index = data.index + data.daily;
-            data.daily = 0;
+            if (doc.id === 'messages_read') {
+                data.index = data.index + messagesToday;
+                data.daily = 0;
+            } else {
+                data.index = data.index + data.daily;
+                data.daily = 0;
+            }
 
             await fire.setDoc(fire.doc(firedb, 'messaging', doc.id), data);
         });
@@ -785,7 +794,7 @@ async function SetServerName(firedb, serverId, name) {
 async function GetLogChannel(firedb, serverId) {
     try {
         let serverInfo = await GetServerFilterInfo(serverId);
-        return serverInfo ? serverInfo.log_channel ? serverInfo.log_channel : '' : '';
+        return serverInfo ? (serverInfo.log_channel ? serverInfo.log_channel : '') : '';
     } catch (error) {
         logging.error(firedb, error);
     }
@@ -801,6 +810,104 @@ async function SetLogChannel(firedb, serverId, channelId) {
 
         const docRef = await fire.doc(firedb, 'servers', serverId);
         await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function SetServerFilterViolationsList(firedb, serverId, list) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        serverInfo.filter_violations = list;
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function GetServerFilterViolationsList(firedb, serverId) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        return serverInfo.filter_violations;
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function IncrementUserFilterViolations(firedb, serverId, userId, count = 1) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        if (serverInfo.filter_violations[userId]) {
+            serverInfo.filter_violations[userId] = serverInfo.filter_violations[userId] + count;
+        } else {
+            serverInfo.filter_violations[userId] = count;
+        }
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function SetUserFilterViolations(firedb, serverId, userId, count) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        if (count === 0) {
+            delete serverInfo.filter_violations[userId];
+        } else {
+            serverInfo.filter_violations[userId] = count;
+        }
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function GetUserViolations(firedb, serverId, userId) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        return serverInfo.filter_violations[userId] ? serverInfo.filter_violations[userId] : 0;
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function SetUserViolationsMax(firedb, serverId, num) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        serverInfo.max_violations = num;
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function GetUserViolations(firedb, serverId, userId) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        return serverInfo.max_violations;
     } catch (error) {
         logging.error(firedb, error);
     }
@@ -851,4 +958,10 @@ module.exports = {
     GetLogChannel,
     SetLogChannel,
     CheckYesterday,
+    SetServerFilterViolationsList,
+    GetServerFilterViolationsList,
+    IncrementUserFilterViolations,
+    SetUserFilterViolations,
+    GetUserViolations,
+    SetUserViolationsMax,
 };

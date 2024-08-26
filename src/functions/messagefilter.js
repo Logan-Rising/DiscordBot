@@ -25,7 +25,8 @@ async function FilterMessage(firedb, message, client) {
                             message.guild.name +
                             '. Please refrain from using it in the future. Thank you!'
                     );
-                    await messagefunctions.delete_message(firedb, message);
+                    await messagefunctions.delete_message(firedb, message, true, client, 'auto filter');
+                    await databasefunctions.IncrementUserFilterViolations(firedb, message.guild.id, message.author.id);
                     await databasefunctions.IncrementServerFilteredMessages(firedb, message.guildId, 1);
                 }
             }

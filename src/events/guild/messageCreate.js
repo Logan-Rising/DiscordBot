@@ -9,9 +9,7 @@ module.exports = async (Discord, client, firedb, message) => {
     const prefix = '&';
 
     // Increment messages parsed counter
-    await databasefunctions.IncrementDaily(firedb, 1, 'messaging', 'messages_read');
-
-    await databasefunctions.IncrementDailyChannelReadMessage(firedb, message.guildId, message.channelId, 1, message, client, message.author.id);
+    await databasefunctions.IncrementDailyChannelReadMessage(firedb, message.guildId, message.channelId, 1, message, client, message.author.id, message.guild.name);
 
     if (message.guild === null) {
         // DM
@@ -28,7 +26,7 @@ module.exports = async (Discord, client, firedb, message) => {
     const args = message.content.slice(prefix.length).split(/ +/);
     const cmd = args.shift().toLowerCase();
 
-    if (cmd != 'removefilteredword') {
+    if (cmd != 'removefilteredword' && cmd != 'addfilteredword') {
         messagefilter.FilterMessage(firedb, message, client);
     }
 

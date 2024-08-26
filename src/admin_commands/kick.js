@@ -46,17 +46,18 @@ module.exports = {
             await kickMessage.react(green_check);
             await kickMessage.react(red_x);
             const collector = kickMessage.createReactionCollector(filter, { maxEmojis: 2 });
-            collector.on('collect', (reaction, user) => {
+            collector.on('collect', async (reaction, user) => {
                 switch (reaction.emoji.name) {
                     case green_check:
                         if (user.id === constants.botId) break;
                         memberTarget.kick();
-                        kickfunction.onKickBan(firedb, memberTarget.user.tag, message.channel, id);
+                        await messages.server_log(firedb, client, message.guild.id, `<@${id}> has been kicked by <@${message.author.id}`);
+                        await kickfunction.onKickBan(firedb, memberTarget.user.tag, message.channel, id);
                         collector.stop();
                         break;
                     default:
                         if (user.id === constants.botId) break;
-                        messages.send_message(firedb, message.channel, `<@${id}> lives to see another day`);
+                        await messages.send_message(firedb, message.channel, `<@${id}> lives to see another day`);
                         collector.stop();
                         break;
                 }

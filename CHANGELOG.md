@@ -5,9 +5,10 @@
 ### Added
 
 -   Added data tracking for individual servers for with database logging
--   Added server logging for events using stored logging channel
+-   Added server logging for events using stored logging channel: kick, ban, channel updates, message filter deletions
 -   Added setlogchannel command to set the logging channel for the server
 -   Added channelCreate, channelUpdate, channelRemove, guildMemberRemove, guildMemberAdd event handlers
+-   Added violations tracking to database for users breaking filter rules for servers
 
 ### Changed
 

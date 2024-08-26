@@ -47,17 +47,31 @@ async function send_reply(firedb, message, content, replyUser = true) {
     }
 }
 
-async function delete_message(firedb, message) {
+async function delete_message(firedb, message, log=false, client=undefined, trigger='') {
     if (!message) {
         logging.log(firedb, 'messages.js: Must include message to reply to');
     }
 
     try {
         await databasefunctions.IncrementDaily(firedb, 1, 'messaging', 'messages_deleted');
+        if (log && client && trigger) {
+            server_log(firedb, client, message.guild.id, `The message: **"` + message.content + `"** was deleted from <#${message.channelId}> and was sent by <@${message.author.id}>. Trigger was ` + trigger)
+        }
         return message.delete();
     } catch (error) {
         console.error(error);
     }
 }
 
-module.exports = { send_message, edit_message, send_reply, delete_message };
+async function server_log(firedb, client, serverId, content) {
+    try {
+        let channelId = await databasefunctions.GetLogChannel(firedb, serverId);
+        if (channelId === '') return; // Server does not have a logging channel defined
+        let logChannel = await discordfunctions.GetChannel(client, channelId);
+        await send_message(firedb, logChannel, content);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+module.exports = { send_message, edit_message, send_reply, delete_message, server_log };
