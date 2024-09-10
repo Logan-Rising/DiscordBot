@@ -57,6 +57,18 @@ async function GetGuildMembers(client, guildId) {
     return await guild.members.fetch().catch(console.error);
 }
 
+async function GetAllMemberRoles(member, guildId) {
+    const roles = [];
+
+    try {
+        await member.roles.cache.filter(roles => roles.id !== guildId).map(role => roles.push(role.id));
+    } catch (error) {
+        await logging.error(error);
+    }
+
+    return roles;
+}
+
 module.exports = {
     GetGuild,
     GetChannel,
@@ -68,4 +80,5 @@ module.exports = {
     GetRole,
     GetGuildChannels,
     GetGuildMembers,
+    GetAllMemberRoles,
 };

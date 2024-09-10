@@ -2,10 +2,10 @@ const fire = require('firebase/firestore');
 const utilities = require('./utilities.js');
 const discordfunctions = require('./discordfunctions.js');
 const logging = require('./logging.js');
+const graph = require('./graph.js');
 
 // Local cache json database
 const JSONdb = require('simple-json-db');
-const { util } = require('prettier');
 const { image } = require('image-downloader');
 const db = new JSONdb('./cache/servers.json');
 
@@ -19,6 +19,35 @@ async function SetCloudData(firedb, document, collection, data) {
         success = false;
     }
     return success;
+}
+
+async function GetCloudData(firedb, document, collection) {
+    let success = true;
+    try {
+        const docRef = await fire.doc(firedb, document, collection);
+        const docSnap = await fire.getDoc(docRef);
+
+        if (!docSnap.exists()) {
+            await logging.log(firedb, 'Could not find data with specified collection and document.');
+            return undefined;
+        }
+
+        return docSnap.data();
+    } catch (error) {
+        logging.error(firedb, error);
+        success = false;
+    }
+    return success;
+}
+
+async function GetAllDocuments(firedb, collection) {
+    let documents = [];
+    const docx = fire.query(fire.collection(firedb, collection));
+    const querySnapshotDocx = await fire.getDocs(docx);
+    querySnapshotDocx.forEach(async doc => {
+        documents.push({ id: doc.id, data: doc.data() });
+    });
+    return documents;
 }
 
 // https://firebase.google.com/docs/firestore/manage-data/delete-data
@@ -44,7 +73,16 @@ async function IncrementDaily(firedb, number, collection, document) {
     }
 }
 
-async function IncrementDailyChannelReadMessage(firedb, serverId, channelId, count, message, client, memberId, serverName) {
+async function IncrementDailyChannelReadMessage(
+    firedb,
+    serverId,
+    channelId,
+    count,
+    message,
+    client,
+    memberId,
+    serverName
+) {
     let success = true;
 
     try {
@@ -58,11 +96,9 @@ async function IncrementDailyChannelReadMessage(firedb, serverId, channelId, cou
             serverInfo = await GetServerInfo(serverId);
         }
 
-        if ( !serverInfo.today_channels[channelId] )
-            serverInfo.today_channels[channelId] = 0;
+        if (!serverInfo.today_channels[channelId]) serverInfo.today_channels[channelId] = 0;
 
-        if ( !serverInfo.today_members[memberId] )
-            serverInfo.today_members[memberId] = 0;
+        if (!serverInfo.today_members[memberId]) serverInfo.today_members[memberId] = 0;
 
         serverInfo.today_channels[channelId] = serverInfo.today_channels[channelId] += count;
         serverInfo.today_members[memberId] = serverInfo.today_members[memberId] += count;
@@ -84,8 +120,7 @@ async function IncrementDailyServerCommandUsed(firedb, serverId, count) {
     try {
         let serverInfo = await GetServerInfo(serverId);
 
-        if ( !serverInfo.commands_today )
-            serverInfo.commands_today = 0;
+        if (!serverInfo.commands_today) serverInfo.commands_today = 0;
 
         serverInfo.commands_today = serverInfo.commands_today += count;
 
@@ -106,8 +141,7 @@ async function IncrementServerFilteredMessages(firedb, serverId, count) {
     try {
         let serverInfo = await GetServerInfo(serverId);
 
-        if ( !serverInfo.filtered_messages )
-            serverInfo.filtered_messages = 0;
+        if (!serverInfo.filtered_messages) serverInfo.filtered_messages = 0;
 
         serverInfo.filtered_messages = serverInfo.filtered_messages += count;
 
@@ -368,7 +402,8 @@ async function InitializeNewServer(firedb, serverId, channelList, memberList, gu
     let success = true;
 
     try {
-        let channelObj = {}, memberObj = {};
+        let channelObj = {},
+            memberObj = {};
         let i = 0;
 
         // Add channels to server database
@@ -387,16 +422,12 @@ async function InitializeNewServer(firedb, serverId, channelList, memberList, gu
             filtered_words: [],
             reaction_role_messages: 0,
             today_channels: {},
-            last_7_days_channels: [
-                {}, {}, {}, {}, {}, {}, {}
-            ],
+            last_7_days_channels: [{}, {}, {}, {}, {}, {}, {}],
             filtered_messages: 0,
             commands_today: 0,
             last_7_days_commands: 0,
             today_members: {},
-            last_7_days_members: [
-                {}, {}, {}, {}, {}, {}, {}
-            ],
+            last_7_days_members: [{}, {}, {}, {}, {}, {}, {}],
             channels: channelObj,
             members: memberObj,
             log_channel: '',
@@ -466,7 +497,9 @@ async function SetReactionRoleMessageCount(firedb, serverId, count) {
 }
 
 async function CheckYesterday(firedb) {
-    const date = new Date();
+    const date = new Date(
+        new Date().toLocaleString("en-US", {timeZone: "America/New_York"}).split(',')[0]
+    );
     date.setDate(date.getDate() - 1);
     const yesterday = date.toISOString().split('T')[0];
     const docRef = await fire.doc(firedb, 'daily_stats', yesterday);
@@ -477,21 +510,28 @@ async function CheckYesterday(firedb) {
     }
 }
 
-async function RolloverDailyData(firedb) {
+async function RolloverDailyData(firedb, client, serverLogCallback, imagePath) {
+    let endOfWeek = false;
     const todayDate = utilities.GetDateNoTime(); // Current date
     var now = new Date();
+
+    if (now.getDay() === 6)
+        endOfWeek = true;
+
     var millisTill10 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 0, 0) - now;
     if (millisTill10 < 0) {
         millisTill10 += 86400000;
     }
+    await logging.log(firedb, 'Rolling over data in ' + utilities.formatMilliseconds(millisTill10));
     setTimeout(async function () {
-        await ResetDailyCommands(firedb, todayDate); // Reset daily statistics
-        RolloverDailyData(firedb); // Rollover again tomorrow
+        await ResetDailyCommands(firedb, todayDate, client, endOfWeek, serverLogCallback, imagePath); // Reset daily statistics
+        RolloverDailyData(firedb, client, serverLogCallback, imagePath); // Rollover again tomorrow
     }, millisTill10);
 }
 
-async function ResetDailyCommands(firedb, todayDate) {
+async function ResetDailyCommands(firedb, todayDate, client, saturday, serverLogCallback, imagePath) {
     try {
+        await logging.log(firedb, 'Rolling over data for ' + todayDate);
         let commandInfo = {};
         let imageInfo = {
             custom: 0,
@@ -526,7 +566,7 @@ async function ResetDailyCommands(firedb, todayDate) {
             const data = doc.data();
 
             const currentMessagingInfo = {
-                index: data.daily,
+                index: doc.id === 'messages_read' ? messagesToday : data.daily,
             };
 
             messagingInfo[doc.id] = currentMessagingInfo;
@@ -568,21 +608,24 @@ async function ResetDailyCommands(firedb, todayDate) {
 
         await SetCloudData(firedb, 'daily_stats', todayDate, dateInfo);
 
-        await RolloverDailyServerInfo(firedb);
+        await RolloverDailyServerInfo(firedb, client, saturday, serverLogCallback, imagePath);
     } catch (error) {
         logging.error(firedb, error);
     }
 }
 
-async function RolloverDailyServerInfo(firedb) {
+async function RolloverDailyServerInfo(firedb, client, serverLog, serverLogCallback, imagePath) {
     const data = db.JSON();
 
-    for (const key in data) {   // key is server id
+    for (const key in data) {
+        // key is server id
         let channelDataToday = data[key].today_channels;
 
         let commandDataToday = data[key].commands_today;
 
         let last7Days = data[key].last_7_days_channels;
+
+        let memberDataToday = data[key].today_members;
 
         if (!last7Days) {
             last7Days = [{}, {}, {}, {}, {}, {}, {}];
@@ -607,7 +650,7 @@ async function RolloverDailyServerInfo(firedb) {
         last7DaysCommands.unshift(commandDataToday ? commandDataToday : 0);
         last7DaysCommands.pop();
 
-        last7DaysMembers.unshift(data[key].today_members ? data[key].today_members : {});
+        last7DaysMembers.unshift(memberDataToday ? memberDataToday : {});
         last7DaysMembers.pop();
 
         // Set new server info
@@ -615,12 +658,17 @@ async function RolloverDailyServerInfo(firedb) {
         serverInfo.today_channels = {};
         serverInfo.last_7_days_channels = last7Days;
         serverInfo.last_7_days_commands = last7DaysCommands;
+        serverInfo.last_7_days_members = last7DaysMembers;
         serverInfo.commands_today = 0;
         serverInfo.today_members = {};
         db.set(key, serverInfo);
 
         const docRef = await fire.doc(firedb, 'servers', key);
         await fire.setDoc(docRef, serverInfo);
+
+        if (serverLog) {
+            await graph.WeeklyServer(firedb, client, serverInfo, key, imagePath, serverLogCallback);
+        }
     }
 }
 
@@ -913,8 +961,19 @@ async function GetUserViolations(firedb, serverId, userId) {
     }
 }
 
+async function test(firedb) {
+    const docRef = await fire.doc(firedb, 'daily_stats', '2024-09-06');
+    const docSnap = await fire.getDoc(docRef);
+
+    const docRef2 = await fire.doc(firedb, 'daily_stats', '2024-09-05');
+    await fire.setDoc(docRef2, docSnap.data());
+}
+
 module.exports = {
+    test,
     SetCloudData,
+    GetCloudData,
+    GetAllDocuments,
     DeleteFirebaseDocument,
     IncrementDaily,
     IncrementDailyChannelReadMessage,

@@ -1,4 +1,5 @@
 const databasefunctions = require('../functions/databasefunctions.js');
+const messages = require('../functions/messages.js');
 
 module.exports = {
     name: 'setlogchannel',
@@ -10,6 +11,8 @@ module.exports = {
         await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
         await databasefunctions.SetLogChannel(firedb, message.guildId, message.channelId);
+        
+        await messages.send_reply(firedb, message, `Updated log channel to <#${message.channel.id}>`);
 
         return;
     },

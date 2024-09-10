@@ -16,7 +16,7 @@ module.exports = {
             return messages.send_reply(
                 firedb,
                 message,
-                'Make sure second argument is a number. Syntax is : ' + this.syntax
+                'Make sure your argument is a number. Syntax is : ' + this.syntax
             );
         }
 

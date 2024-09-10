@@ -9,7 +9,16 @@ module.exports = async (Discord, client, firedb, message) => {
     const prefix = '&';
 
     // Increment messages parsed counter
-    await databasefunctions.IncrementDailyChannelReadMessage(firedb, message.guildId, message.channelId, 1, message, client, message.author.id, message.guild.name);
+    await databasefunctions.IncrementDailyChannelReadMessage(
+        firedb,
+        message.guildId,
+        message.channelId,
+        1,
+        message,
+        client,
+        message.author.id,
+        message.guild.name
+    );
 
     if (message.guild === null) {
         // DM
@@ -39,7 +48,7 @@ module.exports = async (Discord, client, firedb, message) => {
             message.guild.id,
             message.member.permissions.has(PermissionsBitField.Flags.Administrator)
         )
-    ){
+    ) {
         command.execute(client, message, args, Discord, firedb);
         await databasefunctions.IncrementDailyServerCommandUsed(firedb, message.guildId, 1);
     }

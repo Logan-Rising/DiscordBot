@@ -4,7 +4,7 @@ const discordfunctions = require('../functions/discordfunctions.js');
 
 module.exports = {
     name: 'resetuserviolations',
-    description: 'Reset the user\' filter violations back to zero',
+    description: "Reset the user' filter violations back to zero",
     users: [],
     servers: [],
     syntax: '&resetuserviolations',
@@ -17,11 +17,7 @@ module.exports = {
         } else {
             const user = await discordfunctions.GetUser(client, firedb, args[0]);
             if (!user) {
-                return messages.send_reply(
-                    firedb,
-                    message,
-                    'Error fetching user. Make sure the user id is correct.'
-                );
+                return messages.send_reply(firedb, message, 'Error fetching user. Make sure the user id is correct.');
             } else {
                 return await databasefunctions.SetUserFilterViolations(firedb, message.guild.id, user.id, 0);
             }

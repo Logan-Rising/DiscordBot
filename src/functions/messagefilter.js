@@ -31,12 +31,19 @@ async function FilterMessage(firedb, message, client) {
                 }
             }
         }
-        if (!serverFilterInfo.channels[message.channel.id]) {   // Channel is not in the server channel list so add it
+        if (!serverFilterInfo.channels[message.channel.id]) {
+            // Channel is not in the server channel list so add it
             const channel = await discordfunctions.GetChannel(client, message.channel.id);
             await databasefunctions.AddChannelToServer(firedb, message.guild.id, message.channel.id, channel.name);
         }
-        if(!serverFilterInfo.members[message.author.id]) {      // User is not in the server member list so add them
-            await databasefunctions.AddMemberToServer(firedb, message.guild.id, message.author.id, message.author.username);
+        if (!serverFilterInfo.members[message.author.id]) {
+            // User is not in the server member list so add them
+            await databasefunctions.AddMemberToServer(
+                firedb,
+                message.guild.id,
+                message.author.id,
+                message.author.username
+            );
         }
     } else {
         // Server does not exist in filter database so add it

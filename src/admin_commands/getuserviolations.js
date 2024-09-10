@@ -16,21 +16,21 @@ module.exports = {
             return messages.send_reply(
                 firedb,
                 message,
-                `<@${member.id}> has ` + await databasefunctions.GetUserViolations(firedb, message.guild.id, member.id) + ` violations`
+                `<@${member.id}> has ` +
+                    (await databasefunctions.GetUserViolations(firedb, message.guild.id, member.id)) +
+                    ` violations`
             );
         } else {
             const user = await discordfunctions.GetUser(client, firedb, args[0]);
             if (!user) {
-                return messages.send_reply(
-                    firedb,
-                    message,
-                    'Error fetching user. Make sure the user id is correct.'
-                );
+                return messages.send_reply(firedb, message, 'Error fetching user. Make sure the user id is correct.');
             } else {
                 return messages.send_reply(
                     firedb,
                     message,
-                    `<@${user.id}> has ` + await databasefunctions.GetUserViolations(firedb, message.guild.id, user.id) + ` violations`
+                    `<@${user.id}> has ` +
+                        (await databasefunctions.GetUserViolations(firedb, message.guild.id, user.id)) +
+                        ` violations`
                 );
             }
         }

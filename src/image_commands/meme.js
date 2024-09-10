@@ -8,7 +8,8 @@ const Jimp = require('jimp');
 
 module.exports = {
     name: 'meme',
-    description: 'Makes a meme with text as in the decription when the command was ran. Uses image sent with the message or image from the message replied to.',
+    description:
+        'Makes a meme with text as in the decription when the command was ran. Uses image sent with the message or image from the message replied to.',
     users: [],
     servers: [],
     syntax: '&meme [!black] <description>',

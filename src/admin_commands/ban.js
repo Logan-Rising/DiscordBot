@@ -50,7 +50,12 @@ module.exports = {
                     case green_check:
                         if (user.id === constants.botId) break;
                         memberTarget.ban();
-                        await messages.server_log(firedb, client, message.guild.id, `<@${id}> has been banned by <@${message.author.id}`);
+                        await messages.server_log(
+                            firedb,
+                            client,
+                            message.guild.id,
+                            `<@${id}> has been banned by <@${message.author.id}`
+                        );
                         await banfunction.onKickBan(firedb, memberTarget.user.tag, message.channel, id);
                         collector.stop();
                         break;
