@@ -4,10 +4,10 @@ const discordfunctions = require('../functions/discordfunctions.js');
 
 module.exports = {
     name: 'getuserviolations',
-    description: '',
-    users: [],
+    description: 'Get a user\'s current number of filter violations',
+    users: ['admin'],
     servers: [],
-    syntax: '&getuserviolations',
+    syntax: '&getuserviolations <@user or id>',
     async execute(client, message, args, Discord, firedb) {
         await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 

@@ -4,7 +4,7 @@ const messages = require('../functions/messages.js');
 module.exports = {
     name: 'setfilterviolationsmax',
     description: 'Set the violations limit before punishment is enforced',
-    users: [],
+    users: ['admin'],
     servers: [],
     syntax: '&setfilterviolationsmax <number>',
     async execute(client, message, args, Discord, firedb) {

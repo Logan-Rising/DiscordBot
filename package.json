@@ -9,18 +9,22 @@
     "author": "Bigfoot",
     "license": "ISC",
     "dependencies": {
+        "@discordjs/voice": "^0.17.0",
         "chart.js": "^3.9.1",
         "chromium": "^3.0.3",
         "discord.js": "^14.14.1",
         "express": "^4.18.3",
+        "ffmpeg-static": "^5.2.0",
         "firebase": "^10.12.4",
         "free-translate": "^0.1.1",
         "image-downloader": "^4.0.3",
         "jimp": "^0.22.12",
         "node-fetch": "^3.2.4",
+        "node-pre-gyp": "^0.17.0",
         "prettier": "^2.8.8",
         "quickchart-js": "^3.1.0",
         "random-word": "^2.0.0",
+        "rebuild": "^0.1.2",
         "request": "^2.88.2",
         "simple-json-db": "^2.0.0"
     }

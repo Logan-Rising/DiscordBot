@@ -3,7 +3,7 @@ const databasefunctions = require('../functions/databasefunctions.js');
 module.exports = {
     name: 'disablelogging',
     description: 'Disable logging for the current server',
-    users: [],
+    users: ['admin'],
     servers: [],
     syntax: '&disablelogging',
     async execute(client, message, args, Discord, firedb) {

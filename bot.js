@@ -7,6 +7,7 @@ const client = new Client({
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessageReactions,
         GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.GuildVoiceStates,
     ],
 });
 
@@ -48,9 +49,8 @@ client.on('ready', async () => {
     if (!constants.debug) {
         // await databasefunctions.SyncCachedServerSettings(db);    // Sync firebase server data to cache database
         await reactionmessagefunctions.SetupOldReactionMessages(db, client); // Restart reaction role messages listeners
-        console.log(constants.imagesFilePath)
+        await databasefunctions.CheckYesterday(db); // Roll over data if there was no data yesterday
         await databasefunctions.RolloverDailyData(db, client, messages.server_log, constants.imagesFilePath); // Set up rolling data at midnight
-        // await databasefunctions.CheckYesterday(db); // Roll over data if there was no data yesterday
     }
 
     // Set status then every 5 minutes set server count and update status

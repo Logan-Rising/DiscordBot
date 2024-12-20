@@ -7,3 +7,4 @@ script.bat
 /src/functions/customfunctions.js
 /src/assets/pc.jpg
 /src/assets/config.js
+/src/events/guild/voiceStateUpdate.js

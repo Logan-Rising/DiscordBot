@@ -4,16 +4,16 @@ const messages = require('../functions/messages.js');
 
 module.exports = {
     name: 'mute',
-    description: '',
-    users: [],
+    description: 'Mute a user in the server',
+    users: ['admin'],
     servers: [],
-    syntax: '&mute',
+    syntax: '&mute <@user or user id>',
     async execute(client, message, args, Discord, firedb) {
         await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
         const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
 
-        if (!member) return messages.send_reply(firedb, message, 'Please specify a member with a tag or id')
+        if (!member) return messages.send_reply(firedb, message, 'Please specify a member with a tag or id');
 
         const mutedRole = message.guild.roles.cache.find(role => role.name === 'Muted');
 

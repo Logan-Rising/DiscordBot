@@ -5,7 +5,7 @@ const discordfunctions = require('../functions/discordfunctions.js');
 module.exports = {
     name: 'setuserviolations',
     description: 'Set the number of violations for a user',
-    users: [],
+    users: ['admin'],
     servers: [],
     syntax: '&setuserviolations <@user or user id> <number>',
     async execute(client, message, args, Discord, firedb) {

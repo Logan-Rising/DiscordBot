@@ -4,10 +4,10 @@ const discordfunctions = require('../functions/discordfunctions.js');
 
 module.exports = {
     name: 'resetuserviolations',
-    description: "Reset the user' filter violations back to zero",
-    users: [],
+    description: "Reset the user's filter violations back to zero",
+    users: ['admin'],
     servers: [],
-    syntax: '&resetuserviolations',
+    syntax: '&resetuserviolations <@user or user id>',
     async execute(client, message, args, Discord, firedb) {
         await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 

@@ -3,6 +3,7 @@ const utilities = require('./utilities.js');
 const discordfunctions = require('./discordfunctions.js');
 const logging = require('./logging.js');
 const graph = require('./graph.js');
+const serverclass = require('../assets/server.js');
 
 // Local cache json database
 const JSONdb = require('simple-json-db');
@@ -417,29 +418,13 @@ async function InitializeNewServer(firedb, serverId, channelList, memberList, gu
             memberObj[member[1].user.id] = member[1].user.username;
         }
 
-        const serverFilterInfo = {
-            filter_status: false,
-            filtered_words: [],
-            reaction_role_messages: 0,
-            today_channels: {},
-            last_7_days_channels: [{}, {}, {}, {}, {}, {}, {}],
-            filtered_messages: 0,
-            commands_today: 0,
-            last_7_days_commands: 0,
-            today_members: {},
-            last_7_days_members: [{}, {}, {}, {}, {}, {}, {}],
-            channels: channelObj,
-            members: memberObj,
-            log_channel: '',
-            server_name: guildName,
-            filter_violations: {},
-            max_violations: 10,
-        };
+        const serverFilterInfo = new serverclass.Server(memberObj, channelObj, guildName);
+        const {...obj} = serverFilterInfo;
 
         const docRef = await fire.doc(firedb, 'servers', serverId);
-        await fire.setDoc(docRef, serverFilterInfo);
+        await fire.setDoc(docRef, obj);
 
-        db.set(serverId, serverFilterInfo);
+        db.set(serverId, obj);
     } catch (error) {
         logging.error(firedb, error);
         success = false;
@@ -503,10 +488,13 @@ async function CheckYesterday(firedb) {
     date.setDate(date.getDate() - 1);
     const yesterday = date.toISOString().split('T')[0];
     const docRef = await fire.doc(firedb, 'daily_stats', yesterday);
+    logging.log(firedb, 'Checking for data yesterday: ' + yesterday);
     const docSnap = await fire.getDoc(docRef);
     if (!docSnap.exists()) {
         await logging.log(firedb, 'There was no data in the database for yesterday. Rolling over data now.');
         await ResetDailyCommands(firedb, yesterday);
+    } else {
+        logging.log(firedb, 'Data found for ' + yesterday);
     }
 }
 
@@ -522,9 +510,11 @@ async function RolloverDailyData(firedb, client, serverLogCallback, imagePath) {
     if (millisTill10 < 0) {
         millisTill10 += 86400000;
     }
-    await logging.log(firedb, 'Rolling over data in ' + utilities.formatMilliseconds(millisTill10));
+    await logging.log(firedb, 'Rolling over data in ' + utilities.formatMilliseconds(millisTill10) + ' for ' + todayDate);
     setTimeout(async function () {
+        console.log('calling with ' + todayDate);
         await ResetDailyCommands(firedb, todayDate, client, endOfWeek, serverLogCallback, imagePath); // Reset daily statistics
+        await utilities.sleep(60000);
         RolloverDailyData(firedb, client, serverLogCallback, imagePath); // Rollover again tomorrow
     }, millisTill10);
 }
@@ -902,6 +892,10 @@ async function IncrementUserFilterViolations(firedb, serverId, userId, count = 1
 
         const docRef = await fire.doc(firedb, 'servers', serverId);
         await fire.setDoc(docRef, serverInfo);
+
+        if (serverInfo.filter_violations[userId] > serverInfo.max_violations)
+            return true;
+        return false;
     } catch (error) {
         logging.error(firedb, error);
     }
@@ -961,19 +955,34 @@ async function GetUserViolations(firedb, serverId, userId) {
     }
 }
 
-async function test(firedb) {
-    const docRef = await fire.doc(firedb, 'daily_stats', '2024-09-06');
-    const docSnap = await fire.getDoc(docRef);
+async function GetServerPenalty(firedb, serverId) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
 
-    const docRef2 = await fire.doc(firedb, 'daily_stats', '2024-09-05');
-    await fire.setDoc(docRef2, docSnap.data());
+        return serverInfo.violation_penalty;
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function SetServerPenalty(firedb, serverId, penalty) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        serverInfo.violation_penalty = penalty;
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
 }
 
 module.exports = {
-    test,
     SetCloudData,
     GetCloudData,
-    GetAllDocuments,
     DeleteFirebaseDocument,
     IncrementDaily,
     IncrementDailyChannelReadMessage,
@@ -1023,4 +1032,6 @@ module.exports = {
     SetUserFilterViolations,
     GetUserViolations,
     SetUserViolationsMax,
+    GetServerPenalty,
+    SetServerPenalty,
 };
