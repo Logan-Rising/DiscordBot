@@ -10,9 +10,9 @@ module.exports = {
     async execute(client, message, args, Discord, firedb) {
         await databasefunctions.IncrementDaily(firedb, 1, 'commands', this.name);
 
-        if (args[0].toLowerCase() === 'true') {
+        if (args[0] && args[0].toLowerCase() === 'true') {
             await databasefunctions.SetServerFilterSetting(firedb, message.guild.id, true);
-        } else if (args[0].toLowerCase() === 'false') {
+        } else if (args[0] && args[0].toLowerCase() === 'false') {
             await databasefunctions.SetServerFilterSetting(firedb, message.guild.id, false);
         } else {
             await messages.send_reply(firedb, message, "Please enter 'true' or 'false'. Syntax: " + this.syntax);

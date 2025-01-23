@@ -980,6 +980,106 @@ async function SetServerPenalty(firedb, serverId, penalty) {
     }
 }
 
+async function SetServerChannelDeleteLogging(firedb, serverId, value) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        serverInfo.channel_delete_logging = value;
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function GetServerChannelDeleteLogging(firedb, serverId) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        return serverInfo.channel_delete_logging;
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function SetServerChannelUpdateLogging(firedb, serverId, value) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        serverInfo.channel_update_logging = value;
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function GetServerChannelUpdateLogging(firedb, serverId) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        return serverInfo.channel_update_logging;
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function SetServerChannelCreateLogging(firedb, serverId, value) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        serverInfo.channel_create_logging = value;
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function GetServerChannelCreateLogging(firedb, serverId) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        return serverInfo.channel_create_logging;
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function SetServerReactionLogging(firedb, serverId, value) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        serverInfo.reaction_logging = value;
+
+        db.set(serverId, serverInfo);
+
+        const docRef = await fire.doc(firedb, 'servers', serverId);
+        await fire.setDoc(docRef, serverInfo);
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
+async function GetServerReactionLogging(firedb, serverId) {
+    try {
+        let serverInfo = await GetServerFilterInfo(serverId);
+
+        return serverInfo.reaction_logging;
+    } catch (error) {
+        logging.error(firedb, error);
+    }
+}
+
 module.exports = {
     SetCloudData,
     GetCloudData,
@@ -1034,4 +1134,12 @@ module.exports = {
     SetUserViolationsMax,
     GetServerPenalty,
     SetServerPenalty,
+    SetServerChannelCreateLogging,
+    GetServerChannelCreateLogging,
+    SetServerChannelDeleteLogging,
+    GetServerChannelDeleteLogging,
+    SetServerChannelUpdateLogging,
+    GetServerChannelUpdateLogging,
+    SetServerReactionLogging,
+    GetServerReactionLogging,
 };
