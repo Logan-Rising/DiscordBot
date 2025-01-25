@@ -10,7 +10,7 @@ module.exports = async (Discord, client, firedb, oldChannel, newChannel) => {
         newChannel.name
     );
     
-    if (databasefunctions.GetServerChannelUpdateLogging(firedb, channelCreate.guildId)) {
+    if (databasefunctions.GetServerChannelUpdateLogging(firedb, oldChannel.guildId)) {
     await messages.server_log(
         firedb,
         client,

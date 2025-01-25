@@ -139,7 +139,8 @@ async function HandleReaction(firedb, client, reaction, role1, role2, role3, rol
         } else {
             member.roles.add(role5);
             reaction.reply({ content: `You have added the role : ${role5.name}`, ephemeral: true });
-            name        }
+            await HandleRoleAddLog( firedb, client, serverId, userId, role5.name);
+        }
     }
 }
 

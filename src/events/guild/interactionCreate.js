@@ -13,7 +13,7 @@ module.exports = async (Discord, client, firedb, interaction) => {
     }
 
     try {
-        await command.execute(interaction, firedb);
+        await command.execute(interaction, firedb, client);
     } catch (error) {
         console.error(error);
         if (interaction.replied || interaction.deferred) {

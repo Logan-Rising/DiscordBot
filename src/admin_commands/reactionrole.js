@@ -3,6 +3,7 @@ const { PermissionsBitField, ButtonStyle, ActionRowBuilder, ButtonBuilder, Embed
 const databasefunctions = require('../functions/databasefunctions.js');
 const reactionmessagefunctions = require('../functions/reactionmessagefunctions.js');
 const interactionfunctions = require('../functions/interactionfunctions.js');
+const messages = require('../functions/messages.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,7 +17,7 @@ module.exports = {
         .addRoleOption(option => option.setName('role3').setDescription('Role 3 to set up').setRequired(false))
         .addRoleOption(option => option.setName('role4').setDescription('Role 4 to set up').setRequired(false))
         .addRoleOption(option => option.setName('role5').setDescription('Role 5 to set up').setRequired(false)),
-    async execute(interaction, firedb) {
+    async execute(interaction, firedb, client) {
         const title = interaction.options.getString('title');
         const role1 = interaction.options.getRole('role1');
         const role2 = interaction.options.getRole('role2');
@@ -81,17 +82,15 @@ module.exports = {
                     (role5 ? `${role5}` : ``)
             );
 
-        let reply = await interactionfunctions.Reply(firedb, interaction, { embeds: [embed], components: [button] });
+        let roleMessage = await messages.send_message(firedb, interaction.channel, { embeds: [embed], components: [button] });
 
         await databasefunctions.IncrementReactionRoleMessageCount(firedb, interaction.guild.id);
-
-        const message = await interactionfunctions.FetchReply(firedb, interaction);
 
         await reactionmessagefunctions.StoreReactionMessage(
             firedb,
             interaction.guild.id,
             interaction.channel.id,
-            message.id,
+            roleMessage.id,
             role1 ? role1.id : '',
             role2 ? role2.id : '',
             role3 ? role3.id : '',
@@ -99,6 +98,8 @@ module.exports = {
             role5 ? role5.id : ''
         );
 
-        await reactionmessagefunctions.CreateComponentCollector(firedb, reply, role1, role2, role3, role4, role5);
+        await reactionmessagefunctions.CreateComponentCollector(firedb, client, roleMessage, role1, role2, role3, role4, role5);
+
+        await interactionfunctions.Reply(firedb, interaction, `Successfully set up reaction message for **${title}**! You can delete this message.`);
     },
 };
